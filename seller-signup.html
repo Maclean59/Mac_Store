@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Become a Seller · Macstore</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #fff7ec;
+        --card: #fff;
+        --ink: #1d1b2e;
+        --muted: #6b6880;
+        --pink: #ff3d81;
+        --orange: #ff9f1c;
+        --purple: #6c2bd9;
+        --green: #12b76a;
+        --red: #e5383b;
+        --line: #eadfce;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #17142a;
+          --card: #221e3a;
+          --ink: #fff;
+          --muted: #b3aed0;
+          --line: #3a3560;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Poppins, system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        background: linear-gradient(120deg, var(--pink), var(--orange));
+        color: #fff;
+      }
+      header .logo {
+        font-weight: 800;
+        font-size: 22px;
+        letter-spacing: 0.5px;
+      }
+      header a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.25);
+        padding: 8px 14px;
+        border-radius: 999px;
+      }
+      main {
+        max-width: 460px;
+        margin: 0 auto;
+        padding: 20px 16px 60px;
+      }
+      h1 {
+        font-size: 26px;
+        margin: 8px 0 4px;
+        font-weight: 800;
+      }
+      .sub {
+        color: var(--muted);
+        margin: 0 0 18px;
+        font-size: 14px;
+      }
+      .steps {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 18px;
+      }
+      .steps span {
+        flex: 1;
+        height: 8px;
+        border-radius: 8px;
+        background: var(--line);
+      }
+      .steps span.on {
+        background: linear-gradient(90deg, var(--purple), var(--pink));
+      }
+      .card {
+        background: var(--card);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 6px 24px rgba(108, 43, 217, 0.12);
+      }
+      label {
+        display: block;
+        font-weight: 700;
+        font-size: 14px;
+        margin: 14px 0 6px;
+      }
+      input[type="text"],
+      input[type="tel"] {
+        width: 100%;
+        padding: 14px;
+        border: 2px solid var(--line);
+        border-radius: 14px;
+        font: inherit;
+        font-size: 16px;
+        background: transparent;
+        color: var(--ink);
+      }
+      input:focus {
+        outline: none;
+        border-color: var(--purple);
+      }
+      .btn {
+        width: 100%;
+        margin-top: 18px;
+        padding: 15px;
+        border: 0;
+        border-radius: 14px;
+        font: inherit;
+        font-weight: 800;
+        font-size: 16px;
+        color: #fff;
+        background: linear-gradient(120deg, var(--purple), var(--pink));
+        cursor: pointer;
+      }
+      .btn:disabled {
+        opacity: 0.55;
+      }
+      .link {
+        background: none;
+        border: 0;
+        color: var(--purple);
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 12px;
+        padding: 6px;
+      }
+      .msg {
+        margin-top: 14px;
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 14px;
+        display: none;
+      }
+      .msg.err {
+        display: block;
+        background: #ffe5e6;
+        color: var(--red);
+      }
+      .msg.ok {
+        display: block;
+        background: #dcf7ea;
+        color: #0a7a47;
+      }
+      .hint {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      .photo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .photo img {
+        width: 72px;
+        height: 72px;
+        border-radius: 14px;
+        object-fit: cover;
+        background: var(--line);
+      }
+      .pick {
+        flex: 1;
+        text-align: center;
+        padding: 12px;
+        border: 2px dashed var(--purple);
+        border-radius: 14px;
+        color: var(--purple);
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .pick input {
+        display: none;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+      }
+      .row .small {
+        width: auto;
+        margin: 0;
+        padding: 0 14px;
+        white-space: nowrap;
+      }
+      .hidden {
+        display: none;
+      }
+      .done {
+        text-align: center;
+      }
+      .done .big {
+        font-size: 56px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">Macstore</div>
+      <a href="index.html">🏠 Home</a>
+    </header>
+    <main>
+      <h1>Sell on Macstore</h1>
+      <p class="sub">Your first month is free. Sign up in 3 quick steps.</p>
+      <div class="steps">
+        <span id="s1" class="on"></span><span id="s2"></span
+        ><span id="s3"></span>
+      </div>
+
+      <!-- Step 1: phone -->
+      <section class="card" id="step1">
+        <label for="email">Your email address</label>
+        <input
+          id="email"
+          type="email"
+          inputmode="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+        />
+        <div class="hint">
+          We will email you a code to confirm it is really you.
+        </div>
+        <button class="btn" id="sendBtn">Send code</button>
+      </section>
+
+      <!-- Step 2: code -->
+      <section class="card hidden" id="step2">
+        <label for="code">Enter the code from your email</label>
+        <input
+          id="code"
+          type="text"
+          inputmode="numeric"
+          maxlength="10"
+          placeholder="123456"
+          autocomplete="one-time-code"
+        />
+        <button class="btn" id="verifyBtn">Verify</button>
+        <button class="link" id="resendBtn">Send a new code</button>
+        <button class="link" id="changeBtn">Change email</button>
+      </section>
+
+      <!-- Step 3: details -->
+      <section class="card hidden" id="step3">
+        <label for="fullName">Full name (as on your Ghana ID)</label>
+        <input id="fullName" type="text" autocomplete="name" />
+        <label for="shopName">Shop / brand name</label>
+        <input id="shopName" type="text" />
+        <label for="phone"
+          >Your phone number (buyers will contact you on it)</label
+        >
+        <input
+          id="phone"
+          type="tel"
+          inputmode="tel"
+          placeholder="024 123 4567"
+          autocomplete="tel"
+        />
+        <label for="location">Your location</label>
+        <div class="row">
+          <input id="location" type="text" placeholder="e.g. Madina, Accra" />
+          <button class="btn small" id="gpsBtn" type="button">
+            📍 Use mine
+          </button>
+        </div>
+        <label>Photo of your Ghana ID</label>
+        <div class="photo">
+          <img id="idPrev" alt="" /><label class="pick"
+            >Choose photo<input id="idFile" type="file" accept="image/*"
+          /></label>
+        </div>
+        <label>Your personal photo</label>
+        <div class="photo">
+          <img id="selfPrev" alt="" /><label class="pick"
+            >Choose photo<input id="selfFile" type="file" accept="image/*"
+          /></label>
+        </div>
+        <div class="hint">
+          Photos are private. Only the Macstore owner can see them.
+        </div>
+        <button class="btn" id="submitBtn">Submit for approval</button>
+      </section>
+
+      <section class="card done hidden" id="done">
+        <div class="big">🎉</div>
+        <h1>You're in!</h1>
+        <p class="sub">
+          We will check your details and approve your shop soon. Your free month
+          starts now.
+        </p>
+        <a
+          class="btn"
+          style="display: block; text-decoration: none"
+          href="index.html"
+          >Back to Home</a
+        >
+      </section>
+
+      <div class="msg" id="msg"></div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
+    <script>
+      // Supabase project keys (the publishable key is safe to be public)
+      const SUPABASE_URL = "https://bckjpwkccpyvekbohoyp.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "sb_publishable_cLpSBudpjWEXZxkGWOydnA_eG_xjhGt";
+      const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      const $ = (id) => document.getElementById(id);
+      let emailAddr = "",
+        coords = null;
+
+      function show(step) {
+        ["step1", "step2", "step3", "done"].forEach((s) =>
+          $(s).classList.toggle("hidden", s !== step),
+        );
+        const n = { step1: 1, step2: 2, step3: 3, done: 3 }[step];
+        [1, 2, 3].forEach((i) => $("s" + i).classList.toggle("on", i <= n));
+        msg("");
+      }
+      function msg(text, ok) {
+        const m = $("msg");
+        m.textContent = text;
+        m.className = "msg" + (text ? (ok ? " ok" : " err") : "");
+      }
+      function busy(btn, on, label) {
+        btn.disabled = on;
+        if (label) btn.textContent = label;
+      }
+
+      function toE164(raw) {
+        let d = raw.replace(/[^\d+]/g, "");
+        if (d.startsWith("+233")) return d.length === 13 ? d : "";
+        if (d.startsWith("233")) d = "+" + d;
+        else if (d.startsWith("0")) d = "+233" + d.slice(1);
+        else if (d.length === 9) d = "+233" + d;
+        return /^\+233\d{9}$/.test(d) ? d : "";
+      }
+
+      async function sendCode() {
+        emailAddr = $("email").value.trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddr))
+          return msg("Enter a valid email address.");
+        busy($("sendBtn"), true, "Sending…");
+        const { error } = await sb.auth.signInWithOtp({
+          email: emailAddr,
+          options: { shouldCreateUser: true },
+        });
+        busy($("sendBtn"), false, "Send code");
+        if (error) return msg("Could not send the code: " + error.message);
+        show("step2");
+        msg("Code sent to " + emailAddr + ". Check your inbox and spam.", true);
+      }
+      $("sendBtn").onclick = sendCode;
+      $("resendBtn").onclick = sendCode;
+      $("changeBtn").onclick = () => show("step1");
+
+      $("verifyBtn").onclick = async () => {
+        const token = $("code").value.trim();
+        if (token.length < 6) return msg("Enter the code from your email.");
+        busy($("verifyBtn"), true, "Checking…");
+        const { error } = await sb.auth.verifyOtp({
+          email: emailAddr,
+          token,
+          type: "email",
+        });
+        busy($("verifyBtn"), false, "Verify");
+        if (error) return msg("That code is wrong or expired. Try again.");
+        show("step3");
+      };
+
+      $("gpsBtn").onclick = () => {
+        if (!navigator.geolocation)
+          return msg("Location is not available. Type your location instead.");
+        navigator.geolocation.getCurrentPosition(
+          (p) => {
+            coords = { lat: p.coords.latitude, lng: p.coords.longitude };
+            if (!$("location").value)
+              $("location").value = "My current location";
+            msg("Location captured.", true);
+          },
+          () => msg("Could not get your location. Please type it instead."),
+        );
+      };
+
+      function preview(inputId, imgId) {
+        $(inputId).onchange = (e) => {
+          const f = e.target.files[0];
+          if (f) $(imgId).src = URL.createObjectURL(f);
+        };
+      }
+      preview("idFile", "idPrev");
+      preview("selfFile", "selfPrev");
+
+      async function upload(userId, name, file) {
+        const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+        const path = `${userId}/${name}.${ext}`;
+        const { error } = await sb.storage
+          .from("seller-docs")
+          .upload(path, file, { upsert: true, contentType: file.type });
+        if (error) throw error;
+        return path;
+      }
+
+      $("submitBtn").onclick = async () => {
+        const fullName = $("fullName").value.trim(),
+          shopName = $("shopName").value.trim(),
+          location = $("location").value.trim(),
+          idFile = $("idFile").files[0],
+          selfFile = $("selfFile").files[0];
+        const phoneE164 = toE164($("phone").value);
+        if (!fullName || !shopName || !location)
+          return msg("Please fill in your name, shop name and location.");
+        if (!phoneE164)
+          return msg("Enter a valid Ghana phone number, e.g. 024 123 4567.");
+        if (!idFile || !selfFile) return msg("Please add both photos.");
+        if (idFile.size > 8e6 || selfFile.size > 8e6)
+          return msg("Each photo must be under 8 MB.");
+
+        busy($("submitBtn"), true, "Uploading…");
+        try {
+          const {
+            data: { user },
+          } = await sb.auth.getUser();
+          if (!user) throw new Error("Please verify your email again.");
+          const idPath = await upload(user.id, "ghana-id", idFile);
+          const selfPath = await upload(user.id, "personal-photo", selfFile);
+          const { error } = await sb.from("seller_verification").upsert(
+            {
+              user_id: user.id,
+              full_name: fullName,
+              shop_name: shopName,
+              phone: phoneE164,
+              email: emailAddr,
+              location,
+              lat: coords?.lat ?? null,
+              lng: coords?.lng ?? null,
+              id_photo_path: idPath,
+              selfie_path: selfPath,
+              phone_verified: false,
+              status: "pending",
+            },
+            { onConflict: "user_id" },
+          );
+          if (error) throw error;
+          show("done");
+        } catch (e) {
+          msg("Something went wrong: " + (e.message || e));
+          busy($("submitBtn"), false, "Submit for approval");
+        }
+      };
+    </script>
+  </body>
+</html>

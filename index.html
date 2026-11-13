@@ -1,0 +1,1207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Macstore</title>
+    <style>
+      :root {
+        --or: #f68b1e;
+        --ink: #282828;
+        --mut: #75757a;
+        --bg: #f1f1f2;
+        --green: #00a651;
+        --red: #e5252a;
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      body {
+        margin: 0;
+        font:
+          15px/1.4 system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+        padding-bottom: 70px;
+      }
+      header {
+        background: var(--or);
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        padding: 10px 12px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .logo {
+        font-weight: 800;
+        font-size: 22px;
+        color: #fff;
+        cursor: pointer;
+      }
+      #q {
+        flex: 1;
+        border: 0;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font: inherit;
+        min-width: 0;
+      }
+      main {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 10px;
+      }
+      .banner {
+        background: linear-gradient(120deg, #282828, #f68b1e);
+        color: #fff;
+        border-radius: 12px;
+        padding: 18px 16px;
+        margin-bottom: 10px;
+      }
+      .banner h1 {
+        margin: 0 0 4px;
+        font-size: 22px;
+      }
+      .banner p {
+        margin: 0;
+        opacity: 0.9;
+      }
+      .cats {
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        padding: 8px 2px 12px;
+        scrollbar-width: none;
+      }
+      .cat {
+        flex: 0 0 auto;
+        text-align: center;
+        width: 68px;
+        font-size: 12px;
+        cursor: pointer;
+        background: none;
+        border: 0;
+        color: var(--ink);
+        padding: 0;
+      }
+      .cat i {
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #fff;
+        font-style: normal;
+        font-size: 24px;
+        margin: 0 auto 4px;
+        border: 2px solid transparent;
+      }
+      .cat.on i {
+        border-color: var(--or);
+      }
+      .sec {
+        background: #fff;
+        border-radius: 10px;
+        padding: 10px;
+      }
+      .sec h2 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      @media (min-width: 600px) {
+        .grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      .card {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 1px 3px #0002;
+      }
+      .card img,
+      .ph {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        background: #eee;
+        display: grid;
+        place-items: center;
+        font-size: 36px;
+      }
+      .card .b {
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+      }
+      .card h3 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 500;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .price {
+        font-weight: 700;
+        font-size: 16px;
+      }
+      .row {
+        display: flex;
+        gap: 6px;
+        margin-top: auto;
+      }
+      button.act {
+        flex: 1;
+        border: 0;
+        border-radius: 6px;
+        padding: 8px;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        background: var(--or);
+        color: #fff;
+      }
+      button.sv {
+        border: 1px solid #ddd;
+        background: #fff;
+        color: var(--ink);
+        flex: 0 0 40px;
+      }
+      button.act.g {
+        background: var(--green);
+      }
+      button.act.r {
+        background: var(--red);
+      }
+      .sk {
+        height: 210px;
+        border-radius: 8px;
+        background: linear-gradient(
+          90deg,
+          #e8e8e8 25%,
+          #f5f5f5 50%,
+          #e8e8e8 75%
+        );
+        background-size: 200% 100%;
+        animation: sh 1.2s infinite;
+      }
+      @keyframes sh {
+        to {
+          background-position: -200% 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .sk {
+          animation: none;
+        }
+      }
+      .box {
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px;
+        max-width: 460px;
+        margin: 10px auto;
+        display: grid;
+        gap: 10px;
+      }
+      .box h2 {
+        margin: 0;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 11px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font: inherit;
+        background: #fff;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible,
+      .cat:focus-visible {
+        outline: 3px solid #2b7de9;
+        outline-offset: 2px;
+      }
+      .msg {
+        font-weight: 700;
+      }
+      .err {
+        color: var(--red);
+      }
+      .ok {
+        color: var(--green);
+      }
+      .empty {
+        text-align: center;
+        padding: 30px 10px;
+        color: var(--mut);
+        grid-column: 1/-1;
+      }
+      .mine {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        background: #fff;
+        border-radius: 10px;
+        padding: 8px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+      }
+      .mine img {
+        width: 52px;
+        height: 52px;
+        border-radius: 8px;
+        object-fit: cover;
+      }
+      .mine span {
+        flex: 1;
+        min-width: 120px;
+        font-weight: 600;
+      }
+      .mine.sold {
+        opacity: 0.5;
+      }
+      .mine button {
+        flex: 0 0 auto;
+        padding: 8px 12px;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      @media (min-width: 600px) {
+        .stats {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      .stat {
+        background: #fff;
+        border-radius: 10px;
+        padding: 14px;
+        color: var(--mut);
+      }
+      .stat b {
+        display: block;
+        font-size: 28px;
+        color: var(--or);
+      }
+      .mine small {
+        display: block;
+        color: var(--mut);
+        font-weight: 400;
+      }
+      .mine select {
+        width: auto;
+        flex: 0 0 auto;
+        padding: 8px;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      .chip {
+        background: #f1f1f2;
+        border-radius: 6px;
+        padding: 2px 6px;
+        font-size: 11px;
+        color: var(--mut);
+      }
+      .lnk {
+        display: block;
+        background: #fff;
+        color: var(--ink);
+        font: inherit;
+        font-weight: 700;
+        border: 0;
+        border-radius: 6px;
+        padding: 10px 12px;
+        text-decoration: none;
+        margin-top: 8px;
+        cursor: pointer;
+        text-align: center;
+      }
+      nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        display: flex;
+        justify-content: space-around;
+        border-top: 1px solid #ddd;
+        padding: 6px 0 calc(6px + env(safe-area-inset-bottom, 0px));
+        z-index: 9;
+      }
+      nav button {
+        background: none;
+        border: 0;
+        font: inherit;
+        font-size: 12px;
+        color: var(--mut);
+        display: grid;
+        justify-items: center;
+        gap: 2px;
+        cursor: pointer;
+        min-width: 64px;
+      }
+      nav button b {
+        font-size: 21px;
+        font-weight: 400;
+      }
+      nav button.on {
+        color: var(--or);
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo" onclick="go('home')">Macstore</div>
+      <input
+        id="q"
+        type="search"
+        placeholder="Search products"
+        aria-label="Search products"
+      />
+    </header>
+    <main id="app"></main>
+    <nav id="tabs"></nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+    <script>
+      // Paste the URL and publishable key of the Supabase project you are using (Connect button). Never the secret key.
+      const SUPABASE_URL = "https://bckjpwkccpyvekbohoyp.supabase.co";
+      const SUPABASE_KEY = "sb_publishable_cLpSBudpjWEXZxkGWOydnA_eG_xjhGt";
+
+      const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      const app = document.getElementById("app");
+      const CATS = [
+        ["All", "🏠"],
+        ["Fashion", "👕"],
+        ["Phones", "📱"],
+        ["Electronics", "🔌"],
+        ["Home", "🛋️"],
+        ["Beauty", "💄"],
+        ["Food", "🍲"],
+        ["Other", "🛍️"],
+      ];
+      const PAGE = 20;
+      let user = null,
+        profile = null,
+        mode = "login",
+        view = "home",
+        st = { q: "", cat: "All", from: 0, done: false, busy: false },
+        io = null;
+
+      const esc = (s) =>
+        String(s ?? "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      const money = (n) => "GH₵ " + Number(n).toFixed(2);
+      const chips = (d) =>
+        Object.entries(d || {})
+          .map(([k, v]) => `<span class="chip">${esc(k)}: ${esc(v)}</span>`)
+          .join("");
+      const card = (
+        p,
+      ) => `<div class="card">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.title)}" loading="lazy" decoding="async">` : '<div class="ph">🛍️</div>'}
+ <div class="b"><h3>${esc(p.title)}</h3><div class="chips">${chips(p.details)}</div><div class="price">${money(p.price)}</div>
+ <div class="row"><button class="act sv" aria-label="Save" onclick="save('${p.id}')">♥️</button><button class="act" onclick="order('${p.id}','${p.seller_id}',${p.price})">Order</button></div></div></div>`;
+
+      function tabs() {
+        const t = [["home", "🏠", "Home"]];
+        if (user) t.push(["saved", "♥️", "Saved"]);
+        if (profile && ["seller", "admin"].includes(profile.role))
+          t.push(["sell", "🏪", "My shop"]);
+        if (profile && profile.role === "promoter")
+          t.push(["promote", "📣", "Promote"]);
+        if (profile && profile.role === "admin")
+          t.push(["admin", "🛡️", "Admin"]);
+        t.push(["account", "👤", user ? "Account" : "Log in"]);
+        document.getElementById("tabs").innerHTML = t
+          .map(
+            ([k, i, l]) =>
+              `<button class="${view === k ? "on" : ""}" onclick="go('${k}')"><b>${i}</b>${l}</button>`,
+          )
+          .join("");
+      }
+      async function setUser(u) {
+        user = u || null;
+        profile = null;
+        if (user) {
+          const { data } = await sb
+            .from("profiles")
+            .select("role,full_name")
+            .eq("id", user.id)
+            .maybeSingle();
+          profile = data;
+        }
+        tabs();
+      }
+      function go(v) {
+        view = v;
+        window.scrollTo(0, 0);
+        tabs();
+        ({ home, saved, sell, account, admin, promote })[v]();
+      }
+
+      /* HOME: categories, banner, endless grid loaded 20 at a time */
+      function home() {
+        if (io) io.disconnect();
+        app.innerHTML = `<div class="banner"><h1>Shop from sellers across Ghana</h1><p>Pay on delivery or pick up near you.</p><a class="lnk" href="seller-signup.html">🏪 Become a seller</a><button class="lnk" style="width:100%" onclick="becomePromoter()">📣 Become a promoter</button></div>
+   <div class="cats">${CATS.map(([c, i]) => `<button class="cat ${st.cat === c ? "on" : ""}" onclick="setCat('${c}')"><i>${i}</i>${c}</button>`).join("")}</div>
+   <div class="sec"><h2>${st.cat === "All" ? "Latest products" : esc(st.cat)}</h2><div id="g" class="grid"></div><div id="more" style="height:1px"></div></div>`;
+        io = new IntersectionObserver(
+          (e) => {
+            if (e[0].isIntersecting) loadMore(false);
+          },
+          { rootMargin: "400px" },
+        );
+        io.observe(document.getElementById("more"));
+        loadMore(true);
+      }
+      function setCat(c) {
+        st.cat = c;
+        home();
+      }
+      async function loadMore(reset) {
+        if (st.busy || (st.done && !reset)) return;
+        st.busy = true;
+        const g = document.getElementById("g");
+        if (reset) {
+          st.from = 0;
+          st.done = false;
+          g.innerHTML = '<div class="sk"></div>'.repeat(6);
+        }
+        let r = sb
+          .from("products")
+          .select("id,title,price,images,seller_id,details")
+          .eq("in_stock", true)
+          .order("created_at", { ascending: false })
+          .range(st.from, st.from + PAGE - 1);
+        if (st.q) r = r.ilike("title", `%${st.q}%`);
+        if (st.cat !== "All") r = r.eq("category", st.cat);
+        const { data, error } = await r;
+        if (!document.getElementById("g")) {
+          st.busy = false;
+          return;
+        }
+        if (reset) g.innerHTML = "";
+        if (error)
+          g.innerHTML = `<div class="empty err">Could not load products: ${esc(error.message)}</div>`;
+        else {
+          g.insertAdjacentHTML("beforeend", data.map(card).join(""));
+          st.from += data.length;
+          if (data.length < PAGE) st.done = true;
+          if (!g.children.length)
+            g.innerHTML =
+              '<div class="empty"><b>No products here yet</b><br>Try another category or search.</div>';
+        }
+        st.busy = false;
+      }
+      let t;
+      document.getElementById("q").addEventListener("input", (e) => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          st.q = e.target.value.trim();
+          if (view !== "home") {
+            view = "home";
+            tabs();
+          }
+          home();
+        }, 350);
+      });
+
+      /* ACCOUNT */
+      function account() {
+        if (user) {
+          app.innerHTML = `<div class="box"><h2>Hi ${esc(profile?.full_name || "there")}</h2><p>${esc(user.email)} · ${esc(profile?.role || "buyer")}</p>${profile?.role === "buyer" ? `<a class="lnk" style="background:var(--or);color:#fff" href="seller-signup.html">Apply to sell</a><button class="act g" onclick="becomePromoter()">Become a promoter</button>` : ""}<button class="act r" onclick="logout()">Log out</button></div>`;
+          return;
+        }
+        const s = mode === "signup";
+        app.innerHTML = `<div class="box"><h2>${s ? "Create your account" : "Log in"}</h2>
+   ${s ? `<input id="name" placeholder="Full name"><select id="role"><option value="buyer">I want to buy</option><option value="seller">I want to sell</option><option value="promoter">I want to promote</option></select>` : ""}
+   <input id="email" type="email" placeholder="Email" autocomplete="email"><input id="pw" type="password" placeholder="Password (6+ characters)" autocomplete="${s ? "new-password" : "current-password"}">
+   <button class="act" onclick="doAuth()">${s ? "Sign up" : "Log in"}</button>
+   <button class="act sv" style="flex:none;width:100%" onclick="mode='${s ? "login" : "signup"}';account()">${s ? "I already have an account" : "Create an account"}</button><div id="m" class="msg"></div></div>`;
+      }
+      async function doAuth() {
+        const email = document.getElementById("email").value.trim(),
+          password = document.getElementById("pw").value,
+          m = document.getElementById("m");
+        m.className = "msg";
+        m.textContent = "Please wait…";
+        let res;
+        if (mode === "signup") {
+          res = await sb.auth.signUp({
+            email,
+            password,
+            options: {
+              data: {
+                full_name: document.getElementById("name").value,
+                role: document.getElementById("role").value,
+              },
+            },
+          });
+          if (!res.error && !res.data.session) {
+            m.className = "msg ok";
+            m.textContent =
+              "Account created. Check your email to confirm, then log in.";
+            return;
+          }
+        } else res = await sb.auth.signInWithPassword({ email, password });
+        if (res.error) {
+          m.className = "msg err";
+          m.textContent = res.error.message;
+          return;
+        }
+        await setUser(res.data.user || res.data.session.user);
+        go("home");
+      }
+      async function becomePromoter() {
+        if (!user) {
+          mode = "signup";
+          return go("account");
+        }
+        if (profile && profile.role !== "buyer")
+          return go(profile.role === "promoter" ? "promote" : "account");
+        if (!confirm("Become a promoter? Your first month is free.")) return;
+        const { error } = await sb.rpc("become_promoter");
+        if (error) return alert(error.message);
+        await setUser(user);
+        go("promote");
+      }
+      async function logout() {
+        await sb.auth.signOut();
+        await setUser(null);
+        go("home");
+      }
+
+      /* SAVED + ORDER */
+      async function save(id) {
+        if (!user) return go("account");
+        const { error } = await sb
+          .from("saved_items")
+          .upsert({ user_id: user.id, product_id: id });
+        alert(error ? error.message : "Saved. Find it under Saved.");
+      }
+      async function saved() {
+        app.innerHTML =
+          '<div class="sec"><h2>Saved items</h2><div id="g" class="grid"></div></div>';
+        const { data, error } = await sb
+          .from("saved_items")
+          .select("products(id,title,price,images,seller_id,details)")
+          .eq("user_id", user.id);
+        const items = (data || []).map((r) => r.products).filter(Boolean),
+          g = document.getElementById("g");
+        g.innerHTML = error
+          ? `<div class="empty err">${esc(error.message)}</div>`
+          : items.length
+            ? items.map(card).join("")
+            : '<div class="empty">Nothing saved yet. Tap ♥️ on any product.</div>';
+      }
+      async function order(pid, sid, amount) {
+        if (!user) return go("account");
+        const addr = prompt("Delivery address (leave empty for pick-up):");
+        if (addr === null) return;
+        let ref = null;
+        try {
+          ref = localStorage.getItem("mac_ref");
+        } catch (e) {}
+        const row = {
+          buyer_id: user.id,
+          seller_id: sid,
+          product_id: pid,
+          amount,
+          payment_method: "delivery",
+          fulfilment: addr.trim() ? "delivery" : "pickup",
+          delivery_address: addr.trim() || null,
+        };
+        if (ref && ref !== user.id) row.promoter_id = ref;
+        const { data, error } = await sb
+          .from("orders")
+          .insert(row)
+          .select("payment_method")
+          .single();
+        if (error) return alert(error.message);
+        alert(
+          data.payment_method === "in_app"
+            ? "Order placed. This item is paid in the app, not on delivery. Macstore will contact you with mobile money payment details."
+            : "Order sent. You pay on delivery or pick-up.",
+        );
+      }
+
+      /* SELLER SHOP */
+      const PLANS = {
+        basic: { name: "Basic", price: 50, limit: 15 },
+        premium: { name: "Premium", price: 100, limit: 25 },
+      };
+      const formHTML =
+        () => `<div class="box"><h2>Add a product</h2><input id="t" placeholder="Product name"><textarea id="d" rows="3" placeholder="Describe it"></textarea>
+   <input id="p" type="number" min="0" step="0.01" placeholder="Price in GH₵"><select id="c">${CATS.slice(
+     1,
+   )
+     .map(([c]) => `<option>${c}</option>`)
+     .join("")}</select>
+   <input id="f" type="file" accept="image/*"><datalist id="dkeys"><option>Size</option><option>Length</option><option>Colour</option><option>Material</option><option>Weight</option></datalist><div id="dl" style="display:grid;gap:6px"></div><button type="button" class="act sv" style="flex:none;width:100%" onclick="addDetail()">+ Add detail (size, length…)</button><label style="display:flex;gap:8px;align-items:center"><input id="pe" type="checkbox" style="width:auto"> Let promoters sell this item for a commission</label><input id="cm" type="number" min="1" max="50" step="0.5" placeholder="Commission % for promoters (1 to 50)"><button class="act g" onclick="addProduct()">Add product</button><div id="m" class="msg"></div></div>`;
+      async function sell() {
+        app.innerHTML =
+          '<div id="plan"><div class="sk"></div></div><div id="shop"></div>';
+        const isAdmin = profile && profile.role === "admin",
+          pl = document.getElementById("plan"),
+          shop = document.getElementById("shop");
+        const { data: sub } = await sb
+          .from("subscriptions")
+          .select("plan,status,current_period_end")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (!sub && !isAdmin) {
+          pl.innerHTML = `<div class="box" style="max-width:none"><h2>Choose your seller plan</h2><p>Your first month is free. After that you pay monthly.</p>
+     ${Object.entries(PLANS)
+       .map(
+         ([k, P]) =>
+           `<div class="mine"><span>${P.name} · GH₵ ${P.price} a month<small>Up to ${P.limit} new listings every week</small></span><button class="act g" onclick="startPlan('${k}')">Start free month</button></div>`,
+       )
+       .join("")}</div>`;
+          return;
+        }
+        let canAdd = isAdmin;
+        if (sub) {
+          const P = PLANS[sub.plan],
+            end = new Date(sub.current_period_end),
+            active =
+              ["trial", "active"].includes(sub.status) && end > new Date();
+          const since = new Date(Date.now() - 7 * 864e5).toISOString();
+          const { count } = await sb
+            .from("products")
+            .select("*", { count: "exact", head: true })
+            .eq("seller_id", user.id)
+            .gte("created_at", since);
+          const used = count ?? 0,
+            left = Math.max(0, Math.ceil((end - Date.now()) / 864e5)),
+            other = sub.plan === "basic" ? "premium" : "basic";
+          canAdd = active && used < P.limit;
+          pl.innerHTML = `<div class="box" style="max-width:none"><h2>${P.name} plan · ${sub.status === "trial" ? "free month" : esc(sub.status)}</h2>
+     <p>${active ? `${left} day${left === 1 ? "" : "s"} left, until ${dt(end)}.` : "Your plan has ended."}</p>
+     <p><b>${used} of ${P.limit}</b> listings used in the last 7 days.${active && used >= P.limit ? " You have reached this week’s limit." : ""}</p>
+     ${active ? "" : `<p class="msg err">To keep selling, pay GH₵ ${P.price} for the next month. Online payment is coming soon. For now, pay by mobile money and Macstore will renew you.</p>`}
+     ${sub.status === "trial" ? `<button class="act sv" style="flex:none" onclick="startPlan('${other}')">Switch to ${PLANS[other].name} (GH₵ ${PLANS[other].price} a month, ${PLANS[other].limit} a week)</button>` : ""}</div>`;
+        } else pl.innerHTML = "";
+        shop.innerHTML =
+          (canAdd ? formHTML() : "") +
+          '<h2>My products</h2><div id="mine"></div>';
+        loadMine();
+      }
+      async function startPlan(p) {
+        const { error } = await sb.rpc("start_plan", { p });
+        if (error) alert(error.message);
+        else sell();
+      }
+      async function loadMine() {
+        const { data } = await sb
+          .from("products")
+          .select("id,title,price,images,in_stock")
+          .eq("seller_id", user.id)
+          .order("created_at", { ascending: false });
+        document.getElementById("mine").innerHTML =
+          (data || [])
+            .map(
+              (
+                p,
+              ) => `<div class="mine ${p.in_stock ? "" : "sold"}">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="" loading="lazy">` : ""}
+   <span>${esc(p.title)} · ${money(p.price)}</span><button class="act" onclick="toggleStock('${p.id}',${!p.in_stock})">${p.in_stock ? "Out of stock" : "Back in stock"}</button><button class="act r" onclick="delProduct('${p.id}')">Delete</button></div>`,
+            )
+            .join("") || "<p>You have not added anything yet.</p>";
+      }
+      function addDetail(k = "", v = "") {
+        const r = document.createElement("div");
+        r.className = "dr";
+        r.style.cssText = "display:flex;gap:6px";
+        r.innerHTML = `<input class="dk" list="dkeys" placeholder="e.g. Size" value="${esc(k)}"><input class="dv" placeholder="e.g. M, L, XL" value="${esc(v)}"><button type="button" class="act r" style="flex:0 0 40px" onclick="this.parentNode.remove()">✕</button>`;
+        document.getElementById("dl").appendChild(r);
+      }
+      async function addProduct() {
+        const m = document.getElementById("m"),
+          file = document.getElementById("f").files[0],
+          title = document.getElementById("t").value.trim(),
+          price = document.getElementById("p").value;
+        if (!title || !price) {
+          m.className = "msg err";
+          m.textContent = "Enter a name and a price.";
+          return;
+        }
+        const pe = document.getElementById("pe").checked,
+          cm = Number(document.getElementById("cm").value || 0);
+        if (pe && (cm < 1 || cm > 50)) {
+          m.className = "msg err";
+          m.textContent = "Enter a commission between 1% and 50%.";
+          return;
+        }
+        m.className = "msg";
+        m.textContent = "Saving…";
+        let images = [];
+        if (file) {
+          const path = `${user.id}/${Date.now()}-${file.name.replace(/[^\w.]/g, "_")}`;
+          const up = await sb.storage
+            .from("products")
+            .upload(path, file, { cacheControl: "31536000" });
+          if (up.error) {
+            m.className = "msg err";
+            m.textContent = up.error.message;
+            return;
+          }
+          images = [
+            sb.storage.from("products").getPublicUrl(path).data.publicUrl,
+          ];
+        }
+        const details = {};
+        document.querySelectorAll("#dl .dr").forEach((r) => {
+          const k = r.querySelector(".dk").value.trim(),
+            v = r.querySelector(".dv").value.trim();
+          if (k && v) details[k] = v;
+        });
+        const { error } = await sb.from("products").insert({
+          seller_id: user.id,
+          title,
+          description: document.getElementById("d").value,
+          price,
+          images,
+          details,
+          category: document.getElementById("c").value,
+          promo_enabled: pe,
+          commission_pct: pe ? cm : 0,
+        });
+        if (error) {
+          m.className = "msg err";
+          m.textContent = error.message;
+          return;
+        }
+        sell();
+      }
+      async function toggleStock(id, v) {
+        await sb.from("products").update({ in_stock: v }).eq("id", id);
+        loadMine();
+      }
+      async function delProduct(id) {
+        if (confirm("Delete this product?")) {
+          await sb.from("products").delete().eq("id", id);
+          loadMine();
+        }
+      }
+
+      /* ADMIN DASHBOARD (only works for role = admin; the database rules also enforce this) */
+      let adminTab = "overview";
+      const ADMIN_TABS = [
+        "overview",
+        "users",
+        "plans",
+        "products",
+        "orders",
+        "refunds",
+        "feedback",
+      ];
+      function admin() {
+        if (!profile || profile.role !== "admin") {
+          app.innerHTML = '<div class="box"><h2>Admins only</h2></div>';
+          return;
+        }
+        app.innerHTML = `<div class="cats" style="gap:6px">${ADMIN_TABS.map((x) => `<button class="act ${adminTab === x ? "" : "sv"}" style="flex:0 0 auto;padding:8px 14px" onclick="adminTab='${x}';admin()">${x[0].toUpperCase() + x.slice(1)}</button>`).join("")}</div><div id="ad"><div class="sk"></div></div>`;
+        ({
+          overview: adOverview,
+          users: adUsers,
+          plans: adPlans,
+          products: adProducts,
+          orders: adOrders,
+          refunds: adRefunds,
+          feedback: adFeedback,
+        })[adminTab]();
+      }
+      const adEl = () => document.getElementById("ad");
+      const dt = (d) =>
+        new Date(d).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "short",
+        });
+      const opts = (list, cur) =>
+        list
+          .map((o) => `<option ${o === cur ? "selected" : ""}>${o}</option>`)
+          .join("");
+      async function cnt(t, f) {
+        let q = sb.from(t).select("*", { count: "exact", head: true });
+        if (f) q = f(q);
+        const { count } = await q;
+        return count ?? 0;
+      }
+      async function adOverview() {
+        const [u, s, p, o, po, r, f] = await Promise.all([
+          cnt("profiles"),
+          cnt("profiles", (q) => q.eq("role", "seller")),
+          cnt("products"),
+          cnt("orders"),
+          cnt("orders", (q) => q.eq("status", "pending")),
+          cnt("refunds", (q) => q.eq("status", "open")),
+          cnt("feedback"),
+        ]);
+        const st2 = [
+          ["Users", u],
+          ["Sellers", s],
+          ["Products", p],
+          ["Orders", o],
+          ["Pending orders", po],
+          ["Open refunds", r],
+          ["Feedback messages", f],
+        ];
+        adEl().innerHTML = `<div class="stats">${st2.map(([l, n]) => `<div class="stat"><b>${n}</b>${l}</div>`).join("")}</div>`;
+      }
+
+      async function adUsers() {
+        const [pr, sv] = await Promise.all([
+          sb
+            .from("profiles")
+            .select("id,full_name,role,created_at")
+            .order("created_at", { ascending: false })
+            .limit(100),
+          sb
+            .from("seller_verification")
+            .select("user_id,full_name,shop_name,phone,email,location,status")
+            .limit(100),
+        ]);
+        const rank = { pending: 0, rejected: 1, approved: 2 };
+        const sellers = (sv.data || [])
+          .slice()
+          .sort((a, b) => (rank[a.status] ?? 0) - (rank[b.status] ?? 0));
+        const sellerHTML = sv.error
+          ? `<p class="err msg">${esc(sv.error.message)}</p>`
+          : sellers
+              .map(
+                (s) => `<div class="mine" style="align-items:flex-start">
+  <span>${esc(s.shop_name || "No shop name")} · ${esc(s.full_name || "")}
+  <small>${esc(s.phone || "")} · ${esc(s.email || "")}<br>${esc(s.location || "")}<br>Status: <b>${esc(s.status || "pending")}</b></small>
+  <div id="ph-${s.user_id}" style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap"></div></span>
+  <button class="act" onclick="viewDocs('${s.user_id}')">View photos</button>
+  <button class="act g" onclick="decide('${s.user_id}','approved')">Approve</button>
+  <button class="act r" onclick="decide('${s.user_id}','rejected')">Reject</button></div>`,
+              )
+              .join("") || "<p>No seller applications yet.</p>";
+        const usersHTML = pr.error
+          ? `<p class="err msg">${esc(pr.error.message)}</p>`
+          : (pr.data || [])
+              .map(
+                (
+                  u,
+                ) => `<div class="mine"><span>${esc(u.full_name || "No name")}<small>Joined ${dt(u.created_at)} · ${u.id.slice(0, 8)}</small></span>
+  <select aria-label="Role" onchange="setRole('${u.id}',this.value)">${opts(["buyer", "seller", "promoter", "admin"], u.role)}</select></div>`,
+              )
+              .join("");
+        adEl().innerHTML = `<h2>Seller applications</h2>${sellerHTML}<h2>All users</h2>${usersHTML}`;
+      }
+
+      async function viewDocs(id) {
+        const box = document.getElementById("ph-" + id);
+        box.textContent = "Loading…";
+        const { data: v } = await sb
+          .from("seller_verification")
+          .select("id_photo_path,selfie_path")
+          .eq("user_id", id)
+          .maybeSingle();
+        const paths = [v?.id_photo_path, v?.selfie_path].filter(Boolean);
+        if (!paths.length) {
+          box.textContent = "No photos uploaded.";
+          return;
+        }
+        const { data, error } = await sb.storage
+          .from("seller-docs")
+          .createSignedUrls(paths, 300);
+        if (error || !data) {
+          box.innerHTML = `<span class="err msg">${esc(error?.message || "Could not load photos")}</span>`;
+          return;
+        }
+        box.innerHTML = data
+          .map(
+            (d) =>
+              `<a href="${esc(d.signedUrl)}" target="_blank" rel="noopener"><img src="${esc(d.signedUrl)}" alt="Seller photo" style="width:130px;height:130px;border-radius:8px;object-fit:cover"></a>`,
+          )
+          .join("");
+      }
+
+      async function decide(id, status) {
+        if (
+          !confirm(
+            (status === "approved" ? "Approve" : "Reject") + " this seller?",
+          )
+        )
+          return;
+        const a = await sb
+          .from("seller_verification")
+          .update({ status })
+          .eq("user_id", id);
+        if (a.error) return alert(a.error.message);
+        const b =
+          status === "approved"
+            ? await sb.from("profiles").update({ role: "seller" }).eq("id", id)
+            : await sb
+                .from("profiles")
+                .update({ role: "buyer" })
+                .eq("id", id)
+                .eq("role", "seller");
+        if (b.error) return alert(b.error.message);
+        adUsers();
+      }
+
+      async function setRole(id, role) {
+        if (
+          id === user.id &&
+          role !== "admin" &&
+          !confirm("You are removing your own admin access. Continue?")
+        )
+          return adUsers();
+        const { error } = await sb
+          .from("profiles")
+          .update({ role })
+          .eq("id", id);
+        if (error) alert(error.message);
+      }
+      async function adPlans() {
+        const { data, error } = await sb
+          .from("subscriptions")
+          .select("id,plan,status,current_period_end,profiles(full_name)")
+          .order("current_period_end");
+        adEl().innerHTML = error
+          ? `<p class="err msg">${esc(error.message)}</p>`
+          : (data || [])
+              .map(
+                (
+                  x,
+                ) => `<div class="mine"><span>${esc(x.profiles?.full_name || "Seller")} · ${esc(PLANS[x.plan]?.name || x.plan)}
+   <small>${esc(x.status)} · until ${dt(x.current_period_end)}${PLANS[x.plan] || x.plan === "promoter" ? " · GH₵ " + (PLANS[x.plan]?.price ?? PROMO_PRICE) + " a month" : ""}</small></span>
+   <button class="act g" onclick="markPaid('${x.id}','${x.current_period_end}')">Mark paid</button><button class="act r" onclick="suspendPlan('${x.id}')">Suspend</button></div>`,
+              )
+              .join("") || "<p>No seller plans yet.</p>";
+      }
+      async function markPaid(id, end) {
+        const d = new Date(Math.max(Date.now(), new Date(end).getTime()));
+        d.setMonth(d.getMonth() + 1);
+        const { error } = await sb
+          .from("subscriptions")
+          .update({ status: "active", current_period_end: d.toISOString() })
+          .eq("id", id);
+        if (error) alert(error.message);
+        adPlans();
+      }
+      async function suspendPlan(id) {
+        if (confirm("Suspend this seller’s plan?")) {
+          await sb
+            .from("subscriptions")
+            .update({ status: "suspended" })
+            .eq("id", id);
+          adPlans();
+        }
+      }
+      async function adProducts() {
+        const { data, error } = await sb
+          .from("products")
+          .select("id,title,price,in_stock,images,created_at")
+          .order("created_at", { ascending: false })
+          .limit(100);
+        adEl().innerHTML = error
+          ? `<p class="err msg">${esc(error.message)}</p>`
+          : (data || [])
+              .map(
+                (
+                  p,
+                ) => `<div class="mine ${p.in_stock ? "" : "sold"}">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="" loading="lazy">` : ""}
+   <span>${esc(p.title)}<small>${money(p.price)} · ${dt(p.created_at)}</small></span><button class="act" onclick="adStock('${p.id}',${!p.in_stock})">${p.in_stock ? "Hide" : "Show"}</button><button class="act r" onclick="adDel('${p.id}')">Delete</button></div>`,
+              )
+              .join("") || "<p>No products yet.</p>";
+      }
+      async function adStock(id, v) {
+        await sb.from("products").update({ in_stock: v }).eq("id", id);
+        adProducts();
+      }
+      async function adDel(id) {
+        if (confirm("Delete this product for good?")) {
+          await sb.from("products").delete().eq("id", id);
+          adProducts();
+        }
+      }
+      async function adOrders() {
+        const { data, error } = await sb
+          .from("orders")
+          .select(
+            "id,amount,status,fulfilment,payment_method,delivery_address,created_at,commission_amount,products(title)",
+          )
+          .order("created_at", { ascending: false })
+          .limit(50);
+        adEl().innerHTML = error
+          ? `<p class="err msg">${esc(error.message)}</p>`
+          : (data || [])
+              .map(
+                (
+                  o,
+                ) => `<div class="mine"><span>${esc(o.products?.title || "Product")} · ${money(o.amount)}<small>${dt(o.created_at)} · ${esc(o.fulfilment)} · ${esc(o.payment_method)}${o.delivery_address ? " · " + esc(o.delivery_address) : ""}${o.commission_amount > 0 ? " · promoter commission " + money(o.commission_amount) : ""}</small></span>
+   <select aria-label="Order status" onchange="setStatus('orders','${o.id}',this.value)">${opts(["awaiting_payment", "paid", "pending", "confirmed", "delivered", "cancelled"], o.status)}</select></div>`,
+              )
+              .join("") || "<p>No orders yet.</p>";
+      }
+      async function adRefunds() {
+        const { data, error } = await sb
+          .from("refunds")
+          .select("id,reason,status,created_at")
+          .order("created_at", { ascending: false })
+          .limit(50);
+        adEl().innerHTML = error
+          ? `<p class="err msg">${esc(error.message)}</p>`
+          : (data || [])
+              .map(
+                (
+                  r,
+                ) => `<div class="mine"><span>${esc(r.reason || "No reason given")}<small>${dt(r.created_at)}</small></span>
+   <select aria-label="Refund status" onchange="setStatus('refunds','${r.id}',this.value)">${opts(["open", "approved", "rejected", "refunded"], r.status)}</select></div>`,
+              )
+              .join("") || "<p>No refund requests.</p>";
+      }
+      async function setStatus(table, id, status) {
+        const { error } = await sb.from(table).update({ status }).eq("id", id);
+        if (error) alert(error.message);
+      }
+      async function adFeedback() {
+        const { data, error } = await sb
+          .from("feedback")
+          .select("id,message,created_at")
+          .order("created_at", { ascending: false })
+          .limit(50);
+        adEl().innerHTML = error
+          ? `<p class="err msg">${esc(error.message)}</p>`
+          : (data || [])
+              .map(
+                (f) =>
+                  `<div class="mine"><span>${esc(f.message)}<small>${dt(f.created_at)}</small></span></div>`,
+              )
+              .join("") || "<p>No feedback yet.</p>";
+      }
+
+      /* PROMOTER HUB */
+      const PROMO_PRICE = 30;
+      const refLink = (pid) =>
+        location.origin + location.pathname + "?ref=" + user.id + "&p=" + pid;
+      async function copyLink(pid) {
+        const l = refLink(pid);
+        try {
+          await navigator.clipboard.writeText(l);
+          alert("Link copied. Share it on WhatsApp, Facebook or anywhere.");
+        } catch (e) {
+          prompt("Copy your link:", l);
+        }
+      }
+      async function promote() {
+        app.innerHTML =
+          '<div id="plan"><div class="sk"></div></div><div id="hub"></div>';
+        const pl = document.getElementById("plan"),
+          hub = document.getElementById("hub");
+        const { data: sub } = await sb
+          .from("subscriptions")
+          .select("plan,status,current_period_end")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (!sub) {
+          pl.innerHTML = `<div class="box" style="max-width:none"><h2>Become a Macstore promoter</h2><p>Share products with your own link and earn the seller’s commission on every sale. Your first month is free, then GH₵ ${PROMO_PRICE} a month.</p><button class="act g" onclick="startPlan('promoter')">Start free month</button></div>`;
+          return;
+        }
+        const end = new Date(sub.current_period_end),
+          active = ["trial", "active"].includes(sub.status) && end > new Date(),
+          left = Math.max(0, Math.ceil((end - Date.now()) / 864e5));
+        pl.innerHTML = `<div class="box" style="max-width:none"><h2>Promoter plan · ${sub.status === "trial" ? "free month" : esc(sub.status)}</h2><p>${active ? `${left} day${left === 1 ? "" : "s"} left, until ${dt(end)}.` : "Your plan has ended."}</p>${active ? "" : `<p class="msg err">To keep earning, pay GH₵ ${PROMO_PRICE} for the next month by mobile money and Macstore will renew you.</p>`}</div>`;
+        if (!active) return;
+        const [p, o] = await Promise.all([
+          sb
+            .from("products")
+            .select("id,title,price,images,commission_pct")
+            .eq("promo_enabled", true)
+            .eq("in_stock", true)
+            .order("created_at", { ascending: false })
+            .limit(100),
+          sb
+            .from("orders")
+            .select("commission_amount,status,created_at,products(title)")
+            .eq("promoter_id", user.id)
+            .order("created_at", { ascending: false })
+            .limit(30),
+        ]);
+        const ords = o.data || [],
+          sum = (f) =>
+            ords.filter(f).reduce((a, x) => a + Number(x.commission_amount), 0);
+        hub.innerHTML = `<div class="stats"><div class="stat"><b>${money(sum((x) => x.status === "delivered"))}</b>Earned (delivered)</div><div class="stat"><b>${money(sum((x) => !["delivered", "cancelled"].includes(x.status)))}</b>Pending</div></div>
+   <h2>Products you can promote</h2>${(p.data || []).map((x) => `<div class="mine">${x.images && x.images[0] ? `<img src="${esc(x.images[0])}" alt="" loading="lazy">` : ""}<span>${esc(x.title)}<small>${money(x.price)} · you earn ${money((x.price * x.commission_pct) / 100)} (${x.commission_pct}%)</small></span><button class="act" onclick="copyLink('${x.id}')">Copy my link</button></div>`).join("") || "<p>No products are open to promoters yet.</p>"}
+   <h2>Your sales</h2>${ords.map((x) => `<div class="mine"><span>${esc(x.products?.title || "Product")}<small>${dt(x.created_at)} · ${esc(x.status)}</small></span><b>${money(x.commission_amount)}</b></div>`).join("") || "<p>No sales through your links yet.</p>"}`;
+      }
+      /* Open a promoter's shared link */
+      async function shared(pid) {
+        view = "home";
+        tabs();
+        app.innerHTML = '<div class="sk"></div>';
+        const { data } = await sb
+          .from("products")
+          .select("id,title,price,images,seller_id,details")
+          .eq("id", pid)
+          .maybeSingle();
+        if (!data) return go("home");
+        app.innerHTML = `<div class="grid" style="grid-template-columns:minmax(0,420px);justify-content:center">${card(data)}</div><p style="text-align:center"><button class="act sv" style="flex:none;width:auto;padding:10px 18px" onclick="go('home')">See more products</button></p>`;
+      }
+      const UUID =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      (() => {
+        const r = new URLSearchParams(location.search).get("ref");
+        if (r && UUID.test(r)) {
+          try {
+            localStorage.setItem("mac_ref", r);
+          } catch (e) {}
+        }
+      })();
+
+      (async () => {
+        const { data } = await sb.auth.getSession();
+        await setUser(data.session?.user);
+        sb.auth.onAuthStateChange((_e, s) =>
+          setTimeout(() => setUser(s?.user), 0),
+        );
+        const sp = new URLSearchParams(location.search).get("p");
+        if (sp && UUID.test(sp)) shared(sp);
+        else go("home");
+      })();
+    </script>
+  </body>
+</html>
