@@ -742,9 +742,7 @@
           det = Object.entries(p.details || {});
         const form = out
           ? '<p class="msg err">This item is out of stock.</p>'
-          : !user
-            ? `<button class="act g" style="flex:none;width:100%" onclick="mode='login';go('account')">Log in or sign up to order</button>`
-            : `<h3 style="margin:6px 0 0">Order this item</h3>
+          : `<h3 style="margin:6px 0 0">Order this item</h3>${user ? "" : '<input id="gn" placeholder="Your full name" autocomplete="name"><input id="ge" type="email" placeholder="Email (for your payment receipt)" autocomplete="email">'}
    <input id="oph" type="tel" placeholder="Phone number" value="${esc(last?.phone || "")}" autocomplete="tel">
    <select id="of" onchange="$('oa').hidden=this.value==='pickup'"><option value="delivery">Deliver to me</option><option value="pickup">I will pick it up</option></select>
    <textarea id="oa" rows="2" placeholder="Delivery address">${esc(last?.delivery_address || "")}</textarea>
@@ -761,11 +759,12 @@
    <button class="act sv" style="flex:none;width:100%" onclick="save('${p.id}')">♥️ Save this item</button>
    ${form}</div>`;
       }
+      let GUEST_EMAIL = "";
       const PAYSTACK_KEY = "pk_live_1778086fdaa797dc6aaf8e99d6beee56a2d045cb";
       function paystackPay(amount, metadata, done) {
         PaystackPop.setup({
           key: PAYSTACK_KEY,
-          email: user.email,
+          email: user ? user.email : GUEST_EMAIL,
           amount: Math.round(amount * 100),
           currency: "GHS",
           ref: "MAC-" + crypto.randomUUID(),
@@ -787,7 +786,7 @@
       }
       function payOrder(id, amount) {
         paystackPay(amount, { type: "order", order_id: id }, () =>
-          go("orders"),
+          go(user ? "orders" : "home"),
         );
       }
       function payPlan(plan) {
@@ -801,6 +800,17 @@
           addr = $("oa").value.trim(),
           code = $("oc").value.trim().toUpperCase();
         m.className = "msg err";
+        const gname = user ? "" : $("gn").value.trim(),
+          gmail = user ? "" : $("ge").value.trim();
+        if (!user && !gname) {
+          m.textContent = "Enter your full name.";
+          return;
+        }
+        if (!user && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(gmail)) {
+          m.textContent = "Enter a valid email, like name@gmail.com.";
+          return;
+        }
+        GUEST_EMAIL = gmail;
         if (phone.replace(/\D/g, "").length < 9) {
           m.textContent = "Enter a phone number the seller can call.";
           return;
@@ -828,13 +838,15 @@
           } catch (e) {}
           if (ref && UUID.test(ref)) promoter = ref;
         }
-        if (promoter === user.id) {
+        if (user && promoter === user.id) {
           m.className = "msg err";
           m.textContent = "You cannot use your own promoter code.";
           return;
         }
         const row = {
-          buyer_id: user.id,
+          buyer_id: user ? user.id : null,
+          guest_name: user ? null : gname,
+          guest_email: user ? null : gmail,
           seller_id: sid,
           product_id: pid,
           amount,
@@ -845,11 +857,13 @@
           promo_code: code || null,
         };
         if (promoter) row.promoter_id = promoter;
-        const { data, error } = await sb
-          .from("orders")
-          .insert(row)
-          .select("id,payment_method,amount")
-          .single();
+        const { data, error } = user
+          ? await sb
+              .from("orders")
+              .insert(row)
+              .select("id,payment_method,amount")
+              .single()
+          : await sb.rpc("place_guest_order", { o: row }).single();
         if (error) {
           m.className = "msg err";
           m.textContent = error.message;
@@ -860,6 +874,10 @@
           m.textContent =
             "✓ Order placed. Complete your payment to confirm it.";
           payOrder(data.id, data.amount);
+          return;
+        }
+        if (!user) {
+          m.innerHTML = `✓ Order sent. Your order number is <b>${esc(String(data.id).slice(0, 8).toUpperCase())}</b>. Keep it. The seller will call ${esc(phone)}. You pay on delivery or pick-up.<button class="act sv" style="flex:none;width:100%;margin-top:8px" onclick="mode='signup';go('account')">Create a password to track your orders</button>`;
           return;
         }
         m.textContent = "✓ Order sent. You pay on delivery or pick-up.";
@@ -913,6 +931,7 @@
    <select id="rr"><option value="5">★★★★★ Excellent</option><option value="4">★★★★ Good</option><option value="3">★★★ Okay</option><option value="2">★★ Poor</option><option value="1">★ Bad</option></select>
    <textarea id="rm" rows="3" placeholder="Write your review or feedback"></textarea>
    <button class="act g" onclick="sendReview()">Send review</button><div id="rmsg" class="msg"></div></div>`;
+          if (["seller", "promoter"].includes(profile?.role)) payoutBox();
           return;
         }
         const s = mode === "signup";
@@ -965,20 +984,49 @@
           if (res.error) return fail(authMsg(res.error));
           if (res.data.user && (res.data.user.identities || []).length === 0)
             return fail("This email already has an account. Log in instead.");
-          if (!res.data.session) {
-            m.className = "msg ok";
-            m.textContent = `✓ Account created. We sent a confirmation link to ${email}. Open it, then come back and log in.`;
-            return;
-          }
+          if (!res.data.session) return codeBox(email);
         } else {
           res = await sb.auth.signInWithPassword({ email, password });
-          if (res.error) return fail(authMsg(res.error));
+          if (res.error) {
+            if (
+              (res.error.message || "").toLowerCase().includes("not confirmed")
+            ) {
+              await sb.auth.resend({ type: "signup", email });
+              return codeBox(email);
+            }
+            return fail(authMsg(res.error));
+          }
         }
         await setUser(res.data.user || res.data.session.user);
         m.className = "msg ok";
         m.textContent = `✓ ${mode === "signup" ? "Account created" : "Welcome back"}, ${profile?.full_name || "friend"}!`;
         await new Promise((r) => setTimeout(r, 900));
         go(profile?.role === "promoter" ? "promote" : "home");
+      }
+      function codeBox(email) {
+        app.innerHTML = `<div class="box"><h2>Enter your code</h2><p style="margin:0">We sent a code to ${esc(email)}. Type it here to confirm your account.</p><input id="cd" inputmode="numeric" maxlength="8" placeholder="Code from your email" autocomplete="one-time-code"><button class="act" onclick="verifyCode('${esc(email)}')">Confirm and log in</button><button class="act sv" style="flex:none;width:100%" onclick="resendCode('${esc(email)}')">Send a new code</button><div id="m" class="msg" role="status"></div></div>`;
+      }
+      async function verifyCode(email) {
+        const m = $("m"),
+          { data, error } = await sb.auth.verifyOtp({
+            email,
+            token: $("cd").value.trim(),
+            type: "signup",
+          });
+        if (error) {
+          m.className = "msg err";
+          m.textContent =
+            "That code is wrong or has expired. Check it, or send a new one.";
+          return;
+        }
+        await setUser(data.user);
+        go(profile?.role === "promoter" ? "promote" : "home");
+      }
+      async function resendCode(email) {
+        const { error } = await sb.auth.resend({ type: "signup", email }),
+          m = $("m");
+        m.className = error ? "msg err" : "msg ok";
+        m.textContent = error ? authMsg(error) : "✓ A new code is on its way.";
       }
       async function becomePromoter() {
         if (!user) {
@@ -992,6 +1040,49 @@
         if (error) return alert(error.message);
         await setUser(user);
         go("promote");
+      }
+      async function payoutBox() {
+        const [d, w] = await Promise.all([
+          sb
+            .from("payout_details")
+            .select("momo_number,network,account_name")
+            .eq("user_id", user.id)
+            .maybeSingle(),
+          sb
+            .from("app_settings")
+            .select("value")
+            .eq("key", "admin_whatsapp")
+            .maybeSingle(),
+        ]);
+        const v = d.data || {},
+          wa = (w.data?.value || "").replace(/\D/g, "").replace(/^0/, "233");
+        app.insertAdjacentHTML(
+          "beforeend",
+          `<div class="box"><h2>Where should we pay you?</h2><p style="margin:0;color:var(--mut)">Only you and the Macstore admin can see this.</p><input id="pn" type="tel" placeholder="MoMo number" value="${esc(v.momo_number || "")}"><select id="pk">${["MTN", "Telecel", "AirtelTigo"].map((n) => `<option ${n === v.network ? "selected" : ""}>${n}</option>`).join("")}</select><input id="pa" placeholder="Name on the MoMo account" value="${esc(v.account_name || "")}"><button class="act g" onclick="savePayout()">Save payout details</button><div id="pm" class="msg"></div></div>${wa ? `<a class="lnk" style="background:#25d366;color:#fff" href="https://wa.me/${wa}" target="_blank" rel="noopener">💬 Chat with the admin on WhatsApp</a>` : ""}`,
+        );
+      }
+      async function savePayout() {
+        const m = $("pm"),
+          momo = $("pn").value.replace(/\s/g, ""),
+          name = $("pa").value.trim();
+        if (!/^0\d{9}$/.test(momo) || !name) {
+          m.className = "msg err";
+          m.textContent =
+            "Enter a 10-digit MoMo number starting with 0, and the account name.";
+          return;
+        }
+        const { error } = await sb
+          .from("payout_details")
+          .upsert({
+            user_id: user.id,
+            momo_number: momo,
+            network: $("pk").value,
+            account_name: name,
+          });
+        m.className = error ? "msg err" : "msg ok";
+        m.textContent = error
+          ? error.message
+          : "✓ Saved. You will be paid to this number.";
       }
       async function sendReview() {
         const m = $("rmsg"),
@@ -1076,7 +1167,7 @@
      )
      .join("")}</select>
    <label style="font-size:13px;color:var(--mut)">${p.id ? "Photos (choose new ones only to replace the old photos, up to 4)" : "Photos (up to 4)"}</label>
-   <input id="f" type="file" accept="image/*" multiple><datalist id="dkeys"><option>Size</option><option>Length</option><option>Colour</option><option>Material</option><option>Weight</option></datalist><div id="dl" style="display:grid;gap:6px"></div><button type="button" class="act sv" style="flex:none;width:100%" onclick="addDetail()">+ Add detail (size, length…)</button><label style="display:flex;gap:8px;align-items:center"><input id="pe" type="checkbox" style="width:auto" ${p.promo_enabled ? "checked" : ""}> Let promoters sell this item for a commission</label><input id="cm" type="number" min="1" max="50" step="0.5" placeholder="Commission % for promoters (1 to 50)" value="${p.commission_pct || ""}"><button class="act g" onclick="saveProduct()">${p.id ? "Save changes" : "Add product"}</button>${p.id ? '<button class="act sv" style="flex:none;width:100%" onclick="sell()">Cancel</button>' : ""}<div id="m" class="msg"></div></div>`;
+   <input id="f" type="file" accept="image/*" multiple><datalist id="dkeys"><option>Size</option><option>Length</option><option>Colour</option><option>Material</option><option>Weight</option></datalist><div id="dl" style="display:grid;gap:6px"></div><button type="button" class="act sv" style="flex:none;width:100%" onclick="addDetail()">+ Add detail (size, length…)</button><label style="display:flex;gap:8px;align-items:center"><input id="pe" type="checkbox" style="width:auto" ${p.promo_enabled ? "checked" : ""}> Let promoters sell this item for a commission</label><input id="cm" type="number" min="2" max="30" step="0.5" placeholder="Commission % for promoters (2 to 30)" value="${p.commission_pct || ""}"><button class="act g" onclick="saveProduct()">${p.id ? "Save changes" : "Add product"}</button>${p.id ? '<button class="act sv" style="flex:none;width:100%" onclick="sell()">Cancel</button>' : ""}<div id="m" class="msg"></div></div>`;
       }
       async function sell() {
         EDIT = null;
@@ -1190,9 +1281,9 @@
         }
         const pe = $("pe").checked,
           cm = Number($("cm").value || 0);
-        if (pe && (cm < 1 || cm > 50)) {
+        if (pe && (cm < 2 || cm > 30)) {
           m.className = "msg err";
-          m.textContent = "Enter a commission between 1% and 50%.";
+          m.textContent = "Enter a commission between 2% and 30%.";
           return;
         }
         m.className = "msg";
@@ -1281,6 +1372,7 @@
         "orders",
         "refunds",
         "feedback",
+        "payouts",
       ];
       function admin() {
         if (!profile || profile.role !== "admin") {
@@ -1296,6 +1388,7 @@
           orders: adOrders,
           refunds: adRefunds,
           feedback: adFeedback,
+          payouts: adPayouts,
         })[adminTab]();
       }
       const adEl = () => $("ad");
@@ -1514,20 +1607,115 @@
         const { data, error } = await sb
           .from("orders")
           .select(
-            "id,amount,status,fulfilment,payment_method,delivery_address,phone,promo_code,created_at,commission_amount,products(title)",
+            "id,amount,status,fulfilment,payment_method,delivery_address,phone,promo_code,promoter_id,guest_name,created_at,commission_amount,products(title)",
           )
           .order("created_at", { ascending: false })
           .limit(50);
+        const names = {},
+          pids = [
+            ...new Set((data || []).map((o) => o.promoter_id).filter(Boolean)),
+          ];
+        if (pids.length) {
+          const { data: pp } = await sb
+            .from("profiles")
+            .select("id,full_name")
+            .in("id", pids);
+          (pp || []).forEach((p) => (names[p.id] = p.full_name));
+        }
         adEl().innerHTML = error
           ? `<p class="err msg">${esc(error.message)}</p>`
           : (data || [])
               .map(
                 (
                   o,
-                ) => `<div class="mine"><span>${esc(o.products?.title || "Product")} · ${money(o.amount)}<small>${dt(o.created_at)} · ${esc(o.fulfilment)} · ${esc(o.payment_method)}${o.delivery_address ? " · " + esc(o.delivery_address) : ""}${o.phone ? " · " + esc(o.phone) : ""}${o.promo_code ? " · code " + esc(o.promo_code) : ""}${o.commission_amount > 0 ? " · promoter commission " + money(o.commission_amount) : ""}</small></span>
+                ) => `<div class="mine"><span>${esc(o.products?.title || "Product")} · ${money(o.amount)}<small>${dt(o.created_at)} · ${esc(o.fulfilment)} · ${esc(o.payment_method)}${o.delivery_address ? " · " + esc(o.delivery_address) : ""}${o.phone ? " · " + esc(o.phone) : ""}${o.guest_name ? " · guest " + esc(o.guest_name) : ""}${o.promoter_id ? " · promoter " + esc(names[o.promoter_id] || "") + " (" + esc(o.promo_code || "") + ")" : ""}${o.commission_amount > 0 ? " · promoter commission " + money(o.commission_amount) : ""}</small></span>
    <select aria-label="Order status" onchange="setStatus('orders','${o.id}',this.value)">${opts(["awaiting_payment", "paid", "pending", "confirmed", "delivered", "cancelled"], o.status)}</select></div>`,
               )
               .join("") || "<p>No orders yet.</p>";
+      }
+      let OWED = {};
+      async function adPayouts() {
+        const [o, w] = await Promise.all([
+          sb
+            .from("orders")
+            .select(
+              "id,amount,commission_amount,seller_id,promoter_id,seller_paid,promoter_paid,payment_method",
+            )
+            .eq("status", "delivered"),
+          sb
+            .from("app_settings")
+            .select("value")
+            .eq("key", "admin_whatsapp")
+            .maybeSingle(),
+        ]);
+        OWED = {};
+        const add = (uid, role, amt, id, flag) => {
+          if (!uid || amt <= 0) return;
+          const k = role + uid;
+          OWED[k] = OWED[k] || { uid, role, amt: 0, ids: [], flag };
+          OWED[k].amt += amt;
+          OWED[k].ids.push(id);
+        };
+        (o.data || []).forEach((r) => {
+          const c = Number(r.commission_amount || 0);
+          if (r.payment_method === "in_app" && !r.seller_paid)
+            add(
+              r.seller_id,
+              "seller",
+              Number(r.amount) - c,
+              r.id,
+              "seller_paid",
+            );
+          if (r.promoter_id && !r.promoter_paid)
+            add(r.promoter_id, "promoter", c, r.id, "promoter_paid");
+        });
+        const list = Object.entries(OWED),
+          ids = [...new Set(list.map(([, x]) => x.uid))],
+          [pd, pf] = ids.length
+            ? await Promise.all([
+                sb.from("payout_details").select("*").in("user_id", ids),
+                sb.from("profiles").select("id,full_name").in("id", ids),
+              ])
+            : [{ data: [] }, { data: [] }];
+        const bank = Object.fromEntries(
+            (pd.data || []).map((x) => [x.user_id, x]),
+          ),
+          nm = Object.fromEntries(
+            (pf.data || []).map((x) => [x.id, x.full_name]),
+          );
+        adEl().innerHTML = `<div class="box" style="max-width:none"><h2>Your WhatsApp number</h2><p style="margin:0;color:var(--mut)">Approved sellers and promoters see a chat button with this number.</p><input id="aw" type="tel" placeholder="e.g. 0241234567" value="${esc(w.data?.value || "")}"><button class="act g" onclick="saveWa()">Save number</button><div id="aws" class="msg"></div></div>
+   <h2>Money to pay out</h2><p style="margin:0 0 8px;color:var(--mut)">Delivered orders only. Sellers are listed for in-app payments. Cash-on-delivery sales are already with the seller.</p>
+   ${
+     list
+       .map(([k, x]) => {
+         const b = bank[x.uid];
+         return `<div class="mine"><span>${esc(nm[x.uid] || "User")} · ${x.role}<small><b>${money(x.amt)}</b> · ${b ? esc(b.network) + " " + esc(b.momo_number) + " (" + esc(b.account_name) + ")" : "No MoMo number added yet"}</small></span>${b ? `<button class="act g" onclick="markPaid('${k}')">Mark as paid</button>` : ""}</div>`;
+       })
+       .join("") || "<p>Nothing to pay out right now.</p>"
+   }`;
+      }
+      async function saveWa() {
+        const { error } = await sb
+          .from("app_settings")
+          .upsert({ key: "admin_whatsapp", value: $("aw").value.trim() });
+        $("aws").className = error ? "msg err" : "msg ok";
+        $("aws").textContent = error ? error.message : "✓ Saved.";
+      }
+      async function markPaid(k) {
+        const x = OWED[k];
+        if (
+          !x ||
+          !confirm(
+            `Mark ${money(x.amt)} as paid? Do this only after you have sent the MoMo payment.`,
+          )
+        )
+          return;
+        const { error } = await sb
+          .from("orders")
+          .update({ [x.flag]: true })
+          .in("id", x.ids);
+        if (error) return alert(error.message);
+        adPayouts();
       }
       async function adRefunds() {
         const { data, error } = await sb
