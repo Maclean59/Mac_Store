@@ -7,6 +7,13 @@
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <title>Macstore</title>
+    <meta name="theme-color" content="#f68b1e" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="icon-192.png" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Macstore" />
     <style>
       :root {
         --or: #f68b1e;
@@ -38,6 +45,7 @@
         top: 0;
         z-index: 5;
         padding: 10px 12px;
+        padding-top: calc(10px + env(safe-area-inset-top, 0px));
         display: flex;
         gap: 10px;
         align-items: center;
@@ -331,6 +339,7 @@
         padding: 2px 6px;
         font-size: 11px;
         color: var(--mut);
+        align-self: flex-start;
       }
       .lnk {
         display: block;
@@ -345,6 +354,73 @@
         margin-top: 8px;
         cursor: pointer;
         text-align: center;
+      }
+      .rvs {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        scrollbar-width: none;
+      }
+      .rv {
+        flex: 0 0 230px;
+        background: #fff;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 1px 3px #0002;
+      }
+      .rv .st {
+        color: var(--or);
+        letter-spacing: 1px;
+      }
+      .rv p {
+        margin: 4px 0;
+      }
+      .rv small {
+        color: var(--mut);
+      }
+      .code {
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        color: var(--or);
+        text-align: center;
+        background: #fff6ec;
+        border-radius: 10px;
+        padding: 10px;
+      }
+      .gal img.big {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: contain;
+        background: #eee;
+        border-radius: 10px;
+      }
+      .thumbs {
+        display: flex;
+        gap: 6px;
+        margin-top: 6px;
+        overflow-x: auto;
+      }
+      .thumbs img {
+        width: 56px;
+        height: 56px;
+        object-fit: cover;
+        border-radius: 6px;
+        cursor: pointer;
+        border: 2px solid transparent;
+      }
+      table.dt {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      table.dt td {
+        padding: 6px 4px;
+        border-bottom: 1px solid #eee;
+      }
+      table.dt td:first-child {
+        color: var(--mut);
+        width: 40%;
       }
       nav {
         position: fixed;
@@ -362,13 +438,14 @@
         background: none;
         border: 0;
         font: inherit;
-        font-size: 12px;
+        font-size: 11px;
         color: var(--mut);
         display: grid;
         justify-items: center;
         gap: 2px;
         cursor: pointer;
-        min-width: 64px;
+        flex: 1;
+        min-width: 0;
       }
       nav button b {
         font-size: 21px;
@@ -394,6 +471,7 @@
     <nav id="tabs"></nav>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
     <script>
       // Paste the URL and publishable key of the Supabase project you are using (Connect button). Never the secret key.
       const SUPABASE_URL = "https://bckjpwkccpyvekbohoyp.supabase.co";
@@ -401,6 +479,7 @@
 
       const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       const app = document.getElementById("app");
+      const $ = (id) => document.getElementById(id);
       const CATS = [
         ["All", "🏠"],
         ["Fashion", "👕"],
@@ -416,6 +495,10 @@
         profile = null,
         mode = "login",
         view = "home",
+        prev = "home",
+        EDIT = null,
+        CAN_ADD = false,
+        deferredPrompt = null,
         st = { q: "", cat: "All", from: 0, done: false, busy: false },
         io = null;
 
@@ -432,19 +515,36 @@
             })[c],
         );
       const money = (n) => "GH₵ " + Number(n).toFixed(2);
+      const stars = (n) => "★".repeat(n) + "☆".repeat(5 - n);
       const chips = (d) =>
         Object.entries(d || {})
           .map(([k, v]) => `<span class="chip">${esc(k)}: ${esc(v)}</span>`)
           .join("");
+
+      /* STOCK LEVELS: in stock, low stock, few left, out of stock */
+      const STOCK = {
+        in: ["In stock", ""],
+        low: ["Low stock", "#e8890c"],
+        few: ["Few left", "#e5252a"],
+        out: ["Out of stock", "#75757a"],
+      };
+      const badge = (p) => {
+        const s = STOCK[p.stock_level || "in"] || STOCK.in;
+        return s[1]
+          ? `<span class="chip" style="background:${s[1]};color:#fff">${s[0]}</span>`
+          : "";
+      };
       const card = (
         p,
-      ) => `<div class="card">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.title)}" loading="lazy" decoding="async">` : '<div class="ph">🛍️</div>'}
- <div class="b"><h3>${esc(p.title)}</h3><div class="chips">${chips(p.details)}</div><div class="price">${money(p.price)}</div>
- <div class="row"><button class="act sv" aria-label="Save" onclick="save('${p.id}')">♥️</button><button class="act" onclick="order('${p.id}','${p.seller_id}',${p.price})">Order</button></div></div></div>`;
+      ) => `<div class="card"><div onclick="item('${p.id}')" style="cursor:pointer">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.title)}" loading="lazy" decoding="async">` : '<div class="ph">🛍️</div>'}</div>
+ <div class="b"><h3 onclick="item('${p.id}')" style="cursor:pointer">${esc(p.title)}</h3>${badge(p)}<div class="chips">${chips(p.details)}</div><div class="price">${money(p.price)}</div>
+ <div class="row"><button class="act sv" aria-label="Save" onclick="save('${p.id}')">♥️</button><button class="act" onclick="item('${p.id}')">View</button></div></div></div>`;
+      const PSEL = "id,title,price,images,seller_id,details,stock_level";
 
       function tabs() {
         const t = [["home", "🏠", "Home"]];
         if (user) t.push(["saved", "♥️", "Saved"]);
+        if (user) t.push(["orders", "📦", "Orders"]);
         if (profile && ["seller", "admin"].includes(profile.role))
           t.push(["sell", "🏪", "My shop"]);
         if (profile && profile.role === "promoter")
@@ -452,7 +552,7 @@
         if (profile && profile.role === "admin")
           t.push(["admin", "🛡️", "Admin"]);
         t.push(["account", "👤", user ? "Account" : "Log in"]);
-        document.getElementById("tabs").innerHTML = t
+        $("tabs").innerHTML = t
           .map(
             ([k, i, l]) =>
               `<button class="${view === k ? "on" : ""}" onclick="go('${k}')"><b>${i}</b>${l}</button>`,
@@ -463,12 +563,24 @@
         user = u || null;
         profile = null;
         if (user) {
-          const { data } = await sb
-            .from("profiles")
-            .select("role,full_name")
-            .eq("id", user.id)
-            .maybeSingle();
-          profile = data;
+          const load = async (cols) =>
+            sb.from("profiles").select(cols).eq("id", user.id).maybeSingle();
+          let r = await load("role,full_name,promo_code");
+          if (r.error) r = await load("role,full_name");
+          profile = r.data;
+          // Someone who signed up as a promoter is approved automatically
+          if (
+            profile &&
+            profile.role === "buyer" &&
+            user.user_metadata?.role === "promoter"
+          ) {
+            const up = await sb.rpc("become_promoter");
+            if (!up.error) {
+              r = await load("role,full_name,promo_code");
+              if (r.error) r = await load("role,full_name");
+              profile = r.data;
+            }
+          }
         }
         tabs();
       }
@@ -476,13 +588,43 @@
         view = v;
         window.scrollTo(0, 0);
         tabs();
-        ({ home, saved, sell, account, admin, promote })[v]();
+        ({ home, saved, orders, sell, account, admin, promote })[v]();
       }
+      const back = () => go(prev || "home");
 
-      /* HOME: categories, banner, endless grid loaded 20 at a time */
+      /* INSTALL ON HOME SCREEN */
+      const standalone = () =>
+        matchMedia("(display-mode: standalone)").matches ||
+        navigator.standalone;
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+      });
+      window.addEventListener("appinstalled", () => {
+        deferredPrompt = null;
+        if (view === "home") home();
+      });
+      async function installApp() {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          await deferredPrompt.userChoice;
+          deferredPrompt = null;
+          return;
+        }
+        alert(
+          "To put Macstore on your home screen:\n\niPhone (Safari): tap the Share button, then Add to Home Screen.\n\nAndroid (Chrome): tap the ⋮ menu, then Install app or Add to Home screen.",
+        );
+      }
+      if ("serviceWorker" in navigator)
+        window.addEventListener("load", () =>
+          navigator.serviceWorker.register("sw.js").catch(() => {}),
+        );
+
+      /* HOME: banner, reviews, categories, endless grid loaded 20 at a time */
       function home() {
         if (io) io.disconnect();
-        app.innerHTML = `<div class="banner"><h1>Shop from sellers across Ghana</h1><p>Pay on delivery or pick up near you.</p><a class="lnk" href="seller-signup.html">🏪 Become a seller</a><button class="lnk" style="width:100%" onclick="becomePromoter()">📣 Become a promoter</button></div>
+        app.innerHTML = `<div class="banner"><h1>Shop from sellers across Ghana</h1><p>Pay on delivery or pick up near you.</p><a class="lnk" href="seller-signup.html">🏪 Become a seller</a><button class="lnk" style="width:100%" onclick="becomePromoter()">📣 Become a promoter</button>${standalone() ? "" : '<button class="lnk" style="width:100%" onclick="installApp()">📲 Install the app</button>'}</div>
+   <div id="rev"></div>
    <div class="cats">${CATS.map(([c, i]) => `<button class="cat ${st.cat === c ? "on" : ""}" onclick="setCat('${c}')"><i>${i}</i>${c}</button>`).join("")}</div>
    <div class="sec"><h2>${st.cat === "All" ? "Latest products" : esc(st.cat)}</h2><div id="g" class="grid"></div><div id="more" style="height:1px"></div></div>`;
         io = new IntersectionObserver(
@@ -491,8 +633,25 @@
           },
           { rootMargin: "400px" },
         );
-        io.observe(document.getElementById("more"));
+        io.observe($("more"));
         loadMore(true);
+        loadReviews();
+      }
+      async function loadReviews() {
+        const { data } = await sb
+          .from("feedback")
+          .select("name,rating,message")
+          .eq("published", true)
+          .order("created_at", { ascending: false })
+          .limit(8);
+        const box = $("rev");
+        if (!box || !data || !data.length) return;
+        box.innerHTML = `<div class="sec" style="margin-bottom:10px"><h2>What buyers say</h2><div class="rvs">${data
+          .map(
+            (r) =>
+              `<div class="rv">${r.rating ? `<div class="st">${stars(r.rating)}</div>` : ""}<p>${esc(r.message)}</p><small>${esc(r.name || "Macstore buyer")}</small></div>`,
+          )
+          .join("")}</div></div>`;
       }
       function setCat(c) {
         st.cat = c;
@@ -501,7 +660,7 @@
       async function loadMore(reset) {
         if (st.busy || (st.done && !reset)) return;
         st.busy = true;
-        const g = document.getElementById("g");
+        const g = $("g");
         if (reset) {
           st.from = 0;
           st.done = false;
@@ -509,14 +668,14 @@
         }
         let r = sb
           .from("products")
-          .select("id,title,price,images,seller_id,details")
+          .select(PSEL)
           .eq("in_stock", true)
           .order("created_at", { ascending: false })
           .range(st.from, st.from + PAGE - 1);
         if (st.q) r = r.ilike("title", `%${st.q}%`);
         if (st.cat !== "All") r = r.eq("category", st.cat);
         const { data, error } = await r;
-        if (!document.getElementById("g")) {
+        if (!$("g")) {
           st.busy = false;
           return;
         }
@@ -534,7 +693,7 @@
         st.busy = false;
       }
       let t;
-      document.getElementById("q").addEventListener("input", (e) => {
+      $("q").addEventListener("input", (e) => {
         clearTimeout(t);
         t = setTimeout(() => {
           st.q = e.target.value.trim();
@@ -546,51 +705,280 @@
         }, 350);
       });
 
+      /* FULL VIEW OF ONE ITEM + ORDER FORM */
+      async function item(id) {
+        if (view !== "item") prev = view;
+        view = "item";
+        tabs();
+        window.scrollTo(0, 0);
+        app.innerHTML = '<div class="sk"></div>';
+        const { data: p, error } = await sb
+          .from("products")
+          .select(
+            "id,title,description,price,images,seller_id,details,stock_level,category",
+          )
+          .eq("id", id)
+          .maybeSingle();
+        if (error || !p) {
+          app.innerHTML = `<div class="box"><button class="act sv" style="flex:none;width:auto;justify-self:start" onclick="back()">← Back</button><p class="msg err">${esc(error?.message || "This item is no longer available.")}</p></div>`;
+          return;
+        }
+        let last = null,
+          code = "";
+        if (user) {
+          const r = await sb
+            .from("orders")
+            .select("phone,delivery_address")
+            .eq("buyer_id", user.id)
+            .order("created_at", { ascending: false })
+            .limit(1);
+          last = r.data && r.data[0];
+        }
+        try {
+          code = localStorage.getItem("mac_code") || "";
+        } catch (e) {}
+        const imgs = p.images || [],
+          out = p.stock_level === "out",
+          det = Object.entries(p.details || {});
+        const form = out
+          ? '<p class="msg err">This item is out of stock.</p>'
+          : !user
+            ? `<button class="act g" style="flex:none;width:100%" onclick="mode='login';go('account')">Log in or sign up to order</button>`
+            : `<h3 style="margin:6px 0 0">Order this item</h3>
+   <input id="oph" type="tel" placeholder="Phone number" value="${esc(last?.phone || "")}" autocomplete="tel">
+   <select id="of" onchange="$('oa').hidden=this.value==='pickup'"><option value="delivery">Deliver to me</option><option value="pickup">I will pick it up</option></select>
+   <textarea id="oa" rows="2" placeholder="Delivery address">${esc(last?.delivery_address || "")}</textarea>
+   <input id="oc" placeholder="Promoter code (optional)" value="${esc(code)}" autocapitalize="characters">
+   <button class="act g" style="flex:none;width:100%" onclick="placeOrder('${p.id}','${p.seller_id}',${p.price})">Place order · ${money(p.price)}</button><div id="om" class="msg"></div>`;
+        app.innerHTML = `<div class="box" style="max-width:640px">
+   <button class="act sv" style="flex:none;width:auto;justify-self:start" onclick="back()">← Back</button>
+   <div class="gal">${imgs[0] ? `<img id="big" class="big" src="${esc(imgs[0])}" alt="${esc(p.title)}">` : '<div class="ph" style="aspect-ratio:1;border-radius:10px">🛍️</div>'}
+   ${imgs.length > 1 ? `<div class="thumbs">${imgs.map((u) => `<img src="${esc(u)}" alt="" onclick="$('big').src=this.src">`).join("")}</div>` : ""}</div>
+   <h2>${esc(p.title)}</h2><div class="price" style="font-size:22px">${money(p.price)}</div>${badge(p)}
+   ${p.description ? `<p style="white-space:pre-wrap;margin:0">${esc(p.description)}</p>` : ""}
+   ${det.length ? `<table class="dt">${det.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join("")}</table>` : ""}
+   ${p.category ? `<small style="color:var(--mut)">Category: ${esc(p.category)}</small>` : ""}
+   <button class="act sv" style="flex:none;width:100%" onclick="save('${p.id}')">♥️ Save this item</button>
+   ${form}</div>`;
+      }
+      const PAYSTACK_KEY = "pk_live_1778086fdaa797dc6aaf8e99d6beee56a2d045cb";
+      function paystackPay(amount, metadata, done) {
+        PaystackPop.setup({
+          key: PAYSTACK_KEY,
+          email: user.email,
+          amount: Math.round(amount * 100),
+          currency: "GHS",
+          ref: "MAC-" + crypto.randomUUID(),
+          metadata,
+          callback: (r) => {
+            sb.functions
+              .invoke("paystack-verify", { body: { reference: r.reference } })
+              .then(({ error }) => {
+                if (error)
+                  alert(
+                    "We got your payment but could not confirm it yet. Send Macstore this reference: " +
+                      r.reference,
+                  );
+                else done();
+              });
+          },
+          onClose: () => {},
+        }).openIframe();
+      }
+      function payOrder(id, amount) {
+        paystackPay(amount, { type: "order", order_id: id }, () =>
+          go("orders"),
+        );
+      }
+      function payPlan(plan) {
+        const price = plan === "promoter" ? PROMO_PRICE : PLANS[plan].price;
+        paystackPay(price, { type: "plan", plan }, () => go(view));
+      }
+      async function placeOrder(pid, sid, amount) {
+        const m = $("om"),
+          phone = $("oph").value.trim(),
+          ful = $("of").value,
+          addr = $("oa").value.trim(),
+          code = $("oc").value.trim().toUpperCase();
+        m.className = "msg err";
+        if (phone.replace(/\D/g, "").length < 9) {
+          m.textContent = "Enter a phone number the seller can call.";
+          return;
+        }
+        if (ful === "delivery" && !addr) {
+          m.textContent = "Enter your delivery address, or choose pick-up.";
+          return;
+        }
+        m.className = "msg";
+        m.textContent = "Placing your order…";
+        let promoter = null;
+        if (code) {
+          const r = await sb.rpc("promoter_by_code", { c: code });
+          if (r.error || !r.data) {
+            m.className = "msg err";
+            m.textContent =
+              "That promoter code was not found. Check it, or clear the box.";
+            return;
+          }
+          promoter = r.data;
+        } else {
+          let ref = null;
+          try {
+            ref = localStorage.getItem("mac_ref");
+          } catch (e) {}
+          if (ref && UUID.test(ref)) promoter = ref;
+        }
+        if (promoter === user.id) {
+          m.className = "msg err";
+          m.textContent = "You cannot use your own promoter code.";
+          return;
+        }
+        const row = {
+          buyer_id: user.id,
+          seller_id: sid,
+          product_id: pid,
+          amount,
+          payment_method: "delivery",
+          fulfilment: ful,
+          delivery_address: ful === "delivery" ? addr : null,
+          phone,
+          promo_code: code || null,
+        };
+        if (promoter) row.promoter_id = promoter;
+        const { data, error } = await sb
+          .from("orders")
+          .insert(row)
+          .select("id,payment_method,amount")
+          .single();
+        if (error) {
+          m.className = "msg err";
+          m.textContent = error.message;
+          return;
+        }
+        m.className = "msg ok";
+        if (data.payment_method === "in_app") {
+          m.textContent =
+            "✓ Order placed. Complete your payment to confirm it.";
+          payOrder(data.id, data.amount);
+          return;
+        }
+        m.textContent = "✓ Order sent. You pay on delivery or pick-up.";
+        setTimeout(() => go("orders"), 1500);
+      }
+
+      /* BUYER ORDER HISTORY (orders and delivery details stay here) */
+      const OST = {
+        awaiting_payment: "Awaiting payment",
+        paid: "Paid",
+        pending: "Pending",
+        confirmed: "Confirmed",
+        delivered: "Delivered",
+        cancelled: "Cancelled",
+      };
+      async function orders() {
+        if (!user) return go("account");
+        app.innerHTML =
+          '<div class="sec"><h2>My orders</h2><div id="ol"><div class="sk"></div></div></div>';
+        const { data, error } = await sb
+          .from("orders")
+          .select(
+            "id,amount,status,fulfilment,delivery_address,phone,promo_code,created_at,products(id,title,images)",
+          )
+          .eq("buyer_id", user.id)
+          .order("created_at", { ascending: false });
+        $("ol").innerHTML = error
+          ? `<p class="msg err">${esc(error.message)}</p>`
+          : (data || [])
+              .map(
+                (
+                  o,
+                ) => `<div class="mine">${o.products?.images && o.products.images[0] ? `<img src="${esc(o.products.images[0])}" alt="" loading="lazy">` : ""}
+   <span>${esc(o.products?.title || "Item no longer listed")} · ${money(o.amount)}
+   <small>${dt(o.created_at)} · <b>${esc(OST[o.status] || o.status)}</b>${o.status === "awaiting_payment" ? ` <button class="act g" style="flex:none;padding:6px 12px" onclick="payOrder('${o.id}',${o.amount})">Pay now</button>` : ""}<br>${o.fulfilment === "pickup" ? "Pick-up" : "Delivery to: " + esc(o.delivery_address || "")}${o.phone ? "<br>Phone: " + esc(o.phone) : ""}${o.promo_code ? "<br>Promoter code: " + esc(o.promo_code) : ""}</small></span>
+   ${o.products?.id ? `<button class="act" onclick="item('${o.products.id}')">View item</button>` : ""}</div>`,
+              )
+              .join("") ||
+            '<p class="empty" style="padding:20px 0">No orders yet. Your orders and delivery details will stay here.</p>';
+      }
+
       /* ACCOUNT */
       function account() {
         if (user) {
-          app.innerHTML = `<div class="box"><h2>Hi ${esc(profile?.full_name || "there")}</h2><p>${esc(user.email)} · ${esc(profile?.role || "buyer")}</p>${profile?.role === "buyer" ? `<a class="lnk" style="background:var(--or);color:#fff" href="seller-signup.html">Apply to sell</a><button class="act g" onclick="becomePromoter()">Become a promoter</button>` : ""}<button class="act r" onclick="logout()">Log out</button></div>`;
+          const promo =
+            profile?.role === "promoter"
+              ? `<div><small style="color:var(--mut)">Your promoter code</small><div class="code">${esc(profile.promo_code || "Generating…")}</div></div>`
+              : "";
+          app.innerHTML = `<div class="box"><h2>Hi ${esc(profile?.full_name || "there")}</h2><p style="margin:0">${esc(user.email)} · ${esc(profile?.role || "buyer")}</p>${promo}${profile?.role === "buyer" ? `<a class="lnk" style="background:var(--or);color:#fff" href="seller-signup.html">Apply to sell</a><button class="act g" onclick="becomePromoter()">Become a promoter</button>` : ""}${standalone() ? "" : '<button class="act sv" style="flex:none;width:100%" onclick="installApp()">📲 Install the app</button>'}<button class="act r" onclick="logout()">Log out</button></div>
+   <div class="box"><h2>Share your review</h2><p style="margin:0;color:var(--mut)">Tell us about your experience. Only the Macstore team can read it.</p>
+   <select id="rr"><option value="5">★★★★★ Excellent</option><option value="4">★★★★ Good</option><option value="3">★★★ Okay</option><option value="2">★★ Poor</option><option value="1">★ Bad</option></select>
+   <textarea id="rm" rows="3" placeholder="Write your review or feedback"></textarea>
+   <button class="act g" onclick="sendReview()">Send review</button><div id="rmsg" class="msg"></div></div>`;
           return;
         }
         const s = mode === "signup";
         app.innerHTML = `<div class="box"><h2>${s ? "Create your account" : "Log in"}</h2>
-   ${s ? `<input id="name" placeholder="Full name"><select id="role"><option value="buyer">I want to buy</option><option value="seller">I want to sell</option><option value="promoter">I want to promote</option></select>` : ""}
+   ${s ? `<input id="name" placeholder="Full name" autocomplete="name"><select id="role"><option value="buyer">I want to buy</option><option value="promoter">I want to promote and earn commission</option></select>` : ""}
    <input id="email" type="email" placeholder="Email" autocomplete="email"><input id="pw" type="password" placeholder="Password (6+ characters)" autocomplete="${s ? "new-password" : "current-password"}">
+   ${s ? '<input id="pw2" type="password" placeholder="Type the password again" autocomplete="new-password">' : ""}
+   <label style="display:flex;gap:8px;align-items:center;font-size:13px"><input type="checkbox" style="width:auto" onchange="['pw','pw2'].forEach(i=>{if($(i))$(i).type=this.checked?'text':'password'})"> Show password</label>
    <button class="act" onclick="doAuth()">${s ? "Sign up" : "Log in"}</button>
-   <button class="act sv" style="flex:none;width:100%" onclick="mode='${s ? "login" : "signup"}';account()">${s ? "I already have an account" : "Create an account"}</button><div id="m" class="msg"></div></div>`;
+   <button class="act sv" style="flex:none;width:100%" onclick="mode='${s ? "login" : "signup"}';account()">${s ? "I already have an account" : "Create an account"}</button>
+   <a href="seller-signup.html" style="text-align:center;color:var(--or);font-weight:700;text-decoration:none">Want to sell? Apply as a seller</a><div id="m" class="msg" role="status"></div></div>`;
       }
+      const authMsg = (e) => {
+        const x = (e.message || "").toLowerCase();
+        if (x.includes("invalid login"))
+          return "Wrong email or password. Check them and try again.";
+        if (x.includes("not confirmed"))
+          return "Your email is not confirmed yet. Open the email we sent you and tap the link.";
+        if (x.includes("already registered"))
+          return "This email already has an account. Log in instead.";
+        if (x.includes("rate limit"))
+          return "Too many tries. Wait a few minutes and try again.";
+        return e.message;
+      };
       async function doAuth() {
-        const email = document.getElementById("email").value.trim(),
-          password = document.getElementById("pw").value,
-          m = document.getElementById("m");
+        const email = $("email").value.trim(),
+          password = $("pw").value,
+          m = $("m"),
+          fail = (txt) => {
+            m.className = "msg err";
+            m.textContent = txt;
+          };
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+          return fail("Enter a valid email address, like name@gmail.com.");
+        if (password.length < 6)
+          return fail("Your password must be at least 6 characters.");
         m.className = "msg";
         m.textContent = "Please wait…";
         let res;
         if (mode === "signup") {
+          const name = $("name").value.trim();
+          if (!name) return fail("Enter your full name.");
+          if (password !== $("pw2").value)
+            return fail("The two passwords do not match. Type them again.");
           res = await sb.auth.signUp({
             email,
             password,
-            options: {
-              data: {
-                full_name: document.getElementById("name").value,
-                role: document.getElementById("role").value,
-              },
-            },
+            options: { data: { full_name: name, role: $("role").value } },
           });
-          if (!res.error && !res.data.session) {
+          if (res.error) return fail(authMsg(res.error));
+          if (res.data.user && (res.data.user.identities || []).length === 0)
+            return fail("This email already has an account. Log in instead.");
+          if (!res.data.session) {
             m.className = "msg ok";
-            m.textContent =
-              "Account created. Check your email to confirm, then log in.";
+            m.textContent = `✓ Account created. We sent a confirmation link to ${email}. Open it, then come back and log in.`;
             return;
           }
-        } else res = await sb.auth.signInWithPassword({ email, password });
-        if (res.error) {
-          m.className = "msg err";
-          m.textContent = res.error.message;
-          return;
+        } else {
+          res = await sb.auth.signInWithPassword({ email, password });
+          if (res.error) return fail(authMsg(res.error));
         }
         await setUser(res.data.user || res.data.session.user);
-        go("home");
+        m.className = "msg ok";
+        m.textContent = `✓ ${mode === "signup" ? "Account created" : "Welcome back"}, ${profile?.full_name || "friend"}!`;
+        await new Promise((r) => setTimeout(r, 900));
+        go(profile?.role === "promoter" ? "promote" : "home");
       }
       async function becomePromoter() {
         if (!user) {
@@ -605,64 +993,63 @@
         await setUser(user);
         go("promote");
       }
+      async function sendReview() {
+        const m = $("rmsg"),
+          message = $("rm").value.trim();
+        if (message.length < 5) {
+          m.className = "msg err";
+          m.textContent = "Write a few words first.";
+          return;
+        }
+        m.className = "msg";
+        m.textContent = "Sending…";
+        const { error } = await sb.from("feedback").insert({
+          message,
+          rating: Number($("rr").value),
+          name: profile?.full_name || null,
+        });
+        if (error) {
+          m.className = "msg err";
+          m.textContent = error.message;
+          return;
+        }
+        $("rm").value = "";
+        m.className = "msg ok";
+        m.textContent =
+          "✓ Thank you! Your review was sent to the Macstore team.";
+      }
       async function logout() {
         await sb.auth.signOut();
         await setUser(null);
         go("home");
       }
 
-      /* SAVED + ORDER */
+      /* SAVED */
       async function save(id) {
-        if (!user) return go("account");
+        if (!user) {
+          mode = "login";
+          return go("account");
+        }
         const { error } = await sb
           .from("saved_items")
           .upsert({ user_id: user.id, product_id: id });
         alert(error ? error.message : "Saved. Find it under Saved.");
       }
       async function saved() {
+        if (!user) return go("account");
         app.innerHTML =
           '<div class="sec"><h2>Saved items</h2><div id="g" class="grid"></div></div>';
         const { data, error } = await sb
           .from("saved_items")
-          .select("products(id,title,price,images,seller_id,details)")
+          .select(`products(${PSEL})`)
           .eq("user_id", user.id);
         const items = (data || []).map((r) => r.products).filter(Boolean),
-          g = document.getElementById("g");
+          g = $("g");
         g.innerHTML = error
           ? `<div class="empty err">${esc(error.message)}</div>`
           : items.length
             ? items.map(card).join("")
             : '<div class="empty">Nothing saved yet. Tap ♥️ on any product.</div>';
-      }
-      async function order(pid, sid, amount) {
-        if (!user) return go("account");
-        const addr = prompt("Delivery address (leave empty for pick-up):");
-        if (addr === null) return;
-        let ref = null;
-        try {
-          ref = localStorage.getItem("mac_ref");
-        } catch (e) {}
-        const row = {
-          buyer_id: user.id,
-          seller_id: sid,
-          product_id: pid,
-          amount,
-          payment_method: "delivery",
-          fulfilment: addr.trim() ? "delivery" : "pickup",
-          delivery_address: addr.trim() || null,
-        };
-        if (ref && ref !== user.id) row.promoter_id = ref;
-        const { data, error } = await sb
-          .from("orders")
-          .insert(row)
-          .select("payment_method")
-          .single();
-        if (error) return alert(error.message);
-        alert(
-          data.payment_method === "in_app"
-            ? "Order placed. This item is paid in the app, not on delivery. Macstore will contact you with mobile money payment details."
-            : "Order sent. You pay on delivery or pick-up.",
-        );
       }
 
       /* SELLER SHOP */
@@ -670,20 +1057,34 @@
         basic: { name: "Basic", price: 50, limit: 15 },
         premium: { name: "Premium", price: 100, limit: 25 },
       };
-      const formHTML =
-        () => `<div class="box"><h2>Add a product</h2><input id="t" placeholder="Product name"><textarea id="d" rows="3" placeholder="Describe it"></textarea>
-   <input id="p" type="number" min="0" step="0.01" placeholder="Price in GH₵"><select id="c">${CATS.slice(
+      function formHTML(p) {
+        p = p || {};
+        const lvl = p.stock_level || "in";
+        return `<div class="box"><h2>${p.id ? "Edit product" : "Add a product"}</h2><input id="t" placeholder="Product name" value="${esc(p.title || "")}"><textarea id="d" rows="3" placeholder="Describe it">${esc(p.description || "")}</textarea>
+   <input id="p" type="number" min="0" step="0.01" placeholder="Price in GH₵" value="${p.price ?? ""}"><select id="c">${CATS.slice(
      1,
    )
-     .map(([c]) => `<option>${c}</option>`)
+     .map(
+       ([c]) => `<option ${c === p.category ? "selected" : ""}>${c}</option>`,
+     )
      .join("")}</select>
-   <input id="f" type="file" accept="image/*"><datalist id="dkeys"><option>Size</option><option>Length</option><option>Colour</option><option>Material</option><option>Weight</option></datalist><div id="dl" style="display:grid;gap:6px"></div><button type="button" class="act sv" style="flex:none;width:100%" onclick="addDetail()">+ Add detail (size, length…)</button><label style="display:flex;gap:8px;align-items:center"><input id="pe" type="checkbox" style="width:auto"> Let promoters sell this item for a commission</label><input id="cm" type="number" min="1" max="50" step="0.5" placeholder="Commission % for promoters (1 to 50)"><button class="act g" onclick="addProduct()">Add product</button><div id="m" class="msg"></div></div>`;
+   <label style="font-size:13px;color:var(--mut)">Stock level</label>
+   <select id="sl">${Object.entries(STOCK)
+     .map(
+       ([k, v]) =>
+         `<option value="${k}" ${k === lvl ? "selected" : ""}>${v[0]}</option>`,
+     )
+     .join("")}</select>
+   <label style="font-size:13px;color:var(--mut)">${p.id ? "Photos (choose new ones only to replace the old photos, up to 4)" : "Photos (up to 4)"}</label>
+   <input id="f" type="file" accept="image/*" multiple><datalist id="dkeys"><option>Size</option><option>Length</option><option>Colour</option><option>Material</option><option>Weight</option></datalist><div id="dl" style="display:grid;gap:6px"></div><button type="button" class="act sv" style="flex:none;width:100%" onclick="addDetail()">+ Add detail (size, length…)</button><label style="display:flex;gap:8px;align-items:center"><input id="pe" type="checkbox" style="width:auto" ${p.promo_enabled ? "checked" : ""}> Let promoters sell this item for a commission</label><input id="cm" type="number" min="1" max="50" step="0.5" placeholder="Commission % for promoters (1 to 50)" value="${p.commission_pct || ""}"><button class="act g" onclick="saveProduct()">${p.id ? "Save changes" : "Add product"}</button>${p.id ? '<button class="act sv" style="flex:none;width:100%" onclick="sell()">Cancel</button>' : ""}<div id="m" class="msg"></div></div>`;
+      }
       async function sell() {
+        EDIT = null;
         app.innerHTML =
           '<div id="plan"><div class="sk"></div></div><div id="shop"></div>';
         const isAdmin = profile && profile.role === "admin",
-          pl = document.getElementById("plan"),
-          shop = document.getElementById("shop");
+          pl = $("plan"),
+          shop = $("shop");
         const { data: sub } = await sb
           .from("subscriptions")
           .select("plan,status,current_period_end")
@@ -717,33 +1118,42 @@
           canAdd = active && used < P.limit;
           pl.innerHTML = `<div class="box" style="max-width:none"><h2>${P.name} plan · ${sub.status === "trial" ? "free month" : esc(sub.status)}</h2>
      <p>${active ? `${left} day${left === 1 ? "" : "s"} left, until ${dt(end)}.` : "Your plan has ended."}</p>
-     <p><b>${used} of ${P.limit}</b> listings used in the last 7 days.${active && used >= P.limit ? " You have reached this week’s limit." : ""}</p>
-     ${active ? "" : `<p class="msg err">To keep selling, pay GH₵ ${P.price} for the next month. Online payment is coming soon. For now, pay by mobile money and Macstore will renew you.</p>`}
+     <p><b>${used} of ${P.limit}</b> listings used in the last 7 days. Deleting a listing frees one place.${active && used >= P.limit ? " You have reached this week’s limit." : ""}</p>
+     ${active ? "" : `<p class="msg err">To keep selling, pay GH₵ ${P.price} for the next month. </p><button class="act g" style="flex:none" onclick="payPlan('${sub.plan}')">Pay GH₵ ${P.price} with Paystack</button>`}
      ${sub.status === "trial" ? `<button class="act sv" style="flex:none" onclick="startPlan('${other}')">Switch to ${PLANS[other].name} (GH₵ ${PLANS[other].price} a month, ${PLANS[other].limit} a week)</button>` : ""}</div>`;
         } else pl.innerHTML = "";
-        shop.innerHTML =
-          (canAdd ? formHTML() : "") +
-          '<h2>My products</h2><div id="mine"></div>';
+        CAN_ADD = canAdd;
+        shop.innerHTML = `<div id="fw">${canAdd ? formHTML() : ""}</div><h2>My products</h2><div id="mine"></div>`;
         loadMine();
       }
       async function startPlan(p) {
         const { error } = await sb.rpc("start_plan", { p });
         if (error) alert(error.message);
-        else sell();
+        else go(view);
       }
       async function loadMine() {
         const { data } = await sb
           .from("products")
-          .select("id,title,price,images,in_stock")
+          .select("id,title,price,images,stock_level")
           .eq("seller_id", user.id)
           .order("created_at", { ascending: false });
-        document.getElementById("mine").innerHTML =
+        $("mine").innerHTML =
           (data || [])
             .map(
               (
                 p,
-              ) => `<div class="mine ${p.in_stock ? "" : "sold"}">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="" loading="lazy">` : ""}
-   <span>${esc(p.title)} · ${money(p.price)}</span><button class="act" onclick="toggleStock('${p.id}',${!p.in_stock})">${p.in_stock ? "Out of stock" : "Back in stock"}</button><button class="act r" onclick="delProduct('${p.id}')">Delete</button></div>`,
+              ) => `<div class="mine ${p.stock_level === "out" ? "sold" : ""}">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="" loading="lazy">` : ""}
+   <span>${esc(p.title)} · ${money(p.price)}</span>
+   <select aria-label="Stock level" onchange="setStock('${p.id}',this.value)">${Object.entries(
+     STOCK,
+   )
+     .map(
+       ([k, v]) =>
+         `<option value="${k}" ${k === (p.stock_level || "in") ? "selected" : ""}>${v[0]}</option>`,
+     )
+     .join(
+       "",
+     )}</select><button class="act" onclick="editProduct('${p.id}')">Edit</button><button class="act r" onclick="delProduct('${p.id}')">Delete</button></div>`,
             )
             .join("") || "<p>You have not added anything yet.</p>";
       }
@@ -752,20 +1162,34 @@
         r.className = "dr";
         r.style.cssText = "display:flex;gap:6px";
         r.innerHTML = `<input class="dk" list="dkeys" placeholder="e.g. Size" value="${esc(k)}"><input class="dv" placeholder="e.g. M, L, XL" value="${esc(v)}"><button type="button" class="act r" style="flex:0 0 40px" onclick="this.parentNode.remove()">✕</button>`;
-        document.getElementById("dl").appendChild(r);
+        $("dl").appendChild(r);
       }
-      async function addProduct() {
-        const m = document.getElementById("m"),
-          file = document.getElementById("f").files[0],
-          title = document.getElementById("t").value.trim(),
-          price = document.getElementById("p").value;
+      async function editProduct(id) {
+        const { data: p, error } = await sb
+          .from("products")
+          .select(
+            "id,title,description,price,category,details,stock_level,promo_enabled,commission_pct",
+          )
+          .eq("id", id)
+          .maybeSingle();
+        if (error || !p) return alert(error?.message || "Could not open it.");
+        EDIT = id;
+        $("fw").innerHTML = formHTML(p);
+        Object.entries(p.details || {}).forEach(([k, v]) => addDetail(k, v));
+        $("fw").scrollIntoView({ behavior: "smooth" });
+      }
+      async function saveProduct() {
+        const m = $("m"),
+          files = [...$("f").files].slice(0, 4),
+          title = $("t").value.trim(),
+          price = $("p").value;
         if (!title || !price) {
           m.className = "msg err";
           m.textContent = "Enter a name and a price.";
           return;
         }
-        const pe = document.getElementById("pe").checked,
-          cm = Number(document.getElementById("cm").value || 0);
+        const pe = $("pe").checked,
+          cm = Number($("cm").value || 0);
         if (pe && (cm < 1 || cm > 50)) {
           m.className = "msg err";
           m.textContent = "Enter a commission between 1% and 50%.";
@@ -774,7 +1198,7 @@
         m.className = "msg";
         m.textContent = "Saving…";
         let images = [];
-        if (file) {
+        for (const file of files) {
           const path = `${user.id}/${Date.now()}-${file.name.replace(/[^\w.]/g, "_")}`;
           const up = await sb.storage
             .from("products")
@@ -784,9 +1208,9 @@
             m.textContent = up.error.message;
             return;
           }
-          images = [
+          images.push(
             sb.storage.from("products").getPublicUrl(path).data.publicUrl,
-          ];
+          );
         }
         const details = {};
         document.querySelectorAll("#dl .dr").forEach((r) => {
@@ -794,17 +1218,27 @@
             v = r.querySelector(".dv").value.trim();
           if (k && v) details[k] = v;
         });
-        const { error } = await sb.from("products").insert({
-          seller_id: user.id,
-          title,
-          description: document.getElementById("d").value,
-          price,
-          images,
-          details,
-          category: document.getElementById("c").value,
-          promo_enabled: pe,
-          commission_pct: pe ? cm : 0,
-        });
+        const level = $("sl").value,
+          row = {
+            title,
+            description: $("d").value,
+            price,
+            details,
+            category: $("c").value,
+            stock_level: level,
+            in_stock: level !== "out",
+            promo_enabled: pe,
+            commission_pct: pe ? cm : 0,
+          };
+        let error;
+        if (EDIT) {
+          if (images.length) row.images = images;
+          ({ error } = await sb.from("products").update(row).eq("id", EDIT));
+        } else {
+          row.images = images;
+          row.seller_id = user.id;
+          ({ error } = await sb.from("products").insert(row));
+        }
         if (error) {
           m.className = "msg err";
           m.textContent = error.message;
@@ -812,15 +1246,29 @@
         }
         sell();
       }
-      async function toggleStock(id, v) {
-        await sb.from("products").update({ in_stock: v }).eq("id", id);
+      async function setStock(id, level) {
+        const { error } = await sb
+          .from("products")
+          .update({ stock_level: level, in_stock: level !== "out" })
+          .eq("id", id);
+        if (error) alert(error.message);
         loadMine();
       }
       async function delProduct(id) {
-        if (confirm("Delete this product?")) {
-          await sb.from("products").delete().eq("id", id);
-          loadMine();
-        }
+        if (
+          !confirm(
+            "Delete this listing? You can add a corrected one afterwards.",
+          )
+        )
+          return;
+        const { error } = await sb.from("products").delete().eq("id", id);
+        if (error)
+          alert(
+            error.code === "23503"
+              ? "This item already has orders, so it cannot be deleted. Set its stock level to Out of stock instead."
+              : error.message,
+          );
+        sell();
       }
 
       /* ADMIN DASHBOARD (only works for role = admin; the database rules also enforce this) */
@@ -850,7 +1298,7 @@
           feedback: adFeedback,
         })[adminTab]();
       }
-      const adEl = () => document.getElementById("ad");
+      const adEl = () => $("ad");
       const dt = (d) =>
         new Date(d).toLocaleDateString("en-GB", {
           day: "numeric",
@@ -931,7 +1379,7 @@
       }
 
       async function viewDocs(id) {
-        const box = document.getElementById("ph-" + id);
+        const box = $("ph-" + id);
         box.textContent = "Loading…";
         const { data: v } = await sb
           .from("seller_verification")
@@ -1023,7 +1471,7 @@
         adPlans();
       }
       async function suspendPlan(id) {
-        if (confirm("Suspend this seller’s plan?")) {
+        if (confirm("Suspend this plan?")) {
           await sb
             .from("subscriptions")
             .update({ status: "suspended" })
@@ -1049,12 +1497,16 @@
               .join("") || "<p>No products yet.</p>";
       }
       async function adStock(id, v) {
-        await sb.from("products").update({ in_stock: v }).eq("id", id);
+        await sb
+          .from("products")
+          .update({ in_stock: v, stock_level: v ? "in" : "out" })
+          .eq("id", id);
         adProducts();
       }
       async function adDel(id) {
         if (confirm("Delete this product for good?")) {
-          await sb.from("products").delete().eq("id", id);
+          const { error } = await sb.from("products").delete().eq("id", id);
+          if (error) alert(error.message);
           adProducts();
         }
       }
@@ -1062,7 +1514,7 @@
         const { data, error } = await sb
           .from("orders")
           .select(
-            "id,amount,status,fulfilment,payment_method,delivery_address,created_at,commission_amount,products(title)",
+            "id,amount,status,fulfilment,payment_method,delivery_address,phone,promo_code,created_at,commission_amount,products(title)",
           )
           .order("created_at", { ascending: false })
           .limit(50);
@@ -1072,7 +1524,7 @@
               .map(
                 (
                   o,
-                ) => `<div class="mine"><span>${esc(o.products?.title || "Product")} · ${money(o.amount)}<small>${dt(o.created_at)} · ${esc(o.fulfilment)} · ${esc(o.payment_method)}${o.delivery_address ? " · " + esc(o.delivery_address) : ""}${o.commission_amount > 0 ? " · promoter commission " + money(o.commission_amount) : ""}</small></span>
+                ) => `<div class="mine"><span>${esc(o.products?.title || "Product")} · ${money(o.amount)}<small>${dt(o.created_at)} · ${esc(o.fulfilment)} · ${esc(o.payment_method)}${o.delivery_address ? " · " + esc(o.delivery_address) : ""}${o.phone ? " · " + esc(o.phone) : ""}${o.promo_code ? " · code " + esc(o.promo_code) : ""}${o.commission_amount > 0 ? " · promoter commission " + money(o.commission_amount) : ""}</small></span>
    <select aria-label="Order status" onchange="setStatus('orders','${o.id}',this.value)">${opts(["awaiting_payment", "paid", "pending", "confirmed", "delivered", "cancelled"], o.status)}</select></div>`,
               )
               .join("") || "<p>No orders yet.</p>";
@@ -1098,45 +1550,85 @@
         const { error } = await sb.from(table).update({ status }).eq("id", id);
         if (error) alert(error.message);
       }
+      /* Buyer reviews: only the admin sees them all and chooses which to publish */
       async function adFeedback() {
         const { data, error } = await sb
           .from("feedback")
-          .select("id,message,created_at")
+          .select("id,message,rating,name,published,created_at")
           .order("created_at", { ascending: false })
-          .limit(50);
+          .limit(100);
         adEl().innerHTML = error
           ? `<p class="err msg">${esc(error.message)}</p>`
           : (data || [])
               .map(
-                (f) =>
-                  `<div class="mine"><span>${esc(f.message)}<small>${dt(f.created_at)}</small></span></div>`,
+                (
+                  f,
+                ) => `<div class="mine"><span>${f.rating ? `<span style="color:var(--or)">${stars(f.rating)}</span><br>` : ""}${esc(f.message)}<small>${esc(f.name || "Buyer")} · ${dt(f.created_at)} · <b>${f.published ? "Published on the site" : "Hidden"}</b></small></span>
+   <button class="act ${f.published ? "sv" : "g"}" onclick="pubFeedback('${f.id}',${!f.published})">${f.published ? "Unpublish" : "Publish"}</button><button class="act r" onclick="delFeedback('${f.id}')">Delete</button></div>`,
               )
-              .join("") || "<p>No feedback yet.</p>";
+              .join("") || "<p>No reviews yet.</p>";
+      }
+      async function pubFeedback(id, v) {
+        const { error } = await sb
+          .from("feedback")
+          .update({ published: v })
+          .eq("id", id);
+        if (error) alert(error.message);
+        adFeedback();
+      }
+      async function delFeedback(id) {
+        if (!confirm("Delete this review?")) return;
+        const { error } = await sb.from("feedback").delete().eq("id", id);
+        if (error) alert(error.message);
+        adFeedback();
       }
 
       /* PROMOTER HUB */
       const PROMO_PRICE = 30;
       const refLink = (pid) =>
-        location.origin + location.pathname + "?ref=" + user.id + "&p=" + pid;
+        location.origin +
+        location.pathname +
+        "?code=" +
+        encodeURIComponent(profile?.promo_code || "") +
+        "&p=" +
+        pid;
       async function copyLink(pid) {
         const l = refLink(pid);
         try {
           await navigator.clipboard.writeText(l);
-          alert("Link copied. Share it on WhatsApp, Facebook or anywhere.");
+          alert(
+            "Link copied. Buyers who open it get your promoter code filled in automatically.",
+          );
         } catch (e) {
           prompt("Copy your link:", l);
+        }
+      }
+      async function copyCode() {
+        const c = profile?.promo_code || "";
+        try {
+          await navigator.clipboard.writeText(c);
+          alert("Code copied: " + c);
+        } catch (e) {
+          prompt("Copy your code:", c);
         }
       }
       async function promote() {
         app.innerHTML =
           '<div id="plan"><div class="sk"></div></div><div id="hub"></div>';
-        const pl = document.getElementById("plan"),
-          hub = document.getElementById("hub");
-        const { data: sub } = await sb
-          .from("subscriptions")
-          .select("plan,status,current_period_end")
-          .eq("user_id", user.id)
-          .maybeSingle();
+        const pl = $("plan"),
+          hub = $("hub");
+        const getSub = () =>
+          sb
+            .from("subscriptions")
+            .select("plan,status,current_period_end")
+            .eq("user_id", user.id)
+            .maybeSingle();
+        let { data: sub } = await getSub();
+        if (!sub) {
+          // Registered automatically: the free month starts by itself
+          const r = await sb.rpc("start_plan", { p: "promoter" });
+          if (!r.error) ({ data: sub } = await getSub());
+        }
         if (!sub) {
           pl.innerHTML = `<div class="box" style="max-width:none"><h2>Become a Macstore promoter</h2><p>Share products with your own link and earn the seller’s commission on every sale. Your first month is free, then GH₵ ${PROMO_PRICE} a month.</p><button class="act g" onclick="startPlan('promoter')">Start free month</button></div>`;
           return;
@@ -1144,7 +1636,11 @@
         const end = new Date(sub.current_period_end),
           active = ["trial", "active"].includes(sub.status) && end > new Date(),
           left = Math.max(0, Math.ceil((end - Date.now()) / 864e5));
-        pl.innerHTML = `<div class="box" style="max-width:none"><h2>Promoter plan · ${sub.status === "trial" ? "free month" : esc(sub.status)}</h2><p>${active ? `${left} day${left === 1 ? "" : "s"} left, until ${dt(end)}.` : "Your plan has ended."}</p>${active ? "" : `<p class="msg err">To keep earning, pay GH₵ ${PROMO_PRICE} for the next month by mobile money and Macstore will renew you.</p>`}</div>`;
+        pl.innerHTML = `<div class="box" style="max-width:none"><h2>Your promoter code</h2>
+   <div class="code">${esc(profile?.promo_code || "Generating…")}</div>
+   <button class="act" onclick="copyCode()">Copy my code</button>
+   <p style="margin:0">Tell buyers to type this code when they order. Every sale with your code is credited to you.</p>
+   <p style="margin:0"><b>Promoter plan · ${sub.status === "trial" ? "free month" : esc(sub.status)}</b><br>${active ? `${left} day${left === 1 ? "" : "s"} left, until ${dt(end)}.` : "Your plan has ended."}</p>${active ? "" : `<p class="msg err">To keep earning, pay GH₵ ${PROMO_PRICE} for the next month. Your account and code stay yours.</p><button class="act g" onclick="payPlan('promoter')">Pay GH₵ ${PROMO_PRICE} with Paystack</button>`}</div>`;
         if (!active) return;
         const [p, o] = await Promise.all([
           sb
@@ -1166,30 +1662,21 @@
             ords.filter(f).reduce((a, x) => a + Number(x.commission_amount), 0);
         hub.innerHTML = `<div class="stats"><div class="stat"><b>${money(sum((x) => x.status === "delivered"))}</b>Earned (delivered)</div><div class="stat"><b>${money(sum((x) => !["delivered", "cancelled"].includes(x.status)))}</b>Pending</div></div>
    <h2>Products you can promote</h2>${(p.data || []).map((x) => `<div class="mine">${x.images && x.images[0] ? `<img src="${esc(x.images[0])}" alt="" loading="lazy">` : ""}<span>${esc(x.title)}<small>${money(x.price)} · you earn ${money((x.price * x.commission_pct) / 100)} (${x.commission_pct}%)</small></span><button class="act" onclick="copyLink('${x.id}')">Copy my link</button></div>`).join("") || "<p>No products are open to promoters yet.</p>"}
-   <h2>Your sales</h2>${ords.map((x) => `<div class="mine"><span>${esc(x.products?.title || "Product")}<small>${dt(x.created_at)} · ${esc(x.status)}</small></span><b>${money(x.commission_amount)}</b></div>`).join("") || "<p>No sales through your links yet.</p>"}`;
+   <h2>Your sales</h2>${ords.map((x) => `<div class="mine"><span>${esc(x.products?.title || "Product")}<small>${dt(x.created_at)} · ${esc(x.status)}</small></span><b>${money(x.commission_amount)}</b></div>`).join("") || "<p>No sales through your code yet.</p>"}`;
       }
-      /* Open a promoter's shared link */
-      async function shared(pid) {
-        view = "home";
-        tabs();
-        app.innerHTML = '<div class="sk"></div>';
-        const { data } = await sb
-          .from("products")
-          .select("id,title,price,images,seller_id,details")
-          .eq("id", pid)
-          .maybeSingle();
-        if (!data) return go("home");
-        app.innerHTML = `<div class="grid" style="grid-template-columns:minmax(0,420px);justify-content:center">${card(data)}</div><p style="text-align:center"><button class="act sv" style="flex:none;width:auto;padding:10px 18px" onclick="go('home')">See more products</button></p>`;
-      }
+
+      /* Shared promoter links: ?code=PRO-XXXXX&p=<product id> (older ?ref= links still work) */
       const UUID =
         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       (() => {
-        const r = new URLSearchParams(location.search).get("ref");
-        if (r && UUID.test(r)) {
-          try {
-            localStorage.setItem("mac_ref", r);
-          } catch (e) {}
-        }
+        const q = new URLSearchParams(location.search),
+          r = q.get("ref"),
+          c = q.get("code");
+        try {
+          if (r && UUID.test(r)) localStorage.setItem("mac_ref", r);
+          if (c && /^[A-Za-z0-9-]{4,20}$/.test(c))
+            localStorage.setItem("mac_code", c.toUpperCase());
+        } catch (e) {}
       })();
 
       (async () => {
@@ -1199,7 +1686,7 @@
           setTimeout(() => setUser(s?.user), 0),
         );
         const sp = new URLSearchParams(location.search).get("p");
-        if (sp && UUID.test(sp)) shared(sp);
+        if (sp && UUID.test(sp)) item(sp);
         else go("home");
       })();
     </script>
