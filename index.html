@@ -456,9 +456,41 @@
         font-weight: 700;
       }
 
+      /* Stop the page being wider than the phone screen */
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: clip;
+      }
+      main,
+      .sec,
+      .banner,
+      .box,
+      .card {
+        min-width: 0;
+        max-width: 100%;
+      }
+      img {
+        max-width: 100%;
+      }
+      header .logo {
+        flex: none;
+      }
+      #q {
+        min-width: 0;
+        width: 100%;
+      }
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      @media (min-width: 600px) {
+        .grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
       /* Clean mobile look */
       body {
-        padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+        padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px) * 0.4);
       }
       input,
       select,
@@ -481,7 +513,7 @@
       nav {
         border-top: 0;
         box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.08);
-        padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+        padding: 4px 6px calc(4px + env(safe-area-inset-bottom, 0px) * 0.4);
       }
       nav button {
         position: relative;
@@ -802,6 +834,8 @@
           .querySelectorAll("[data-sv]")
           .forEach((b) => paintHearts(b.dataset.sv));
         tabs();
+        if (profile && ["seller", "promoter", "admin"].includes(profile.role))
+          document.querySelectorAll(".bec").forEach((e) => e.remove());
       }
       function go(v) {
         view = v;
@@ -842,10 +876,10 @@
       /* HOME: banner, reviews, categories, endless grid loaded 20 at a time */
       function home() {
         if (io) io.disconnect();
-        app.innerHTML = `<div class="banner"><h1>Shop from sellers across Ghana</h1><p>Pay on delivery or pick up near you.</p><a class="lnk" href="seller-signup.html">🏪 Become a seller</a><button class="lnk" style="width:100%" onclick="becomePromoter()">📣 Become a promoter</button>${standalone() ? "" : '<button class="lnk" style="width:100%" onclick="installApp()">📲 Install the app</button>'}</div>
+        app.innerHTML = `<div class="banner"><h1>Shop from sellers across Ghana</h1><p>Pay on delivery or pick up near you.</p>${profile && ["seller", "promoter", "admin"].includes(profile.role) ? "" : '<a class="lnk bec" href="seller-signup.html">🏪 Become a seller</a><button class="lnk bec" style="width:100%" onclick="becomePromoter()">📣 Become a promoter</button>'}${standalone() ? "" : '<button class="lnk" style="width:100%" onclick="installApp()">📲 Install the app</button>'}</div>
    <div id="rev"></div>
    <div class="cats">${CATS.map(([c, i]) => `<button class="cat ${st.cat === c ? "on" : ""}" onclick="setCat('${c}')"><i>${i}</i>${c}</button>`).join("")}</div>
-   <div class="cats" style="gap:6px;align-items:center"><input id="fmin" type="number" min="0" placeholder="Min GH₵" value="${st.min || ""}" style="width:96px" onchange="setFilter()"><input id="fmax" type="number" min="0" placeholder="Max GH₵" value="${st.max || ""}" style="width:96px" onchange="setFilter()"><select id="fsort" onchange="setFilter()" style="width:auto"><option value="new" ${st.sort === "new" || !st.sort ? "selected" : ""}>Newest</option><option value="low" ${st.sort === "low" ? "selected" : ""}>Price: low to high</option><option value="high" ${st.sort === "high" ? "selected" : ""}>Price: high to low</option></select></div>
+   <div class="cats" style="gap:8px;align-items:center;padding:8px 10px 12px"><input id="fmin" type="number" min="0" placeholder="Min GH₵" value="${st.min || ""}" style="flex:1;min-width:0;width:auto" onchange="setFilter()"><input id="fmax" type="number" min="0" placeholder="Max GH₵" value="${st.max || ""}" style="flex:1;min-width:0;width:auto" onchange="setFilter()"><select id="fsort" onchange="setFilter()" style="flex:1.5;min-width:0;width:auto"><option value="new" ${st.sort === "new" || !st.sort ? "selected" : ""}>Newest</option><option value="low" ${st.sort === "low" ? "selected" : ""}>Price: low to high</option><option value="high" ${st.sort === "high" ? "selected" : ""}>Price: high to low</option></select></div>
    <div class="sec"><h2>${st.cat === "All" ? "Latest products" : esc(st.cat)}</h2><div id="g" class="grid"></div><div id="more" style="height:1px"></div></div>`;
         io = new IntersectionObserver(
           (e) => {
