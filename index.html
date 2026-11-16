@@ -538,15 +538,107 @@
         p,
       ) => `<div class="card"><div onclick="item('${p.id}')" style="cursor:pointer">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.title)}" loading="lazy" decoding="async">` : '<div class="ph">🛍️</div>'}</div>
  <div class="b"><h3 onclick="item('${p.id}')" style="cursor:pointer">${esc(p.title)}</h3>${badge(p)}<div class="chips">${chips(p.details)}</div><div class="price">${money(p.price)}</div>
- <div class="row"><button class="act sv" aria-label="Save" onclick="save('${p.id}')">♥️</button><button class="act" onclick="item('${p.id}')">View</button></div></div></div>`;
+ <div class="row"><button class="act sv" data-sv="${p.id}" aria-label="Save or unsave" onclick="save('${p.id}')">${heart(p.id)}</button><button class="act" onclick="item('${p.id}')">View</button></div></div></div>`;
       const PSEL = "id,title,price,images,seller_id,details,stock_level";
 
+      /* LIVE SELLER ALERTS: toast, sound, vibration and phone notification the moment an order is ready */
+      let alertCh = null;
+      const ALERTED = new Set();
+      function beep() {
+        try {
+          const c = new (window.AudioContext || window.webkitAudioContext)(),
+            o = c.createOscillator();
+          o.connect(c.destination);
+          o.frequency.value = 880;
+          o.start();
+          o.stop(c.currentTime + 0.25);
+        } catch (e) {}
+      }
+      function notifySeller(title, body) {
+        beep();
+        try {
+          navigator.vibrate && navigator.vibrate([200, 100, 200]);
+        } catch (e) {}
+        try {
+          if ("Notification" in window && Notification.permission === "granted")
+            new Notification(title, { body });
+        } catch (e) {}
+        const d = document.createElement("div");
+        d.setAttribute("role", "alert");
+        d.style.cssText =
+          "position:fixed;top:12px;left:12px;right:12px;z-index:99;background:#00a651;color:#fff;padding:14px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.25)";
+        d.innerHTML = `${esc(title)}<br><span style="font-weight:400">${esc(body)} · Tap to open</span>`;
+        d.onclick = () => {
+          d.remove();
+          go("sorders");
+        };
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), 9000);
+      }
+      async function onOrderEvent(p) {
+        const o = p.new;
+        if (!o || ALERTED.has(o.id)) return;
+        const cod = o.payment_method !== "in_app",
+          ready = cod
+            ? p.eventType === "INSERT"
+            : PAIDSTATES.includes(o.status);
+        if (!ready) return;
+        ALERTED.add(o.id);
+        notifySeller(
+          cod ? "New order (cash on delivery)" : "New paid order. Deliver now",
+          money(o.amount),
+        );
+        await loadTodo();
+        tabs();
+        if (view === "sorders") sorders();
+      }
+      function startAlerts() {
+        if (alertCh) {
+          sb.removeChannel(alertCh);
+          alertCh = null;
+        }
+        if (!user || !profile || !["seller", "admin"].includes(profile.role))
+          return;
+        alertCh = sb
+          .channel("orders-" + user.id)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "orders",
+              filter: "seller_id=eq." + user.id,
+            },
+            onOrderEvent,
+          )
+          .subscribe();
+      }
+      function enableAlerts() {
+        if (!("Notification" in window))
+          return alert("This phone or browser does not support notifications.");
+        Notification.requestPermission().then(() => sorders());
+      }
+      let TODO = 0;
+      async function loadTodo() {
+        TODO = 0;
+        if (!user || !profile || !["seller", "admin"].includes(profile.role))
+          return;
+        const { count } = await sb
+          .from("orders")
+          .select("*", { count: "exact", head: true })
+          .eq("seller_id", user.id)
+          .in("status", ["paid", "confirmed"]);
+        TODO = count || 0;
+      }
       function tabs() {
         const t = [["home", "🏠", "Home"]];
         if (user) t.push(["saved", "♥️", "Saved"]);
         if (user) t.push(["orders", "📦", "Orders"]);
         if (profile && ["seller", "admin"].includes(profile.role))
-          t.push(["sell", "🏪", "My shop"]);
+          t.push(
+            ["sell", "🏪", "My shop"],
+            ["sorders", "🧾", "Shop orders" + (TODO ? " (" + TODO + ")" : "")],
+          );
         if (profile && profile.role === "promoter")
           t.push(["promote", "📣", "Promote"]);
         if (profile && profile.role === "admin")
@@ -582,13 +674,19 @@
             }
           }
         }
+        await loadSaved();
+        await loadTodo();
+        startAlerts();
+        document
+          .querySelectorAll("[data-sv]")
+          .forEach((b) => paintHearts(b.dataset.sv));
         tabs();
       }
       function go(v) {
         view = v;
         window.scrollTo(0, 0);
         tabs();
-        ({ home, saved, orders, sell, account, admin, promote })[v]();
+        ({ home, saved, orders, sell, sorders, account, admin, promote })[v]();
       }
       const back = () => go(prev || "home");
 
@@ -626,6 +724,7 @@
         app.innerHTML = `<div class="banner"><h1>Shop from sellers across Ghana</h1><p>Pay on delivery or pick up near you.</p><a class="lnk" href="seller-signup.html">🏪 Become a seller</a><button class="lnk" style="width:100%" onclick="becomePromoter()">📣 Become a promoter</button>${standalone() ? "" : '<button class="lnk" style="width:100%" onclick="installApp()">📲 Install the app</button>'}</div>
    <div id="rev"></div>
    <div class="cats">${CATS.map(([c, i]) => `<button class="cat ${st.cat === c ? "on" : ""}" onclick="setCat('${c}')"><i>${i}</i>${c}</button>`).join("")}</div>
+   <div class="cats" style="gap:6px;align-items:center"><input id="fmin" type="number" min="0" placeholder="Min GH₵" value="${st.min || ""}" style="width:96px" onchange="setFilter()"><input id="fmax" type="number" min="0" placeholder="Max GH₵" value="${st.max || ""}" style="width:96px" onchange="setFilter()"><select id="fsort" onchange="setFilter()" style="width:auto"><option value="new" ${st.sort === "new" || !st.sort ? "selected" : ""}>Newest</option><option value="low" ${st.sort === "low" ? "selected" : ""}>Price: low to high</option><option value="high" ${st.sort === "high" ? "selected" : ""}>Price: high to low</option></select></div>
    <div class="sec"><h2>${st.cat === "All" ? "Latest products" : esc(st.cat)}</h2><div id="g" class="grid"></div><div id="more" style="height:1px"></div></div>`;
         io = new IntersectionObserver(
           (e) => {
@@ -653,6 +752,12 @@
           )
           .join("")}</div></div>`;
       }
+      function setFilter() {
+        st.min = Number($("fmin").value) || 0;
+        st.max = Number($("fmax").value) || 0;
+        st.sort = $("fsort").value;
+        loadMore(true);
+      }
       function setCat(c) {
         st.cat = c;
         home();
@@ -670,8 +775,13 @@
           .from("products")
           .select(PSEL)
           .eq("in_stock", true)
-          .order("created_at", { ascending: false })
+          .order(
+            st.sort === "low" || st.sort === "high" ? "price" : "created_at",
+            { ascending: st.sort === "low" },
+          )
           .range(st.from, st.from + PAGE - 1);
+        if (st.min) r = r.gte("price", st.min);
+        if (st.max) r = r.lte("price", st.max);
         if (st.q) r = r.ilike("title", `%${st.q}%`);
         if (st.cat !== "All") r = r.eq("category", st.cat);
         const { data, error } = await r;
@@ -746,6 +856,7 @@
    <input id="oph" type="tel" placeholder="Phone number" value="${esc(last?.phone || "")}" autocomplete="tel">
    <select id="of" onchange="$('oa').hidden=this.value==='pickup'"><option value="delivery">Deliver to me</option><option value="pickup">I will pick it up</option></select>
    <textarea id="oa" rows="2" placeholder="Delivery address">${esc(last?.delivery_address || "")}</textarea>
+   <textarea id="on" rows="2" maxlength="300" placeholder="${det.length ? "Tell the seller your " + esc(det.map((d) => d[0].toLowerCase()).join(", ")) + " (optional)" : "Note for the seller, like size or colour (optional)"}"></textarea>
    <input id="oc" placeholder="Promoter code (optional)" value="${esc(code)}" autocapitalize="characters">
    <button class="act g" style="flex:none;width:100%" onclick="placeOrder('${p.id}','${p.seller_id}',${p.price})">Place order · ${money(p.price)}</button><div id="om" class="msg"></div>`;
         app.innerHTML = `<div class="box" style="max-width:640px">
@@ -756,8 +867,50 @@
    ${p.description ? `<p style="white-space:pre-wrap;margin:0">${esc(p.description)}</p>` : ""}
    ${det.length ? `<table class="dt">${det.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join("")}</table>` : ""}
    ${p.category ? `<small style="color:var(--mut)">Category: ${esc(p.category)}</small>` : ""}
-   <button class="act sv" style="flex:none;width:100%" onclick="save('${p.id}')">♥️ Save this item</button>
+   <div id="irt"></div><button class="act sv" style="flex:none;width:100%" onclick="reportItem('${p.id}','${p.seller_id}')">🚩 Report this item</button>
+   <button class="act sv" data-sv="${p.id}" data-full="1" style="flex:none;width:100%" onclick="save('${p.id}')">${heart(p.id)} ${SAVED.has(p.id) ? "Saved. Tap to remove" : "Save this item"}</button>
    ${form}</div>`;
+        loadItemRatings(p.id);
+      }
+      async function loadItemRatings(pid) {
+        const { data } = await sb
+          .from("ratings")
+          .select("stars,comment")
+          .eq("product_id", pid)
+          .order("created_at", { ascending: false })
+          .limit(20);
+        if (!$("irt") || !data || !data.length) return;
+        const avg = data.reduce((a, r) => a + r.stars, 0) / data.length;
+        $("irt").innerHTML =
+          `<h3 style="margin:0">★ ${avg.toFixed(1)} · ${data.length} rating${data.length === 1 ? "" : "s"} from verified buyers</h3>${data
+            .filter((r) => r.comment)
+            .slice(0, 5)
+            .map(
+              (r) =>
+                `<p style="margin:4px 0">${"★".repeat(r.stars)} ${esc(r.comment)}</p>`,
+            )
+            .join("")}`;
+      }
+      async function reportItem(pid, sid) {
+        if (!user) {
+          mode = "login";
+          return go("account");
+        }
+        const reason = prompt("What is wrong with this item or seller?");
+        if (!reason || !reason.trim()) return;
+        const { error } = await sb
+          .from("reports")
+          .insert({
+            reporter_id: user.id,
+            product_id: pid,
+            seller_id: sid,
+            reason: reason.trim(),
+          });
+        alert(
+          error
+            ? error.message
+            : "Thank you. The Macstore admin will look into it.",
+        );
       }
       let GUEST_EMAIL = "";
       const PAYSTACK_KEY = "pk_live_1778086fdaa797dc6aaf8e99d6beee56a2d045cb";
@@ -798,7 +951,8 @@
           phone = $("oph").value.trim(),
           ful = $("of").value,
           addr = $("oa").value.trim(),
-          code = $("oc").value.trim().toUpperCase();
+          code = $("oc").value.trim().toUpperCase(),
+          note = $("on").value.trim();
         m.className = "msg err";
         const gname = user ? "" : $("gn").value.trim(),
           gmail = user ? "" : $("ge").value.trim();
@@ -855,6 +1009,7 @@
           delivery_address: ful === "delivery" ? addr : null,
           phone,
           promo_code: code || null,
+          note: note || null,
         };
         if (promoter) row.promoter_id = promoter;
         const { data, error } = user
@@ -893,6 +1048,36 @@
         delivered: "Delivered",
         cancelled: "Cancelled",
       };
+      function timeline(status) {
+        if (status === "cancelled") return "<b>Cancelled</b>";
+        const i =
+          {
+            awaiting_payment: 0,
+            pending: 0,
+            paid: 1,
+            confirmed: 2,
+            delivered: 3,
+          }[status] ?? 0;
+        return ["Placed", "Paid", "Confirmed", "Delivered"]
+          .map(
+            (l, k) =>
+              `<span style="color:${k <= i ? "#00a651" : "#a0a0a6"}">${k <= i ? "●" : "○"} ${l}</span>`,
+          )
+          .join(" › ");
+      }
+      async function rate(oid, pid, sid) {
+        const n = Number($("rs" + oid).value),
+          { error } = await sb.from("ratings").insert({
+            order_id: oid,
+            product_id: pid,
+            seller_id: sid,
+            buyer_id: user.id,
+            stars: n,
+            comment: $("rc" + oid).value.trim() || null,
+          });
+        if (error) return alert(error.message);
+        orders();
+      }
       async function orders() {
         if (!user) return go("account");
         app.innerHTML =
@@ -900,10 +1085,20 @@
         const { data, error } = await sb
           .from("orders")
           .select(
-            "id,amount,status,fulfilment,delivery_address,phone,promo_code,created_at,products(id,title,images)",
+            "id,seller_id,amount,status,fulfilment,delivery_address,phone,promo_code,note,created_at,products(id,title,images)",
           )
           .eq("buyer_id", user.id)
           .order("created_at", { ascending: false });
+        const rated = new Set(
+          (
+            (
+              await sb
+                .from("ratings")
+                .select("order_id")
+                .eq("buyer_id", user.id)
+            ).data || []
+          ).map((r) => r.order_id),
+        );
         $("ol").innerHTML = error
           ? `<p class="msg err">${esc(error.message)}</p>`
           : (data || [])
@@ -912,7 +1107,7 @@
                   o,
                 ) => `<div class="mine">${o.products?.images && o.products.images[0] ? `<img src="${esc(o.products.images[0])}" alt="" loading="lazy">` : ""}
    <span>${esc(o.products?.title || "Item no longer listed")} · ${money(o.amount)}
-   <small>${dt(o.created_at)} · <b>${esc(OST[o.status] || o.status)}</b>${o.status === "awaiting_payment" ? ` <button class="act g" style="flex:none;padding:6px 12px" onclick="payOrder('${o.id}',${o.amount})">Pay now</button>` : ""}<br>${o.fulfilment === "pickup" ? "Pick-up" : "Delivery to: " + esc(o.delivery_address || "")}${o.phone ? "<br>Phone: " + esc(o.phone) : ""}${o.promo_code ? "<br>Promoter code: " + esc(o.promo_code) : ""}</small></span>
+   <small>${dt(o.created_at)} · <b>${esc(OST[o.status] || o.status)}</b>${o.status === "awaiting_payment" ? ` <button class="act g" style="flex:none;padding:6px 12px" onclick="payOrder('${o.id}',${o.amount})">Pay now</button>` : ""}<br>${o.fulfilment === "pickup" ? "Pick-up" : "Delivery to: " + esc(o.delivery_address || "")}${o.phone ? "<br>Phone: " + esc(o.phone) : ""}${o.note ? "<br>Your note: " + esc(o.note) : ""}<br>${timeline(o.status)}${o.status === "delivered" && o.products?.id && !rated.has(o.id) ? `<br><select id="rs${o.id}" style="width:auto">${[5, 4, 3, 2, 1].map((n) => `<option value="${n}">${"★".repeat(n)}</option>`).join("")}</select> <input id="rc${o.id}" placeholder="How was it? (optional)" style="width:150px"> <button class="act g" style="flex:none;padding:6px 12px" onclick="rate('${o.id}','${o.products.id}','${o.seller_id}')">Rate</button>` : ""}${o.promo_code ? "<br>Promoter code: " + esc(o.promo_code) : ""}</small></span>
    ${o.products?.id ? `<button class="act" onclick="item('${o.products.id}')">View item</button>` : ""}</div>`,
               )
               .join("") ||
@@ -1071,14 +1266,12 @@
             "Enter a 10-digit MoMo number starting with 0, and the account name.";
           return;
         }
-        const { error } = await sb
-          .from("payout_details")
-          .upsert({
-            user_id: user.id,
-            momo_number: momo,
-            network: $("pk").value,
-            account_name: name,
-          });
+        const { error } = await sb.from("payout_details").upsert({
+          user_id: user.id,
+          momo_number: momo,
+          network: $("pk").value,
+          account_name: name,
+        });
         m.className = error ? "msg err" : "msg ok";
         m.textContent = error
           ? error.message
@@ -1116,15 +1309,48 @@
       }
 
       /* SAVED */
+      let SAVED = new Set();
+      const heart = (id) => (SAVED.has(id) ? "♥️" : "🤍");
+      function paintHearts(id) {
+        document.querySelectorAll(`[data-sv="${id}"]`).forEach((b) => {
+          b.textContent = b.dataset.full
+            ? heart(id) +
+              " " +
+              (SAVED.has(id) ? "Saved. Tap to remove" : "Save this item")
+            : heart(id);
+        });
+      }
+      async function loadSaved() {
+        SAVED = new Set();
+        if (!user) return;
+        const { data } = await sb
+          .from("saved_items")
+          .select("product_id")
+          .eq("user_id", user.id);
+        (data || []).forEach((r) => SAVED.add(r.product_id));
+      }
       async function save(id) {
         if (!user) {
           mode = "login";
           return go("account");
         }
-        const { error } = await sb
-          .from("saved_items")
-          .upsert({ user_id: user.id, product_id: id });
-        alert(error ? error.message : "Saved. Find it under Saved.");
+        if (SAVED.has(id)) {
+          const { error } = await sb
+            .from("saved_items")
+            .delete()
+            .eq("user_id", user.id)
+            .eq("product_id", id);
+          if (error) return alert(error.message);
+          SAVED.delete(id);
+        } else {
+          const { error } = await sb
+            .from("saved_items")
+            .upsert({ user_id: user.id, product_id: id });
+          if (error) return alert(error.message);
+          SAVED.add(id);
+        }
+        paintHearts(id);
+        if (view === "saved") saved();
       }
       async function saved() {
         if (!user) return go("account");
@@ -1140,7 +1366,99 @@
           ? `<div class="empty err">${esc(error.message)}</div>`
           : items.length
             ? items.map(card).join("")
-            : '<div class="empty">Nothing saved yet. Tap ♥️ on any product.</div>';
+            : '<div class="empty">Nothing saved yet. Tap the heart on any product. Tap it again to remove it.</div>';
+      }
+
+      /* SELLER: ORDERS TO DELIVER + EARNINGS */
+      const PAIDSTATES = ["paid", "confirmed", "delivered"];
+      async function sellerEarnings(el) {
+        const { data, error } = await sb
+          .from("orders")
+          .select("amount,commission_amount,status,payment_method,seller_paid")
+          .eq("seller_id", user.id);
+        if (error) {
+          el.innerHTML = "";
+          return;
+        }
+        let earned = 0,
+          received = 0,
+          waiting = 0,
+          toDeliver = 0;
+        (data || []).forEach((o) => {
+          const net = Number(o.amount) - Number(o.commission_amount || 0),
+            cod = o.payment_method !== "in_app";
+          if (o.status === "delivered") {
+            earned += net;
+            if (cod || o.seller_paid) received += net;
+            else waiting += net;
+          } else if (
+            !["cancelled", "awaiting_payment"].includes(o.status) &&
+            (cod || PAIDSTATES.includes(o.status))
+          )
+            toDeliver++;
+        });
+        el.innerHTML = `<div class="stats"><div class="stat"><b>${money(earned)}</b>Total earned</div><div class="stat"><b>${money(received)}</b>Received</div><div class="stat"><b>${money(waiting)}</b>Waiting for payout</div><div class="stat"><b>${toDeliver}</b>To deliver</div></div>`;
+      }
+      async function sorders() {
+        if (!profile || !["seller", "admin"].includes(profile.role))
+          return go("home");
+        app.innerHTML = `<div class="sec"><h2>Shop orders</h2>${"Notification" in window && Notification.permission === "default" ? '<button class="act g" style="flex:none;width:100%;margin-bottom:8px" onclick="enableAlerts()">🔔 Turn on order alerts</button>' : ""}<div id="earn"></div><div id="sol"><div class="sk"></div></div></div>`;
+        sellerEarnings($("earn"));
+        const { data, error } = await sb
+          .from("orders")
+          .select(
+            "id,amount,commission_amount,status,fulfilment,payment_method,delivery_address,phone,guest_name,note,created_at,products(id,title,images)",
+          )
+          .eq("seller_id", user.id)
+          .order("created_at", { ascending: false })
+          .limit(100);
+        $("sol").innerHTML = error
+          ? `<p class="msg err">${esc(error.message)}</p>`
+          : (data || [])
+              .map((o) => {
+                const cod = o.payment_method !== "in_app",
+                  paid = PAIDSTATES.includes(o.status);
+                let tag, col, show;
+                if (o.status === "cancelled")
+                  [tag, col, show] = ["Cancelled", "#75757a", false];
+                else if (cod)
+                  [tag, col, show] = [
+                    "Cash on delivery. Collect " + money(o.amount),
+                    "#b45309",
+                    true,
+                  ];
+                else if (paid)
+                  [tag, col, show] = [
+                    "Paid. Ready to deliver",
+                    "#00a651",
+                    true,
+                  ];
+                else
+                  [tag, col, show] = [
+                    "Awaiting payment. Do not deliver yet",
+                    "#e5252a",
+                    false,
+                  ];
+                const done = o.status === "delivered" ? " · Delivered" : "",
+                  youGet = Number(o.amount) - Number(o.commission_amount || 0);
+                return `<div class="mine">${o.products?.images && o.products.images[0] ? `<img src="${esc(o.products.images[0])}" alt="" loading="lazy">` : ""}
+   <span>${esc(o.products?.title || "Item no longer listed")} · ${money(o.amount)}
+   <small>${dt(o.created_at)}${done}<br><b style="color:${col}">${esc(tag)}</b>${Number(o.commission_amount) > 0 ? `<br>You get ${money(youGet)} after the promoter’s commission` : ""}${
+     show
+       ? `<br>${o.fulfilment === "pickup" ? "Pick-up: the buyer collects" : "Deliver to: " + esc(o.delivery_address || "")}<br>${o.guest_name ? esc(o.guest_name) + " · " : ""}Call: ${esc(o.phone || "")}${o.note ? "<br><b>Buyer’s note: " + esc(o.note) + "</b>" : ""}<br><a href="https://wa.me/${String(
+           o.phone || "",
+         )
+           .replace(/\D/g, "")
+           .replace(
+             /^0/,
+             "233",
+           )}" target="_blank" rel="noopener">💬 WhatsApp the buyer</a>`
+       : "<br>Buyer details show here once the order is paid."
+   }</small></span>
+   ${o.products?.id ? `<button class="act" onclick="item('${o.products.id}')">View item</button>` : ""}</div>`;
+              })
+              .join("") ||
+            '<p class="empty" style="padding:20px 0">No orders yet. New orders for your items will appear here.</p>';
       }
 
       /* SELLER SHOP */
@@ -1214,7 +1532,8 @@
      ${sub.status === "trial" ? `<button class="act sv" style="flex:none" onclick="startPlan('${other}')">Switch to ${PLANS[other].name} (GH₵ ${PLANS[other].price} a month, ${PLANS[other].limit} a week)</button>` : ""}</div>`;
         } else pl.innerHTML = "";
         CAN_ADD = canAdd;
-        shop.innerHTML = `<div id="fw">${canAdd ? formHTML() : ""}</div><h2>My products</h2><div id="mine"></div>`;
+        shop.innerHTML = `<div id="earn"></div><div id="fw">${canAdd ? formHTML() : ""}</div><h2>My products</h2><div id="mine"></div>`;
+        sellerEarnings($("earn"));
         loadMine();
       }
       async function startPlan(p) {
@@ -1373,6 +1692,7 @@
         "refunds",
         "feedback",
         "payouts",
+        "reports",
       ];
       function admin() {
         if (!profile || profile.role !== "admin") {
@@ -1389,6 +1709,7 @@
           refunds: adRefunds,
           feedback: adFeedback,
           payouts: adPayouts,
+          reports: adReports,
         })[adminTab]();
       }
       const adEl = () => $("ad");
@@ -1426,7 +1747,59 @@
           ["Open refunds", r],
           ["Feedback messages", f],
         ];
-        adEl().innerHTML = `<div class="stats">${st2.map(([l, n]) => `<div class="stat"><b>${n}</b>${l}</div>`).join("")}</div>`;
+        adEl().innerHTML = `<div class="stats">${st2.map(([l, n]) => `<div class="stat"><b>${n}</b>${l}</div>`).join("")}</div>
+   <div class="box" style="max-width:none"><h2>Money paid out</h2><input id="pd" type="date" value="${new Date().toLocaleDateString("en-CA")}" onchange="adDaily()"><div id="daily"><div class="sk"></div></div></div>`;
+        adDaily();
+      }
+      async function adDaily() {
+        const d = $("pd").value,
+          el = $("daily");
+        if (!d) return;
+        const [y, m, dd] = d.split("-").map(Number),
+          iso = (x) => x.toISOString();
+        const [day, mon, owed] = await Promise.all([
+          sb
+            .from("payouts")
+            .select("role,amount")
+            .gte("paid_at", iso(new Date(y, m - 1, dd)))
+            .lt("paid_at", iso(new Date(y, m - 1, dd + 1))),
+          sb
+            .from("payouts")
+            .select("role,amount")
+            .gte("paid_at", iso(new Date(y, m - 1, 1)))
+            .lt("paid_at", iso(new Date(y, m, 1))),
+          sb
+            .from("orders")
+            .select(
+              "amount,commission_amount,seller_paid,promoter_paid,payment_method",
+            )
+            .eq("status", "delivered"),
+        ]);
+        if (day.error) {
+          el.innerHTML = `<p class="msg err">${esc(day.error.message)}</p>`;
+          return;
+        }
+        const sum = (rows, role) =>
+          (rows || [])
+            .filter((r) => r.role === role)
+            .reduce((a, r) => a + Number(r.amount), 0);
+        let os = 0,
+          op = 0;
+        (owed.data || []).forEach((o) => {
+          const c = Number(o.commission_amount || 0);
+          if (o.payment_method === "in_app" && !o.seller_paid)
+            os += Number(o.amount) - c;
+          if (c > 0 && !o.promoter_paid) op += c;
+        });
+        const st = [
+          ["Paid to sellers that day", sum(day.data, "seller")],
+          ["Paid to promoters that day", sum(day.data, "promoter")],
+          ["Paid to sellers this month", sum(mon.data, "seller")],
+          ["Paid to promoters this month", sum(mon.data, "promoter")],
+          ["Still owed to sellers", os],
+          ["Still owed to promoters", op],
+        ];
+        el.innerHTML = `<div class="stats">${st.map(([l, n]) => `<div class="stat"><b>${money(n)}</b>${l}</div>`).join("")}</div>`;
       }
 
       async function adUsers() {
@@ -1607,7 +1980,7 @@
         const { data, error } = await sb
           .from("orders")
           .select(
-            "id,amount,status,fulfilment,payment_method,delivery_address,phone,promo_code,promoter_id,guest_name,created_at,commission_amount,products(title)",
+            "id,amount,status,fulfilment,payment_method,delivery_address,phone,promo_code,promoter_id,guest_name,note,created_at,commission_amount,products(title)",
           )
           .order("created_at", { ascending: false })
           .limit(50);
@@ -1628,7 +2001,7 @@
               .map(
                 (
                   o,
-                ) => `<div class="mine"><span>${esc(o.products?.title || "Product")} · ${money(o.amount)}<small>${dt(o.created_at)} · ${esc(o.fulfilment)} · ${esc(o.payment_method)}${o.delivery_address ? " · " + esc(o.delivery_address) : ""}${o.phone ? " · " + esc(o.phone) : ""}${o.guest_name ? " · guest " + esc(o.guest_name) : ""}${o.promoter_id ? " · promoter " + esc(names[o.promoter_id] || "") + " (" + esc(o.promo_code || "") + ")" : ""}${o.commission_amount > 0 ? " · promoter commission " + money(o.commission_amount) : ""}</small></span>
+                ) => `<div class="mine"><span>${esc(o.products?.title || "Product")} · ${money(o.amount)}<small>${dt(o.created_at)} · ${esc(o.fulfilment)} · ${esc(o.payment_method)}${o.delivery_address ? " · " + esc(o.delivery_address) : ""}${o.phone ? " · " + esc(o.phone) : ""}${o.note ? " · note: " + esc(o.note) : ""}${o.guest_name ? " · guest " + esc(o.guest_name) : ""}${o.promoter_id ? " · promoter " + esc(names[o.promoter_id] || "") + " (" + esc(o.promo_code || "") + ")" : ""}${o.commission_amount > 0 ? " · promoter commission " + money(o.commission_amount) : ""}</small></span>
    <select aria-label="Order status" onchange="setStatus('orders','${o.id}',this.value)">${opts(["awaiting_payment", "paid", "pending", "confirmed", "delivered", "cancelled"], o.status)}</select></div>`,
               )
               .join("") || "<p>No orders yet.</p>";
@@ -1683,16 +2056,37 @@
           nm = Object.fromEntries(
             (pf.data || []).map((x) => [x.id, x.full_name]),
           );
+        const row = ([k, x]) => {
+          const b = bank[x.uid];
+          return `<div class="mine"><span>${esc(nm[x.uid] || "User")}<small><b>${money(x.amt)}</b> · ${b ? esc(b.network) + " " + esc(b.momo_number) + " (" + esc(b.account_name) + ")" : "No MoMo number added yet"}</small></span>${b ? `<button class="act g" onclick="markPayout('${k}')">Mark as paid</button>` : ""}</div>`;
+        };
+        const sec = (title, role) => {
+          const rows = list.filter(([, x]) => x.role === role),
+            tot = rows.reduce((a, [, x]) => a + x.amt, 0);
+          return (
+            `<h2>${title} · ${money(tot)}</h2>` +
+            (rows.map(row).join("") || "<p>Nothing to pay right now.</p>")
+          );
+        };
         adEl().innerHTML = `<div class="box" style="max-width:none"><h2>Your WhatsApp number</h2><p style="margin:0;color:var(--mut)">Approved sellers and promoters see a chat button with this number.</p><input id="aw" type="tel" placeholder="e.g. 0241234567" value="${esc(w.data?.value || "")}"><button class="act g" onclick="saveWa()">Save number</button><div id="aws" class="msg"></div></div>
    <h2>Money to pay out</h2><p style="margin:0 0 8px;color:var(--mut)">Delivered orders only. Sellers are listed for in-app payments. Cash-on-delivery sales are already with the seller.</p>
-   ${
-     list
-       .map(([k, x]) => {
-         const b = bank[x.uid];
-         return `<div class="mine"><span>${esc(nm[x.uid] || "User")} · ${x.role}<small><b>${money(x.amt)}</b> · ${b ? esc(b.network) + " " + esc(b.momo_number) + " (" + esc(b.account_name) + ")" : "No MoMo number added yet"}</small></span>${b ? `<button class="act g" onclick="markPaid('${k}')">Mark as paid</button>` : ""}</div>`;
-       })
-       .join("") || "<p>Nothing to pay out right now.</p>"
-   }`;
+   ${sec("Sellers to pay", "seller")}
+   ${sec("Promoters to pay", "promoter")}`;
+      }
+      async function adReports() {
+        const { data, error } = await sb
+          .from("reports")
+          .select("id,product_id,reason,status,created_at")
+          .order("created_at", { ascending: false })
+          .limit(50);
+        adEl().innerHTML = error
+          ? `<p class="msg err">${esc(error.message)}</p>`
+          : (data || [])
+              .map(
+                (r) =>
+                  `<div class="mine"><span>${esc(r.reason)}<small>${dt(r.created_at)} · ${esc(r.status)}</small></span><button class="act" onclick="item('${r.product_id}')">View item</button>${r.status === "open" ? `<button class="act g" onclick="setStatus('reports','${r.id}','resolved');adReports()">Resolve</button>` : ""}</div>`,
+              )
+              .join("") || "<p>No reports.</p>";
       }
       async function saveWa() {
         const { error } = await sb
@@ -1701,7 +2095,7 @@
         $("aws").className = error ? "msg err" : "msg ok";
         $("aws").textContent = error ? error.message : "✓ Saved.";
       }
-      async function markPaid(k) {
+      async function markPayout(k) {
         const x = OWED[k];
         if (
           !x ||
@@ -1715,6 +2109,17 @@
           .update({ [x.flag]: true })
           .in("id", x.ids);
         if (error) return alert(error.message);
+        const log = await sb.from("payouts").insert({
+          user_id: x.uid,
+          role: x.role,
+          amount: x.amt,
+          order_ids: x.ids,
+        });
+        if (log.error)
+          alert(
+            "Marked as paid, but it could not be saved to the daily totals: " +
+              log.error.message,
+          );
         adPayouts();
       }
       async function adRefunds() {
@@ -1840,17 +2245,27 @@
             .limit(100),
           sb
             .from("orders")
-            .select("commission_amount,status,created_at,products(title)")
+            .select(
+              "commission_amount,status,promoter_paid,created_at,products(title)",
+            )
             .eq("promoter_id", user.id)
             .order("created_at", { ascending: false })
-            .limit(30),
+            .limit(1000),
         ]);
         const ords = o.data || [],
           sum = (f) =>
             ords.filter(f).reduce((a, x) => a + Number(x.commission_amount), 0);
-        hub.innerHTML = `<div class="stats"><div class="stat"><b>${money(sum((x) => x.status === "delivered"))}</b>Earned (delivered)</div><div class="stat"><b>${money(sum((x) => !["delivered", "cancelled"].includes(x.status)))}</b>Pending</div></div>
+        hub.innerHTML = `<div class="stats"><div class="stat"><b>${money(sum((x) => x.status === "delivered"))}</b>Total earned</div><div class="stat"><b>${money(sum((x) => x.status === "delivered" && x.promoter_paid))}</b>Paid to you</div><div class="stat"><b>${money(sum((x) => x.status === "delivered" && !x.promoter_paid))}</b>Waiting for payout</div><div class="stat"><b>${money(sum((x) => !["delivered", "cancelled"].includes(x.status)))}</b>Not delivered yet</div></div>
    <h2>Products you can promote</h2>${(p.data || []).map((x) => `<div class="mine">${x.images && x.images[0] ? `<img src="${esc(x.images[0])}" alt="" loading="lazy">` : ""}<span>${esc(x.title)}<small>${money(x.price)} · you earn ${money((x.price * x.commission_pct) / 100)} (${x.commission_pct}%)</small></span><button class="act" onclick="copyLink('${x.id}')">Copy my link</button></div>`).join("") || "<p>No products are open to promoters yet.</p>"}
-   <h2>Your sales</h2>${ords.map((x) => `<div class="mine"><span>${esc(x.products?.title || "Product")}<small>${dt(x.created_at)} · ${esc(x.status)}</small></span><b>${money(x.commission_amount)}</b></div>`).join("") || "<p>No sales through your code yet.</p>"}`;
+   <h2>Your sales</h2>${
+     ords
+       .slice(0, 30)
+       .map(
+         (x) =>
+           `<div class="mine"><span>${esc(x.products?.title || "Product")}<small>${dt(x.created_at)} · ${esc(x.status)}${x.promoter_paid ? " · paid to you" : ""}</small></span><b>${money(x.commission_amount)}</b></div>`,
+       )
+       .join("") || "<p>No sales through your code yet.</p>"
+   }`;
       }
 
       /* Shared promoter links: ?code=PRO-XXXXX&p=<product id> (older ?ref= links still work) */
