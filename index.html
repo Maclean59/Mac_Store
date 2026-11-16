@@ -455,6 +455,108 @@
         color: var(--or);
         font-weight: 700;
       }
+
+      /* Clean mobile look */
+      body {
+        padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+      }
+      input,
+      select,
+      textarea {
+        font-size: 16px;
+      }
+      #q {
+        border-radius: 22px;
+        padding: 10px 14px;
+      }
+      .card {
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      }
+      .row .act,
+      .box .act {
+        min-height: 44px;
+      }
+      nav {
+        border-top: 0;
+        box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.08);
+        padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+      }
+      nav button {
+        position: relative;
+        min-height: 52px;
+        align-content: center;
+        padding: 2px 0;
+      }
+      nav button b {
+        font-size: 22px;
+        line-height: 1;
+        padding: 4px 16px;
+        border-radius: 14px;
+      }
+      nav button.on b {
+        background: #fff3e6;
+      }
+      .bdg {
+        position: absolute;
+        top: 0;
+        left: calc(50% + 6px);
+        background: var(--red);
+        color: #fff;
+        font-style: normal;
+        font-size: 10px;
+        font-weight: 700;
+        border-radius: 9px;
+        min-width: 18px;
+        padding: 1px 5px;
+        text-align: center;
+      }
+      .ov {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 20;
+        display: flex;
+        align-items: flex-end;
+      }
+      .pn {
+        background: #fff;
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        border-radius: 20px 20px 0 0;
+        padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+        display: grid;
+        gap: 8px;
+      }
+      .pn button {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        min-height: 52px;
+        border: 0;
+        background: #f6f6f7;
+        border-radius: 14px;
+        font: inherit;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 0 14px;
+        color: var(--ink);
+      }
+      .pn button.on {
+        color: var(--or);
+        background: #fff3e6;
+      }
+      @media (min-width: 700px) {
+        nav {
+          max-width: 520px;
+          left: 50%;
+          right: auto;
+          transform: translateX(-50%);
+          border-radius: 18px 18px 0 0;
+        }
+      }
     </style>
   </head>
   <body>
@@ -536,10 +638,11 @@
       };
       const card = (
         p,
-      ) => `<div class="card"><div onclick="item('${p.id}')" style="cursor:pointer">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.title)}" loading="lazy" decoding="async">` : '<div class="ph">🛍️</div>'}</div>
+      ) => `<div class="card"><div style="padding:8px 10px 4px;font-weight:700;font-size:13px;color:#e8890c">🏪 ${esc(p.shop_name || "Macstore")}</div><div onclick="item('${p.id}')" style="cursor:pointer">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.title)}" loading="lazy" decoding="async">` : '<div class="ph">🛍️</div>'}</div>
  <div class="b"><h3 onclick="item('${p.id}')" style="cursor:pointer">${esc(p.title)}</h3>${badge(p)}<div class="chips">${chips(p.details)}</div><div class="price">${money(p.price)}</div>
  <div class="row"><button class="act sv" data-sv="${p.id}" aria-label="Save or unsave" onclick="save('${p.id}')">${heart(p.id)}</button><button class="act" onclick="item('${p.id}')">View</button></div></div></div>`;
-      const PSEL = "id,title,price,images,seller_id,details,stock_level";
+      const PSEL =
+        "id,title,price,images,seller_id,details,stock_level,shop_name";
 
       /* LIVE SELLER ALERTS: toast, sound, vibration and phone notification the moment an order is ready */
       let alertCh = null;
@@ -630,26 +733,44 @@
           .in("status", ["paid", "confirmed"]);
         TODO = count || 0;
       }
+      let MORE = [];
       function tabs() {
         const t = [["home", "🏠", "Home"]];
-        if (user) t.push(["saved", "♥️", "Saved"]);
-        if (user) t.push(["orders", "📦", "Orders"]);
+        if (user) t.push(["saved", "♥️", "Saved"], ["orders", "📦", "Orders"]);
+        const more = [];
         if (profile && ["seller", "admin"].includes(profile.role))
-          t.push(
+          more.push(
             ["sell", "🏪", "My shop"],
             ["sorders", "🧾", "Shop orders" + (TODO ? " (" + TODO + ")" : "")],
           );
         if (profile && profile.role === "promoter")
-          t.push(["promote", "📣", "Promote"]);
+          more.push(["promote", "📣", "Promote"]);
         if (profile && profile.role === "admin")
-          t.push(["admin", "🛡️", "Admin"]);
+          more.push(["admin", "🛡️", "Admin"]);
+        MORE = more;
+        if (more.length === 1) t.push(more[0]);
+        else if (more.length > 1) t.push(["more", "⋯", "More"]);
         t.push(["account", "👤", user ? "Account" : "Log in"]);
         $("tabs").innerHTML = t
-          .map(
-            ([k, i, l]) =>
-              `<button class="${view === k ? "on" : ""}" onclick="go('${k}')"><b>${i}</b>${l}</button>`,
-          )
+          .map(([k, i, l]) => {
+            const on =
+              view === k || (k === "more" && more.some((x) => x[0] === view));
+            return `<button class="${on ? "on" : ""}" onclick="${k === "more" ? "openMore()" : `go('${k}')`}"><b>${i}</b>${l}${k === "more" && TODO ? `<i class="bdg">${TODO}</i>` : ""}</button>`;
+          })
           .join("");
+      }
+      function closeMore() {
+        const o = $("sheet");
+        if (o) o.remove();
+      }
+      function openMore() {
+        closeMore();
+        const o = document.createElement("div");
+        o.id = "sheet";
+        o.className = "ov";
+        o.onclick = (e) => e.target === o && closeMore();
+        o.innerHTML = `<div class="pn">${MORE.map(([k, i, l]) => `<button class="${view === k ? "on" : ""}" onclick="closeMore();go('${k}')"><span>${i}</span>${l}</button>`).join("")}</div>`;
+        document.body.appendChild(o);
       }
       async function setUser(u) {
         user = u || null;
@@ -825,7 +946,7 @@
         const { data: p, error } = await sb
           .from("products")
           .select(
-            "id,title,description,price,images,seller_id,details,stock_level,category",
+            "id,title,description,price,images,seller_id,details,stock_level,category,shop_name",
           )
           .eq("id", id)
           .maybeSingle();
@@ -863,7 +984,7 @@
    <button class="act sv" style="flex:none;width:auto;justify-self:start" onclick="back()">← Back</button>
    <div class="gal">${imgs[0] ? `<img id="big" class="big" src="${esc(imgs[0])}" alt="${esc(p.title)}">` : '<div class="ph" style="aspect-ratio:1;border-radius:10px">🛍️</div>'}
    ${imgs.length > 1 ? `<div class="thumbs">${imgs.map((u) => `<img src="${esc(u)}" alt="" onclick="$('big').src=this.src">`).join("")}</div>` : ""}</div>
-   <h2>${esc(p.title)}</h2><div class="price" style="font-size:22px">${money(p.price)}</div>${badge(p)}
+   <div style="font-weight:700;color:#e8890c">🏪 ${esc(p.shop_name || "Macstore")}</div><h2>${esc(p.title)}</h2><div class="price" style="font-size:22px">${money(p.price)}</div>${badge(p)}
    ${p.description ? `<p style="white-space:pre-wrap;margin:0">${esc(p.description)}</p>` : ""}
    ${det.length ? `<table class="dt">${det.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join("")}</table>` : ""}
    ${p.category ? `<small style="color:var(--mut)">Category: ${esc(p.category)}</small>` : ""}
@@ -1445,14 +1566,7 @@
    <span>${esc(o.products?.title || "Item no longer listed")} · ${money(o.amount)}
    <small>${dt(o.created_at)}${done}<br><b style="color:${col}">${esc(tag)}</b>${Number(o.commission_amount) > 0 ? `<br>You get ${money(youGet)} after the promoter’s commission` : ""}${
      show
-       ? `<br>${o.fulfilment === "pickup" ? "Pick-up: the buyer collects" : "Deliver to: " + esc(o.delivery_address || "")}<br>${o.guest_name ? esc(o.guest_name) + " · " : ""}Call: ${esc(o.phone || "")}${o.note ? "<br><b>Buyer’s note: " + esc(o.note) + "</b>" : ""}<br><a href="https://wa.me/${String(
-           o.phone || "",
-         )
-           .replace(/\D/g, "")
-           .replace(
-             /^0/,
-             "233",
-           )}" target="_blank" rel="noopener">💬 WhatsApp the buyer</a>`
+       ? `<br>${o.fulfilment === "pickup" ? "Pick-up: the buyer collects" : "Deliver to: " + esc(o.delivery_address || "")}<br>${o.guest_name ? esc(o.guest_name) + " · " : ""}Call: ${esc(o.phone || "")}${o.note ? "<br><b>Buyer’s note: " + esc(o.note) + "</b>" : ""}`
        : "<br>Buyer details show here once the order is paid."
    }</small></span>
    ${o.products?.id ? `<button class="act" onclick="item('${o.products.id}')">View item</button>` : ""}</div>`;
@@ -1532,9 +1646,48 @@
      ${sub.status === "trial" ? `<button class="act sv" style="flex:none" onclick="startPlan('${other}')">Switch to ${PLANS[other].name} (GH₵ ${PLANS[other].price} a month, ${PLANS[other].limit} a week)</button>` : ""}</div>`;
         } else pl.innerHTML = "";
         CAN_ADD = canAdd;
-        shop.innerHTML = `<div id="earn"></div><div id="fw">${canAdd ? formHTML() : ""}</div><h2>My products</h2><div id="mine"></div>`;
+        shop.innerHTML = `<div id="earn"></div><div id="rn"></div><div id="fw">${canAdd ? formHTML() : ""}</div><h2>My products</h2><div id="mine"></div>`;
         sellerEarnings($("earn"));
+        shopBox();
         loadMine();
+      }
+      async function shopBox() {
+        const el = $("rn");
+        if (!el) return;
+        const [{ data }, { data: pr }] = await Promise.all([
+          sb
+            .from("seller_verification")
+            .select("shop_name")
+            .eq("user_id", user.id)
+            .maybeSingle(),
+          sb
+            .from("profiles")
+            .select("shop_renamed_at")
+            .eq("id", user.id)
+            .maybeSingle(),
+        ]);
+        const next = pr?.shop_renamed_at
+            ? new Date(new Date(pr.shop_renamed_at).getTime() + 30 * 864e5)
+            : null,
+          locked = next && next > new Date();
+        el.innerHTML = `<div class="box" style="max-width:none"><h2>Your shop name</h2><p style="margin:0;color:var(--mut)">Buyers see this on top of every item you post. You can change it once a month.</p><input id="sn" maxlength="40" placeholder="Shop name" value="${esc(data?.shop_name || "")}" ${locked ? "disabled" : ""}><button class="act g" onclick="renameShop()" ${locked ? "disabled" : ""}>Save shop name</button><div id="snm" class="msg">${locked ? "You can rename again on " + dt(next) + "." : ""}</div></div>`;
+      }
+      async function renameShop() {
+        const n = $("sn").value.trim(),
+          m = $("snm");
+        if (n.length < 2) {
+          m.className = "msg err";
+          m.textContent = "Enter a shop name with at least 2 letters.";
+          return;
+        }
+        m.className = "msg";
+        m.textContent = "Saving…";
+        const { error } = await sb.rpc("rename_shop", { new_name: n });
+        m.className = error ? "msg err" : "msg ok";
+        m.textContent = error
+          ? error.message
+          : "✓ Saved. Every item now shows this name.";
+        if (!error) shopBox();
       }
       async function startPlan(p) {
         const { error } = await sb.rpc("start_plan", { p });
