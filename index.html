@@ -457,138 +457,29 @@
       }
 
       /* Stop the page being wider than the phone screen */
-      html,
-      body {
-        max-width: 100%;
-        overflow-x: clip;
-      }
-      main,
-      .sec,
-      .banner,
-      .box,
-      .card {
-        min-width: 0;
-        max-width: 100%;
-      }
-      img {
-        max-width: 100%;
-      }
-      header .logo {
-        flex: none;
-      }
-      #q {
-        min-width: 0;
-        width: 100%;
-      }
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      @media (min-width: 600px) {
-        .grid {
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-        }
-      }
+      html, body { max-width: 100%; overflow-x: clip; }
+      main, .sec, .banner, .box, .card { min-width: 0; max-width: 100%; }
+      img { max-width: 100%; }
+      header .logo { flex: none; }
+      #q { min-width: 0; width: 100%; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      @media (min-width: 600px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
       /* Clean mobile look */
-      body {
-        padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px) * 0.4);
-      }
-      input,
-      select,
-      textarea {
-        font-size: 16px;
-      }
-      #q {
-        border-radius: 22px;
-        padding: 10px 14px;
-      }
-      .card {
-        border-radius: 14px;
-        overflow: hidden;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-      }
-      .row .act,
-      .box .act {
-        min-height: 44px;
-      }
-      nav {
-        border-top: 0;
-        box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.08);
-        padding: 4px 6px calc(4px + env(safe-area-inset-bottom, 0px) * 0.4);
-      }
-      nav button {
-        position: relative;
-        min-height: 52px;
-        align-content: center;
-        padding: 2px 0;
-      }
-      nav button b {
-        font-size: 22px;
-        line-height: 1;
-        padding: 4px 16px;
-        border-radius: 14px;
-      }
-      nav button.on b {
-        background: #fff3e6;
-      }
-      .bdg {
-        position: absolute;
-        top: 0;
-        left: calc(50% + 6px);
-        background: var(--red);
-        color: #fff;
-        font-style: normal;
-        font-size: 10px;
-        font-weight: 700;
-        border-radius: 9px;
-        min-width: 18px;
-        padding: 1px 5px;
-        text-align: center;
-      }
-      .ov {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.35);
-        z-index: 20;
-        display: flex;
-        align-items: flex-end;
-      }
-      .pn {
-        background: #fff;
-        width: 100%;
-        max-width: 520px;
-        margin: 0 auto;
-        border-radius: 20px 20px 0 0;
-        padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
-        display: grid;
-        gap: 8px;
-      }
-      .pn button {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        min-height: 52px;
-        border: 0;
-        background: #f6f6f7;
-        border-radius: 14px;
-        font: inherit;
-        font-size: 16px;
-        font-weight: 600;
-        padding: 0 14px;
-        color: var(--ink);
-      }
-      .pn button.on {
-        color: var(--or);
-        background: #fff3e6;
-      }
-      @media (min-width: 700px) {
-        nav {
-          max-width: 520px;
-          left: 50%;
-          right: auto;
-          transform: translateX(-50%);
-          border-radius: 18px 18px 0 0;
-        }
-      }
+      body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px) * 0.4); }
+      input, select, textarea { font-size: 16px; }
+      #q { border-radius: 22px; padding: 10px 14px; }
+      .card { border-radius: 14px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+      .row .act, .box .act { min-height: 44px; }
+      nav { border-top: 0; box-shadow: 0 -2px 14px rgba(0,0,0,.08); padding: 4px 6px calc(4px + env(safe-area-inset-bottom, 0px) * 0.4); }
+      nav button { position: relative; min-height: 52px; align-content: center; padding: 2px 0; }
+      nav button b { font-size: 22px; line-height: 1; padding: 4px 16px; border-radius: 14px; }
+      nav button.on b { background: #fff3e6; }
+      .bdg { position: absolute; top: 0; left: calc(50% + 6px); background: var(--red); color: #fff; font-style: normal; font-size: 10px; font-weight: 700; border-radius: 9px; min-width: 18px; padding: 1px 5px; text-align: center; }
+      .ov { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 20; display: flex; align-items: flex-end; }
+      .pn { background: #fff; width: 100%; max-width: 520px; margin: 0 auto; border-radius: 20px 20px 0 0; padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 8px; }
+      .pn button { display: flex; gap: 12px; align-items: center; min-height: 52px; border: 0; background: #f6f6f7; border-radius: 14px; font: inherit; font-size: 16px; font-weight: 600; padding: 0 14px; color: var(--ink); }
+      .pn button.on { color: var(--or); background: #fff3e6; }
+      @media (min-width: 700px) { nav { max-width: 520px; left: 50%; right: auto; transform: translateX(-50%); border-radius: 18px 18px 0 0; } }
     </style>
   </head>
   <body>
@@ -670,11 +561,10 @@
       };
       const card = (
         p,
-      ) => `<div class="card"><div style="padding:8px 10px 4px;font-weight:700;font-size:13px;color:#e8890c">🏪 ${esc(p.shop_name || "Macstore")}</div><div onclick="item('${p.id}')" style="cursor:pointer">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.title)}" loading="lazy" decoding="async">` : '<div class="ph">🛍️</div>'}</div>
- <div class="b"><h3 onclick="item('${p.id}')" style="cursor:pointer">${esc(p.title)}</h3>${badge(p)}<div class="chips">${chips(p.details)}</div><div class="price">${money(p.price)}</div>
+      ) => `<div class="card"><div onclick="shopPage('${p.seller_id}')" style="cursor:pointer;padding:8px 10px 4px;font-weight:700;font-size:13px;color:#e8890c">🏪 ${esc(p.shop_name || "Macstore")}</div><div onclick="item('${p.id}')" style="cursor:pointer">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.title)}" loading="lazy" decoding="async">` : '<div class="ph">🛍️</div>'}</div>
+ <div class="b"><h3 onclick="item('${p.id}')" style="cursor:pointer">${esc(p.title)}</h3>${badge(p)}${p.boosted_until && new Date(p.boosted_until) > new Date() ? '<span class="chip" style="background:#7c3aed;color:#fff">Featured</span>' : ""}<div class="chips">${chips(p.details)}</div><div class="price">${money(p.price)}</div>
  <div class="row"><button class="act sv" data-sv="${p.id}" aria-label="Save or unsave" onclick="save('${p.id}')">${heart(p.id)}</button><button class="act" onclick="item('${p.id}')">View</button></div></div></div>`;
-      const PSEL =
-        "id,title,price,images,seller_id,details,stock_level,shop_name";
+      const PSEL = "id,title,price,images,seller_id,details,stock_level,shop_name,boosted_until";
 
       /* LIVE SELLER ALERTS: toast, sound, vibration and phone notification the moment an order is ready */
       let alertCh = null;
@@ -689,24 +579,18 @@
           o.stop(c.currentTime + 0.25);
         } catch (e) {}
       }
-      function notifySeller(title, body) {
+      function notifySeller(title, body, to = "sorders") {
         beep();
-        try {
-          navigator.vibrate && navigator.vibrate([200, 100, 200]);
-        } catch (e) {}
+        try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) {}
         try {
           if ("Notification" in window && Notification.permission === "granted")
             new Notification(title, { body });
         } catch (e) {}
         const d = document.createElement("div");
         d.setAttribute("role", "alert");
-        d.style.cssText =
-          "position:fixed;top:12px;left:12px;right:12px;z-index:99;background:#00a651;color:#fff;padding:14px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.25)";
+        d.style.cssText = "position:fixed;top:12px;left:12px;right:12px;z-index:99;background:#00a651;color:#fff;padding:14px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.25)";
         d.innerHTML = `${esc(title)}<br><span style="font-weight:400">${esc(body)} · Tap to open</span>`;
-        d.onclick = () => {
-          d.remove();
-          go("sorders");
-        };
+        d.onclick = () => { d.remove(); go(to); };
         document.body.appendChild(d);
         setTimeout(() => d.remove(), 9000);
       }
@@ -714,79 +598,72 @@
         const o = p.new;
         if (!o || ALERTED.has(o.id)) return;
         const cod = o.payment_method !== "in_app",
-          ready = cod
-            ? p.eventType === "INSERT"
-            : PAIDSTATES.includes(o.status);
+          ready = cod ? p.eventType === "INSERT" : PAIDSTATES.includes(o.status);
         if (!ready) return;
         ALERTED.add(o.id);
-        notifySeller(
-          cod ? "New order (cash on delivery)" : "New paid order. Deliver now",
-          money(o.amount),
-        );
+        notifySeller(cod ? "New order (cash on delivery)" : "New paid order. Deliver now", money(o.amount));
         await loadTodo();
         tabs();
         if (view === "sorders") sorders();
       }
+      let buyCh = null, BUYN = 0, SHOWN = false;
+      async function onBuyerEvent(p) {
+        const o = p.new;
+        if (!o || !["confirmed", "ready", "handed_over"].includes(o.status) || ALERTED.has(o.id + o.status)) return;
+        ALERTED.add(o.id + o.status);
+        const pk = o.fulfilment === "pickup",
+          m = { confirmed: ["Order confirmed", "The seller has confirmed your order."], ready: pk ? ["Ready for pick-up", "Your order is ready. Open Orders for the pick-up location."] : ["On its way", "Your order is waiting to be delivered to you."], handed_over: ["Delivered?", "The seller marked your order as delivered. Tap Received once you have it."] }[o.status];
+        notifySeller(m[0], m[1], "orders");
+        await loadTodo();
+        tabs();
+        if (view === "orders") orders();
+      }
       function startAlerts() {
-        if (alertCh) {
-          sb.removeChannel(alertCh);
-          alertCh = null;
-        }
-        if (!user || !profile || !["seller", "admin"].includes(profile.role))
-          return;
+        if (alertCh) { sb.removeChannel(alertCh); alertCh = null; }
+        if (buyCh) { sb.removeChannel(buyCh); buyCh = null; }
+        if (user)
+          buyCh = sb
+            .channel("buy-" + user.id)
+            .on("postgres_changes", { event: "UPDATE", schema: "public", table: "orders", filter: "buyer_id=eq." + user.id }, onBuyerEvent)
+            .subscribe();
+        if (!user || !profile || !["seller", "admin"].includes(profile.role)) return;
         alertCh = sb
           .channel("orders-" + user.id)
-          .on(
-            "postgres_changes",
-            {
-              event: "*",
-              schema: "public",
-              table: "orders",
-              filter: "seller_id=eq." + user.id,
-            },
-            onOrderEvent,
-          )
+          .on("postgres_changes", { event: "*", schema: "public", table: "orders", filter: "seller_id=eq." + user.id }, onOrderEvent)
           .subscribe();
       }
       function enableAlerts() {
-        if (!("Notification" in window))
-          return alert("This phone or browser does not support notifications.");
-        Notification.requestPermission().then(() => sorders());
+        if (!("Notification" in window)) return alert("This phone or browser does not support notifications.");
+        Notification.requestPermission().then(() => go(view));
       }
       let TODO = 0;
       async function loadTodo() {
         TODO = 0;
-        if (!user || !profile || !["seller", "admin"].includes(profile.role))
-          return;
-        const { count } = await sb
-          .from("orders")
-          .select("*", { count: "exact", head: true })
-          .eq("seller_id", user.id)
-          .in("status", ["paid", "confirmed"]);
+        BUYN = 0;
+        if (user) {
+          const r = await sb.from("orders").select("*", { count: "exact", head: true }).eq("buyer_id", user.id).in("status", ["ready", "handed_over"]);
+          BUYN = r.count || 0;
+        }
+        if (!user || !profile || !["seller", "admin"].includes(profile.role)) return;
+        const { count } = await sb.from("orders").select("*", { count: "exact", head: true }).eq("seller_id", user.id).in("status", ["paid", "confirmed", "ready"]);
         TODO = count || 0;
       }
       let MORE = [];
       function tabs() {
-        const t = [["home", "🏠", "Home"]];
-        if (user) t.push(["saved", "♥️", "Saved"], ["orders", "📦", "Orders"]);
+        const t = [["home", "🏠", "Home"], ["bulk", "🚚", "Bulk"]];
+        if (user) t.push(["saved", "♥️", "Saved"], ["orders", "📦", "Orders" + (BUYN ? " (" + BUYN + ")" : "")]);
         const more = [];
         if (profile && ["seller", "admin"].includes(profile.role))
-          more.push(
-            ["sell", "🏪", "My shop"],
-            ["sorders", "🧾", "Shop orders" + (TODO ? " (" + TODO + ")" : "")],
-          );
-        if (profile && profile.role === "promoter")
-          more.push(["promote", "📣", "Promote"]);
-        if (profile && profile.role === "admin")
-          more.push(["admin", "🛡️", "Admin"]);
+          more.push(["sell", "🏪", "My shop"], ["sorders", "🧾", "Shop orders" + (TODO ? " (" + TODO + ")" : "")]);
+        if (profile && profile.role === "promoter") more.push(["promote", "📣", "Promote"]);
+        if (profile && profile.role === "admin") more.push(["admin", "🛡️", "Admin"]);
         MORE = more;
         if (more.length === 1) t.push(more[0]);
         else if (more.length > 1) t.push(["more", "⋯", "More"]);
         t.push(["account", "👤", user ? "Account" : "Log in"]);
         $("tabs").innerHTML = t
           .map(([k, i, l]) => {
-            const on =
-              view === k || (k === "more" && more.some((x) => x[0] === view));
+            const on = view === k || (k === "more" && more.some((x) => x[0] === view));
             return `<button class="${on ? "on" : ""}" onclick="${k === "more" ? "openMore()" : `go('${k}')`}"><b>${i}</b>${l}${k === "more" && TODO ? `<i class="bdg">${TODO}</i>` : ""}</button>`;
           })
           .join("");
@@ -829,6 +706,14 @@
         }
         await loadSaved();
         await loadTodo();
+        if (user) {
+          if (TODO && !SHOWN) {
+            SHOWN = true;
+            notifySeller("Orders waiting to be delivered", TODO + (TODO === 1 ? " order needs" : " orders need") + " your attention");
+          }
+          const { data: ra } = await sb.rpc("claim_restock_alerts");
+          if (ra && ra.length) setTimeout(() => alert("Back in stock: " + ra.map((x) => x.title).join(", ")), 500);
+        }
         startAlerts();
         document
           .querySelectorAll("[data-sv]")
@@ -841,7 +726,8 @@
         view = v;
         window.scrollTo(0, 0);
         tabs();
-        ({ home, saved, orders, sell, sorders, account, admin, promote })[v]();
+        JOIN = null;
+        ({ home, saved, orders, sell, sorders, account, admin, promote, bulk, shop: () => shopPage(SHOPID) })[v]();
       }
       const back = () => go(prev || "home");
 
@@ -890,6 +776,7 @@
         io.observe($("more"));
         loadMore(true);
         loadReviews();
+        loadLeaders();
       }
       async function loadReviews() {
         const { data } = await sb
@@ -930,10 +817,8 @@
           .from("products")
           .select(PSEL)
           .eq("in_stock", true)
-          .order(
-            st.sort === "low" || st.sort === "high" ? "price" : "created_at",
-            { ascending: st.sort === "low" },
-          )
+          .order("boosted_until", { ascending: false, nullsFirst: false })
+          .order(st.sort === "low" || st.sort === "high" ? "price" : "created_at", { ascending: st.sort === "low" })
           .range(st.from, st.from + PAGE - 1);
         if (st.min) r = r.gte("price", st.min);
         if (st.max) r = r.lte("price", st.max);
@@ -980,7 +865,7 @@
         const { data: p, error } = await sb
           .from("products")
           .select(
-            "id,title,description,price,images,seller_id,details,stock_level,category,shop_name",
+            "id,title,description,price,images,seller_id,details,stock_level,category,shop_name,sale_type,min_qty,price_tiers,preorder_closes,expected_arrival,origin_country",
           )
           .eq("id", id)
           .maybeSingle();
@@ -988,6 +873,8 @@
           app.innerHTML = `<div class="box"><button class="act sv" style="flex:none;width:auto;justify-self:start" onclick="back()">← Back</button><p class="msg err">${esc(error?.message || "This item is no longer available.")}</p></div>`;
           return;
         }
+        ITEM = p;
+        sb.rpc("bump_view", { pid: p.id });
         let last = null,
           code = "";
         if (user) {
@@ -1005,20 +892,29 @@
         const imgs = p.images || [],
           out = p.stock_level === "out",
           det = Object.entries(p.details || {});
-        const form = out
-          ? '<p class="msg err">This item is out of stock.</p>'
+        const bulkItem = p.sale_type !== "retail",
+          q0 = bulkItem ? p.min_qty || 1 : 1,
+          closed = p.sale_type === "preorder" && p.preorder_closes && new Date(p.preorder_closes + "T23:59:59") < new Date();
+        const bulkInfo = !bulkItem ? "" : `<div class="chips"><span class="chip">${p.sale_type === "preorder" ? "Pre-order" : "Wholesale"}</span>${p.min_qty > 1 ? `<span class="chip">Minimum ${p.min_qty}</span>` : ""}${p.origin_country ? `<span class="chip">From ${esc(p.origin_country)}</span>` : ""}${p.expected_arrival ? `<span class="chip">Arrives about ${dt(p.expected_arrival)}</span>` : ""}${p.preorder_closes ? `<span class="chip">Pre-order closes ${dt(p.preorder_closes)}</span>` : ""}</div>${(p.price_tiers || []).length ? `<table class="dt">${p.price_tiers.map((t) => `<tr><td>${esc(t.min)}+ items</td><td>${money(t.price)} each</td></tr>`).join("")}</table>` : ""}`;
+        const form = closed
+          ? '<p class="msg err">Pre-orders for this item have closed.</p>'
+          : out
+          ? `<p class="msg err">This item is out of stock.</p><button class="act g" style="flex:none;width:100%" onclick="notifyMe('${p.id}')">🔔 Tell me when it is back</button>`
           : `<h3 style="margin:6px 0 0">Order this item</h3>${user ? "" : '<input id="gn" placeholder="Your full name" autocomplete="name"><input id="ge" type="email" placeholder="Email (for your payment receipt)" autocomplete="email">'}
    <input id="oph" type="tel" placeholder="Phone number" value="${esc(last?.phone || "")}" autocomplete="tel">
-   <select id="of" onchange="$('oa').hidden=this.value==='pickup'"><option value="delivery">Deliver to me</option><option value="pickup">I will pick it up</option></select>
+   ${bulkItem ? `<label style="font-size:13px;color:var(--mut)">Quantity${p.min_qty > 1 ? " (minimum " + p.min_qty + ")" : ""}</label><input id="oq" type="number" min="${q0}" value="${q0}" oninput="qtyChange()">` : ""}${JOIN ? '<p class="msg ok">You are joining a shipment from abroad. You pay the same way as any other order.</p>' : ""}
+   <select id="of" onchange="$('oa').hidden=this.value==='pickup';$('pki').hidden=this.value!=='pickup'"><option value="delivery">Deliver to me</option><option value="pickup">I will pick it up</option></select>
    <textarea id="oa" rows="2" placeholder="Delivery address">${esc(last?.delivery_address || "")}</textarea>
+   <div id="pki" class="msg" hidden></div>
    <textarea id="on" rows="2" maxlength="300" placeholder="${det.length ? "Tell the seller your " + esc(det.map((d) => d[0].toLowerCase()).join(", ")) + " (optional)" : "Note for the seller, like size or colour (optional)"}"></textarea>
    <input id="oc" placeholder="Promoter code (optional)" value="${esc(code)}" autocapitalize="characters">
-   <button class="act g" style="flex:none;width:100%" onclick="placeOrder('${p.id}','${p.seller_id}',${p.price})">Place order · ${money(p.price)}</button><div id="om" class="msg"></div>`;
+   <input id="oco" placeholder="Discount code (optional)" autocapitalize="characters">
+   <button id="ob" class="act g" style="flex:none;width:100%" onclick="placeOrder('${p.id}','${p.seller_id}',${p.price})">Place order · ${money(unitPrice(p, q0) * q0)}</button><div id="om" class="msg"></div>`;
         app.innerHTML = `<div class="box" style="max-width:640px">
    <button class="act sv" style="flex:none;width:auto;justify-self:start" onclick="back()">← Back</button>
    <div class="gal">${imgs[0] ? `<img id="big" class="big" src="${esc(imgs[0])}" alt="${esc(p.title)}">` : '<div class="ph" style="aspect-ratio:1;border-radius:10px">🛍️</div>'}
    ${imgs.length > 1 ? `<div class="thumbs">${imgs.map((u) => `<img src="${esc(u)}" alt="" onclick="$('big').src=this.src">`).join("")}</div>` : ""}</div>
-   <div style="font-weight:700;color:#e8890c">🏪 ${esc(p.shop_name || "Macstore")}</div><h2>${esc(p.title)}</h2><div class="price" style="font-size:22px">${money(p.price)}</div>${badge(p)}
+   <div onclick="shopPage('${p.seller_id}')" style="cursor:pointer;font-weight:700;color:#e8890c">🏪 ${esc(p.shop_name || "Macstore")}</div><h2>${esc(p.title)}</h2><div class="price" style="font-size:22px">${money(p.price)}</div>${badge(p)}${bulkInfo}
    ${p.description ? `<p style="white-space:pre-wrap;margin:0">${esc(p.description)}</p>` : ""}
    ${det.length ? `<table class="dt">${det.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join("")}</table>` : ""}
    ${p.category ? `<small style="color:var(--mut)">Category: ${esc(p.category)}</small>` : ""}
@@ -1026,25 +922,16 @@
    <button class="act sv" data-sv="${p.id}" data-full="1" style="flex:none;width:100%" onclick="save('${p.id}')">${heart(p.id)} ${SAVED.has(p.id) ? "Saved. Tap to remove" : "Save this item"}</button>
    ${form}</div>`;
         loadItemRatings(p.id);
+        if ($("pki")) {
+          $("pki").hidden = true;
+          showPickup(p.seller_id, $("pki"));
+        }
       }
       async function loadItemRatings(pid) {
-        const { data } = await sb
-          .from("ratings")
-          .select("stars,comment")
-          .eq("product_id", pid)
-          .order("created_at", { ascending: false })
-          .limit(20);
+        const { data } = await sb.from("ratings").select("stars,comment").eq("product_id", pid).order("created_at", { ascending: false }).limit(20);
         if (!$("irt") || !data || !data.length) return;
         const avg = data.reduce((a, r) => a + r.stars, 0) / data.length;
-        $("irt").innerHTML =
-          `<h3 style="margin:0">★ ${avg.toFixed(1)} · ${data.length} rating${data.length === 1 ? "" : "s"} from verified buyers</h3>${data
-            .filter((r) => r.comment)
-            .slice(0, 5)
-            .map(
-              (r) =>
-                `<p style="margin:4px 0">${"★".repeat(r.stars)} ${esc(r.comment)}</p>`,
-            )
-            .join("")}`;
+        $("irt").innerHTML = `<h3 style="margin:0">★ ${avg.toFixed(1)} · ${data.length} rating${data.length === 1 ? "" : "s"} from verified buyers</h3>${data.filter((r) => r.comment).slice(0, 5).map((r) => `<p style="margin:4px 0">${"★".repeat(r.stars)} ${esc(r.comment)}</p>`).join("")}`;
       }
       async function reportItem(pid, sid) {
         if (!user) {
@@ -1053,19 +940,8 @@
         }
         const reason = prompt("What is wrong with this item or seller?");
         if (!reason || !reason.trim()) return;
-        const { error } = await sb
-          .from("reports")
-          .insert({
-            reporter_id: user.id,
-            product_id: pid,
-            seller_id: sid,
-            reason: reason.trim(),
-          });
-        alert(
-          error
-            ? error.message
-            : "Thank you. The Macstore admin will look into it.",
-        );
+        const { error } = await sb.from("reports").insert({ reporter_id: user.id, product_id: pid, seller_id: sid, reason: reason.trim() });
+        alert(error ? error.message : "Thank you. The Macstore admin will look into it.");
       }
       let GUEST_EMAIL = "";
       const PAYSTACK_KEY = "pk_live_1778086fdaa797dc6aaf8e99d6beee56a2d045cb";
@@ -1107,7 +983,9 @@
           ful = $("of").value,
           addr = $("oa").value.trim(),
           code = $("oc").value.trim().toUpperCase(),
-          note = $("on").value.trim();
+          note = $("on").value.trim(),
+          qty = qtyOf();
+        amount = Math.round(unitPrice(ITEM, qty) * qty * 100) / 100;
         m.className = "msg err";
         const gname = user ? "" : $("gn").value.trim(),
           gmail = user ? "" : $("ge").value.trim();
@@ -1152,6 +1030,18 @@
           m.textContent = "You cannot use your own promoter code.";
           return;
         }
+        let cpn = null;
+        const cc = ($("oco") ? $("oco").value.trim() : "").toUpperCase();
+        if (cc) {
+          const r2 = await sb.rpc("check_coupon", { c: cc, sid });
+          if (r2.error || !r2.data) {
+            m.className = "msg err";
+            m.textContent = "That discount code is not valid for this shop.";
+            return;
+          }
+          amount = Math.round(amount * (1 - Number(r2.data) / 100) * 100) / 100;
+          cpn = cc;
+        }
         const row = {
           buyer_id: user ? user.id : null,
           guest_name: user ? null : gname,
@@ -1165,7 +1055,10 @@
           phone,
           promo_code: code || null,
           note: note || null,
+          quantity: qty,
+          coupon_code: cpn,
         };
+        if (JOIN && ITEM.id === pid) row.shipment_id = JOIN;
         if (promoter) row.promoter_id = promoter;
         const { data, error } = user
           ? await sb
@@ -1194,41 +1087,194 @@
         setTimeout(() => go("orders"), 1500);
       }
 
+
+      /* DELIVERY STEPS, PICK-UP LOCATION, BULK AND PRE-ORDER */
+      let ITEM = null,
+        JOIN = null;
+      const ST = { awaiting_payment: "Awaiting payment", paid: "Paid", pending: "Pending", confirmed: "Confirmed", ready: "Waiting to be delivered", handed_over: "Delivered by seller", delivered: "Delivered (received by buyer)", cancelled: "Cancelled" };
+      const unitPrice = (p, q) => {
+        let u = Number(p.price);
+        (p.price_tiers || []).forEach((t) => {
+          if (q >= t.min && Number(t.price) < u) u = Number(t.price);
+        });
+        return u;
+      };
+      function qtyOf() {
+        return $("oq") ? Math.max(parseInt($("oq").value) || 1, ITEM.min_qty || 1) : 1;
+      }
+      function qtyChange() {
+        const q = qtyOf(), u = unitPrice(ITEM, q);
+        $("ob").textContent = "Place order · " + money(u * q) + (q > 1 ? " (" + q + " × " + money(u) + ")" : "");
+      }
+      async function showPickup(sid, el) {
+        const { data } = await sb.rpc("seller_pickup", { sid }),
+          r = data && data[0];
+        el.innerHTML = r && r.address
+          ? `<b>Pick-up location</b><br>${esc(r.address)}${r.hours ? "<br>Open: " + esc(r.hours) : ""}${r.map_link && /^https?:\/\//.test(r.map_link) ? `<br><a href="${esc(r.map_link)}" target="_blank" rel="noopener">Open in Maps</a>` : ""}`
+          : "The seller has not added a pick-up location yet. They will call you after you order.";
+      }
+      async function orderStep(id, step) {
+        const { error } = await sb.rpc("seller_order_step", { o: id, s: step });
+        if (error) return alert(error.message);
+        sorders();
+        loadTodo();
+      }
+      async function received(id) {
+        if (!confirm("Confirm that you received this item?")) return;
+        const { error } = await sb.rpc("buyer_confirm_received", { o: id });
+        if (error) return alert(error.message);
+        orders();
+      }
+      async function pickBox() {
+        const el = $("pkb");
+        if (!el) return;
+        const { data } = await sb.from("profiles").select("pickup_address,pickup_hours,pickup_map_link").eq("id", user.id).maybeSingle();
+        el.innerHTML = `<div class="box" style="max-width:none"><h2>Pick-up location</h2><p style="margin:0;color:var(--mut)">Buyers who choose pick-up see this after they order.</p><input id="pua" placeholder="Address or landmark" value="${esc(data?.pickup_address || "")}"><input id="puh" placeholder="Opening hours, like Mon to Sat 9am to 6pm" value="${esc(data?.pickup_hours || "")}"><input id="pul" placeholder="Map link (optional)" value="${esc(data?.pickup_map_link || "")}"><button class="act sv" style="flex:none;width:100%" onclick="useGps()">📍 Use my current location</button><button class="act g" onclick="savePickup()">Save pick-up location</button><button class="act sv" style="flex:none;width:100%" onclick="copyShop('${user.id}')">🔗 Copy my shop link</button><div id="pum" class="msg"></div></div>`;
+      }
+      function useGps() {
+        if (!navigator.geolocation) return alert("Location is not available on this phone.");
+        navigator.geolocation.getCurrentPosition((g) => ($("pul").value = `https://www.google.com/maps?q=${g.coords.latitude},${g.coords.longitude}`), () => alert("Allow location access, or paste a map link."));
+      }
+      async function savePickup() {
+        const m = $("pum"), a = $("pua").value.trim(), l = $("pul").value.trim();
+        m.className = "msg err";
+        if (!a) return (m.textContent = "Enter the pick-up address.");
+        if (l && !/^https?:\/\//.test(l)) return (m.textContent = "The map link must start with https://");
+        const { error } = await sb.rpc("save_pickup", { a, h: $("puh").value.trim(), l });
+        m.className = error ? "msg err" : "msg ok";
+        m.textContent = error ? error.message : "✓ Saved. Buyers see it when they pick up.";
+      }
+      async function shipBox() {
+        const el = $("shb");
+        if (!el) return;
+        const { data } = await sb.from("products").select("id,title").eq("seller_id", user.id).eq("sale_type", "preorder");
+        el.innerHTML = data && data.length
+          ? `<div class="box" style="max-width:none"><h2>Start a shipment from abroad</h2><p style="margin:0;color:var(--mut)">Buyers join together until you reach your target quantity.</p><select id="sp">${data.map((x) => `<option value="${x.id}">${esc(x.title)}</option>`).join("")}</select><input id="sq" type="number" min="1" placeholder="Target quantity"><label style="font-size:13px;color:var(--mut)">Joining closes on</label><input id="sc" type="date"><button class="act g" onclick="addShipment()">Open shipment</button><div id="sm" class="msg"></div></div>`
+          : "";
+      }
+      async function addShipment() {
+        const m = $("sm"), q = parseInt($("sq").value);
+        m.className = "msg err";
+        if (!(q > 0) || !$("sc").value) return (m.textContent = "Enter a target quantity and a closing date.");
+        const { error } = await sb.from("shipments").insert({ seller_id: user.id, product_id: $("sp").value, target_qty: q, closes_at: $("sc").value });
+        m.className = error ? "msg err" : "msg ok";
+        m.textContent = error ? error.message : "✓ Shipment opened. Buyers can join it from the Bulk tab.";
+      }
+      async function bulk() {
+        app.innerHTML = '<div class="sec"><h2>Bulk and pre-order</h2><p style="margin:0 0 8px;color:var(--mut)">Buy in bulk for lower prices, pre-order items, or join a shipment from abroad. You pay the same way as any order.</p><h3>Shipments from abroad</h3><div id="shp"><div class="sk"></div></div><h3>Wholesale and pre-order items</h3><div id="bl"><div class="sk"></div></div></div>';
+        const [s, b] = await Promise.all([
+          sb.rpc("open_shipments"),
+          sb.from("products").select(PSEL).in("sale_type", ["wholesale", "preorder"]).neq("stock_level", "out").order("created_at", { ascending: false }).limit(40),
+        ]);
+        $("shp").innerHTML = (s.data || []).map((x) => `<div class="mine"><span>${esc(x.title)} · ${esc(x.shop_name || "Macstore")}<small>From ${esc(x.origin_country || "abroad")}${x.expected_arrival ? " · arrives about " + dt(x.expected_arrival) : ""}<br>${x.joined} of ${x.target_qty} joined · closes ${dt(x.closes_at)}<span style="display:block;height:6px;background:#e5e5ea;border-radius:3px;margin-top:4px"><span style="display:block;height:6px;width:${Math.min(100, Math.round((x.joined / x.target_qty) * 100))}%;background:#00a651;border-radius:3px"></span></span></small></span><button class="act g" onclick="JOIN='${x.id}';item('${x.product_id}')">Join</button></div>`).join("") || '<p class="empty" style="padding:12px 0">No open shipments right now.</p>';
+        $("bl").innerHTML = b.error ? `<p class="msg err">${esc(b.error.message)}</p>` : (b.data || []).length ? `<div class="grid">${b.data.map(card).join("")}</div>` : '<p class="empty" style="padding:12px 0">No wholesale or pre-order items yet.</p>';
+      }
+
+
+      /* SHOP PAGES, LEADERBOARD, STATS, COUPONS, PROBLEM REPORTS, RESTOCK ALERTS */
+      let SHOPID = null;
+      const waLink = (phone, text) => {
+        let d = String(phone || "").replace(/\D/g, "");
+        if (d.startsWith("0")) d = "233" + d.slice(1);
+        return "https://wa.me/" + d + "?text=" + encodeURIComponent(text);
+      };
+      async function shopPage(sid) {
+        SHOPID = sid;
+        if (view !== "shop" && view !== "item") prev = view;
+        view = "shop";
+        tabs();
+        window.scrollTo(0, 0);
+        app.innerHTML = '<div class="sk"></div>';
+        const [p, r] = await Promise.all([
+          sb.from("products").select(PSEL).eq("seller_id", sid).eq("in_stock", true).order("created_at", { ascending: false }).limit(60),
+          sb.rpc("seller_stats", { sid }),
+        ]);
+        const x = (r.data && r.data[0]) || {}, name = (p.data && p.data[0]?.shop_name) || "Macstore shop";
+        app.innerHTML = `<div class="box" style="max-width:none"><button class="act sv" style="flex:none;width:auto;justify-self:start" onclick="back()">← Back</button><h2>🏪 ${esc(name)} ${x.verified ? '<span class="chip" style="background:#00a651;color:#fff">✓ Verified seller</span>' : ""}</h2><p style="margin:0;color:var(--mut)">${x.rating_count ? stars(Math.round(x.avg_stars)) + " " + Number(x.avg_stars).toFixed(1) + " (" + x.rating_count + " ratings)" : "No ratings yet"} · ${x.total ? Math.round((x.delivered / x.total) * 100) + "% of orders delivered" : "New seller"}</p><button class="act sv" style="flex:none;width:100%" onclick="copyShop('${sid}')">🔗 Copy shop link</button></div><div class="sec"><div class="grid">${(p.data || []).map(card).join("") || '<div class="empty">No items yet.</div>'}</div></div>`;
+      }
+      function copyShop(sid) {
+        const u = location.origin + location.pathname + "?shop=" + sid;
+        navigator.clipboard ? navigator.clipboard.writeText(u).then(() => alert("Shop link copied. Share it anywhere."), () => prompt("Copy this link", u)) : prompt("Copy this link", u);
+      }
+      async function loadLeaders() {
+        const { data } = await sb.rpc("leaderboard");
+        if (!data || !data.length || !$("rev")) return;
+        const f = (k) => data.filter((x) => x.kind === k).map((x, i) => `<div class="mine"><span>${["🥇", "🥈", "🥉", "4.", "5."][i]} ${esc(x.name)}<small>${k === "seller" ? x.score + " orders delivered" : money(x.score) + " commission earned"}</small></span></div>`).join("");
+        $("rev").insertAdjacentHTML("beforebegin", `<div class="sec"><h2>🏆 Top this month</h2><h3>Sellers</h3>${f("seller") || "<p>No sellers yet.</p>"}<h3>Promoters</h3>${f("promoter") || "<p>No promoters yet.</p>"}</div>`);
+      }
+      async function statsBox() {
+        const el = $("stb");
+        if (!el) return;
+        const { data } = await sb.rpc("my_product_stats");
+        el.innerHTML = data && data.length ? `<div class="box" style="max-width:none"><h2>How your items are doing</h2>${data.map((x) => `<div class="mine"><span>${esc(x.title)}<small>${x.views} views · ${x.saves} saves · ${x.orders} orders · ${money(x.revenue)} earned</small></span></div>`).join("")}</div>` : "";
+      }
+      async function couponBox() {
+        const el = $("cpb");
+        if (!el) return;
+        const { data } = await sb.from("coupons").select("id,code,pct,expires_at").eq("seller_id", user.id).order("created_at", { ascending: false });
+        el.innerHTML = `<div class="box" style="max-width:none"><h2>Discount codes</h2><p style="margin:0;color:var(--mut)">Give buyers a percentage off your items.</p>${(data || []).map((c) => `<div class="mine"><span>${esc(c.code)} · ${c.pct}% off<small>${c.expires_at ? "Until " + dt(c.expires_at) : "No end date"}</small></span><button class="act r" onclick="delCoupon('${c.id}')">Delete</button></div>`).join("")}<input id="cpc" placeholder="Code, like EASTER10" maxlength="20" autocapitalize="characters"><input id="cpp" type="number" min="1" max="90" placeholder="Percent off (1 to 90)"><label style="font-size:13px;color:var(--mut)">Ends on (optional)</label><input id="cpe" type="date"><button class="act g" onclick="addCoupon()">Create code</button><div id="cpm" class="msg"></div></div>`;
+      }
+      async function addCoupon() {
+        const m = $("cpm"), c = $("cpc").value.trim().toUpperCase(), p = Number($("cpp").value);
+        m.className = "msg err";
+        if (!/^[A-Z0-9-]{3,20}$/.test(c) || !(p >= 1 && p <= 90)) return (m.textContent = "Enter a code (letters and numbers) and a percent from 1 to 90.");
+        const { error } = await sb.from("coupons").insert({ code: c, pct: p, seller_id: user.id, expires_at: $("cpe").value || null });
+        if (error) return (m.textContent = error.code === "23505" ? "That code is already taken. Try another." : error.message);
+        couponBox();
+      }
+      async function delCoupon(id) {
+        await sb.from("coupons").delete().eq("id", id);
+        couponBox();
+      }
+      async function dispute(oid) {
+        const r = prompt("What went wrong with this order?");
+        if (!r || r.trim().length < 5) return;
+        const { error } = await sb.from("disputes").insert({ order_id: oid, buyer_id: user.id, reason: r.trim() });
+        if (error) return alert(error.message);
+        orders();
+      }
+      async function notifyMe(pid) {
+        if (!user) {
+          mode = "login";
+          return go("account");
+        }
+        const { error } = await sb.from("stock_alerts").upsert({ user_id: user.id, product_id: pid });
+        alert(error ? error.message : "Done. We will tell you here when it is back in stock.");
+      }
+      async function adBoost(id) {
+        const d = parseInt(prompt("Feature this item for how many days?", "7"));
+        if (!(d > 0)) return;
+        const { error } = await sb.rpc("admin_boost", { pid: id, days: d });
+        alert(error ? error.message : "Featured for " + d + " days.");
+      }
+      async function adDisputes() {
+        const { data, error } = await sb.from("disputes").select("id,order_id,reason,status,created_at").order("created_at", { ascending: false }).limit(50);
+        adEl().innerHTML = error ? `<p class="err msg">${esc(error.message)}</p>` : (data || []).map((d) => `<div class="mine"><span>${esc(d.reason)}<small>${dt(d.created_at)} · order ${esc(String(d.order_id).slice(0, 8).toUpperCase())}</small></span><select aria-label="Problem status" onchange="setStatus('disputes','${d.id}',this.value)">${opts(["open", "investigating", "resolved"], d.status)}</select></div>`).join("") || "<p>No problem reports.</p>";
+      }
+
       /* BUYER ORDER HISTORY (orders and delivery details stay here) */
       const OST = {
         awaiting_payment: "Awaiting payment",
         paid: "Paid",
         pending: "Pending",
         confirmed: "Confirmed",
-        delivered: "Delivered",
+        ready: "Waiting to be delivered",
+        handed_over: "Delivered by seller",
+        delivered: "Received",
         cancelled: "Cancelled",
       };
       function timeline(status) {
         if (status === "cancelled") return "<b>Cancelled</b>";
-        const i =
-          {
-            awaiting_payment: 0,
-            pending: 0,
-            paid: 1,
-            confirmed: 2,
-            delivered: 3,
-          }[status] ?? 0;
-        return ["Placed", "Paid", "Confirmed", "Delivered"]
-          .map(
-            (l, k) =>
-              `<span style="color:${k <= i ? "#00a651" : "#a0a0a6"}">${k <= i ? "●" : "○"} ${l}</span>`,
-          )
+        const i = { awaiting_payment: 0, pending: 0, paid: 1, confirmed: 2, ready: 3, handed_over: 4, delivered: 5 }[status] ?? 0;
+        return ["Placed", "Paid", "Confirmed", "Waiting to be delivered", "Delivered", "Received"]
+          .map((l, k) => `<span style="color:${k <= i ? "#00a651" : "#a0a0a6"}">${k <= i ? "●" : "○"} ${l}</span>`)
           .join(" › ");
       }
       async function rate(oid, pid, sid) {
         const n = Number($("rs" + oid).value),
           { error } = await sb.from("ratings").insert({
-            order_id: oid,
-            product_id: pid,
-            seller_id: sid,
-            buyer_id: user.id,
-            stars: n,
-            comment: $("rc" + oid).value.trim() || null,
+            order_id: oid, product_id: pid, seller_id: sid, buyer_id: user.id,
+            stars: n, comment: $("rc" + oid).value.trim() || null,
           });
         if (error) return alert(error.message);
         orders();
@@ -1236,24 +1282,17 @@
       async function orders() {
         if (!user) return go("account");
         app.innerHTML =
-          '<div class="sec"><h2>My orders</h2><div id="ol"><div class="sk"></div></div></div>';
+          `<div class="sec"><h2>My orders</h2>${"Notification" in window && Notification.permission === "default" ? '<button class="act g" style="flex:none;width:100%;margin-bottom:8px" onclick="enableAlerts()">🔔 Get alerts when your order is ready</button>' : ""}<div id="ol"><div class="sk"></div></div></div>`;
         const { data, error } = await sb
           .from("orders")
           .select(
-            "id,seller_id,amount,status,fulfilment,delivery_address,phone,promo_code,note,created_at,products(id,title,images)",
+            "id,seller_id,amount,quantity,status,fulfilment,delivery_address,phone,promo_code,note,created_at,products(id,title,images)",
           )
           .eq("buyer_id", user.id)
           .order("created_at", { ascending: false });
-        const rated = new Set(
-          (
-            (
-              await sb
-                .from("ratings")
-                .select("order_id")
-                .eq("buyer_id", user.id)
-            ).data || []
-          ).map((r) => r.order_id),
-        );
+        const rated = new Set(((await sb.from("ratings").select("order_id").eq("buyer_id", user.id)).data || []).map((r) => r.order_id));
+        const dsp = {};
+        ((await sb.from("disputes").select("order_id,status").eq("buyer_id", user.id)).data || []).forEach((d) => (dsp[d.order_id] = d.status));
         $("ol").innerHTML = error
           ? `<p class="msg err">${esc(error.message)}</p>`
           : (data || [])
@@ -1262,11 +1301,12 @@
                   o,
                 ) => `<div class="mine">${o.products?.images && o.products.images[0] ? `<img src="${esc(o.products.images[0])}" alt="" loading="lazy">` : ""}
    <span>${esc(o.products?.title || "Item no longer listed")} · ${money(o.amount)}
-   <small>${dt(o.created_at)} · <b>${esc(OST[o.status] || o.status)}</b>${o.status === "awaiting_payment" ? ` <button class="act g" style="flex:none;padding:6px 12px" onclick="payOrder('${o.id}',${o.amount})">Pay now</button>` : ""}<br>${o.fulfilment === "pickup" ? "Pick-up" : "Delivery to: " + esc(o.delivery_address || "")}${o.phone ? "<br>Phone: " + esc(o.phone) : ""}${o.note ? "<br>Your note: " + esc(o.note) : ""}<br>${timeline(o.status)}${o.status === "delivered" && o.products?.id && !rated.has(o.id) ? `<br><select id="rs${o.id}" style="width:auto">${[5, 4, 3, 2, 1].map((n) => `<option value="${n}">${"★".repeat(n)}</option>`).join("")}</select> <input id="rc${o.id}" placeholder="How was it? (optional)" style="width:150px"> <button class="act g" style="flex:none;padding:6px 12px" onclick="rate('${o.id}','${o.products.id}','${o.seller_id}')">Rate</button>` : ""}${o.promo_code ? "<br>Promoter code: " + esc(o.promo_code) : ""}</small></span>
+   <small>${dt(o.created_at)} · <b>${esc(OST[o.status] || o.status)}</b>${o.status === "awaiting_payment" ? ` <button class="act g" style="flex:none;padding:6px 12px" onclick="payOrder('${o.id}',${o.amount})">Pay now</button>` : ""}<br>${o.quantity > 1 ? "Quantity: " + o.quantity + "<br>" : ""}${o.fulfilment === "pickup" ? "Pick-up" : "Delivery to: " + esc(o.delivery_address || "")}${o.phone ? "<br>Phone: " + esc(o.phone) : ""}${o.note ? "<br>Your note: " + esc(o.note) : ""}<br>${timeline(o.status)}${o.status === "handed_over" ? `<br><button class="act g" style="flex:none;width:100%;margin-top:6px" onclick="received('${o.id}')">✓ I have received it</button>` : ""}${dsp[o.id] ? `<br><b>Problem report: ${esc(dsp[o.id])}</b>` : ["paid", "confirmed", "ready", "handed_over", "delivered"].includes(o.status) ? `<br><button class="act sv" style="flex:none;width:100%;margin-top:6px" onclick="dispute('${o.id}')">⚠ Report a problem</button>` : ""}${o.fulfilment === "pickup" && !["delivered", "cancelled"].includes(o.status) ? `<div class="msg" id="pu${o.id}" data-s="${o.seller_id}"></div>` : ""}${o.status === "delivered" && o.products?.id && !rated.has(o.id) ? `<br><select id="rs${o.id}" style="width:auto">${[5, 4, 3, 2, 1].map((n) => `<option value="${n}">${"★".repeat(n)}</option>`).join("")}</select> <input id="rc${o.id}" placeholder="How was it? (optional)" style="width:150px"> <button class="act g" style="flex:none;padding:6px 12px" onclick="rate('${o.id}','${o.products.id}','${o.seller_id}')">Rate</button>` : ""}${o.promo_code ? "<br>Promoter code: " + esc(o.promo_code) : ""}</small></span>
    ${o.products?.id ? `<button class="act" onclick="item('${o.products.id}')">View item</button>` : ""}</div>`,
               )
               .join("") ||
             '<p class="empty" style="padding:20px 0">No orders yet. Your orders and delivery details will stay here.</p>';
+        document.querySelectorAll("[id^=pu][data-s]").forEach((e) => showPickup(e.dataset.s, e));
       }
 
       /* ACCOUNT */
@@ -1469,9 +1509,7 @@
       function paintHearts(id) {
         document.querySelectorAll(`[data-sv="${id}"]`).forEach((b) => {
           b.textContent = b.dataset.full
-            ? heart(id) +
-              " " +
-              (SAVED.has(id) ? "Saved. Tap to remove" : "Save this item")
+            ? heart(id) + " " + (SAVED.has(id) ? "Saved. Tap to remove" : "Save this item")
             : heart(id);
         });
       }
@@ -1525,7 +1563,7 @@
       }
 
       /* SELLER: ORDERS TO DELIVER + EARNINGS */
-      const PAIDSTATES = ["paid", "confirmed", "delivered"];
+      const PAIDSTATES = ["paid", "confirmed", "ready", "handed_over", "delivered"];
       async function sellerEarnings(el) {
         const { data, error } = await sb
           .from("orders")
@@ -1547,7 +1585,7 @@
             if (cod || o.seller_paid) received += net;
             else waiting += net;
           } else if (
-            !["cancelled", "awaiting_payment"].includes(o.status) &&
+            !["cancelled", "awaiting_payment", "handed_over"].includes(o.status) &&
             (cod || PAIDSTATES.includes(o.status))
           )
             toDeliver++;
@@ -1557,12 +1595,13 @@
       async function sorders() {
         if (!profile || !["seller", "admin"].includes(profile.role))
           return go("home");
-        app.innerHTML = `<div class="sec"><h2>Shop orders</h2>${"Notification" in window && Notification.permission === "default" ? '<button class="act g" style="flex:none;width:100%;margin-bottom:8px" onclick="enableAlerts()">🔔 Turn on order alerts</button>' : ""}<div id="earn"></div><div id="sol"><div class="sk"></div></div></div>`;
+        app.innerHTML =
+          `<div class="sec"><h2>Shop orders</h2>${"Notification" in window && Notification.permission === "default" ? '<button class="act g" style="flex:none;width:100%;margin-bottom:8px" onclick="enableAlerts()">🔔 Turn on order alerts</button>' : ""}<div id="earn"></div><div id="sol"><div class="sk"></div></div></div>`;
         sellerEarnings($("earn"));
         const { data, error } = await sb
           .from("orders")
           .select(
-            "id,amount,commission_amount,status,fulfilment,payment_method,delivery_address,phone,guest_name,note,created_at,products(id,title,images)",
+            "id,amount,quantity,commission_amount,status,fulfilment,payment_method,delivery_address,phone,guest_name,note,created_at,products(id,title,images)",
           )
           .eq("seller_id", user.id)
           .order("created_at", { ascending: false })
@@ -1574,35 +1613,22 @@
                 const cod = o.payment_method !== "in_app",
                   paid = PAIDSTATES.includes(o.status);
                 let tag, col, show;
-                if (o.status === "cancelled")
-                  [tag, col, show] = ["Cancelled", "#75757a", false];
-                else if (cod)
-                  [tag, col, show] = [
-                    "Cash on delivery. Collect " + money(o.amount),
-                    "#b45309",
-                    true,
-                  ];
-                else if (paid)
-                  [tag, col, show] = [
-                    "Paid. Ready to deliver",
-                    "#00a651",
-                    true,
-                  ];
-                else
-                  [tag, col, show] = [
-                    "Awaiting payment. Do not deliver yet",
-                    "#e5252a",
-                    false,
-                  ];
-                const done = o.status === "delivered" ? " · Delivered" : "",
+                if (o.status === "cancelled") [tag, col, show] = ["Cancelled", "#75757a", false];
+                else if (cod) [tag, col, show] = ["Cash on delivery. Collect " + money(o.amount), "#b45309", true];
+                else if (paid) [tag, col, show] = ["Paid. Ready to deliver", "#00a651", true];
+                else [tag, col, show] = ["Awaiting payment. Do not deliver yet", "#e5252a", false];
+                const done = { delivered: " · Received by buyer", handed_over: " · Waiting for the buyer to tap Received", ready: " · Ready", confirmed: " · Confirmed" }[o.status] || "",
                   youGet = Number(o.amount) - Number(o.commission_amount || 0);
+                const pk = o.fulfilment === "pickup",
+                  nxt = show && ({ paid: ["confirmed", "Confirm order"], pending: ["confirmed", "Confirm order"], confirmed: ["ready", pk ? "Ready for pick-up" : "Ready to deliver"], ready: ["handed_over", pk ? "Mark as handed over" : "Mark as delivered"] })[o.status],
+                  stepBtn = (nxt ? `<br><button class="act g" style="flex:none;width:100%;margin-top:6px" onclick="orderStep('${o.id}','${nxt[0]}')">${nxt[1]}</button>` : "");
                 return `<div class="mine">${o.products?.images && o.products.images[0] ? `<img src="${esc(o.products.images[0])}" alt="" loading="lazy">` : ""}
    <span>${esc(o.products?.title || "Item no longer listed")} · ${money(o.amount)}
-   <small>${dt(o.created_at)}${done}<br><b style="color:${col}">${esc(tag)}</b>${Number(o.commission_amount) > 0 ? `<br>You get ${money(youGet)} after the promoter’s commission` : ""}${
+   <small>${dt(o.created_at)}${o.quantity > 1 ? " · Qty " + o.quantity : ""}${done}<br><b style="color:${col}">${esc(tag)}</b>${Number(o.commission_amount) > 0 ? `<br>You get ${money(youGet)} after the promoter’s commission` : ""}${
      show
        ? `<br>${o.fulfilment === "pickup" ? "Pick-up: the buyer collects" : "Deliver to: " + esc(o.delivery_address || "")}<br>${o.guest_name ? esc(o.guest_name) + " · " : ""}Call: ${esc(o.phone || "")}${o.note ? "<br><b>Buyer’s note: " + esc(o.note) + "</b>" : ""}`
        : "<br>Buyer details show here once the order is paid."
-   }</small></span>
+   }${stepBtn}</small></span>
    ${o.products?.id ? `<button class="act" onclick="item('${o.products.id}')">View item</button>` : ""}</div>`;
               })
               .join("") ||
@@ -1633,7 +1659,7 @@
      )
      .join("")}</select>
    <label style="font-size:13px;color:var(--mut)">${p.id ? "Photos (choose new ones only to replace the old photos, up to 4)" : "Photos (up to 4)"}</label>
-   <input id="f" type="file" accept="image/*" multiple><datalist id="dkeys"><option>Size</option><option>Length</option><option>Colour</option><option>Material</option><option>Weight</option></datalist><div id="dl" style="display:grid;gap:6px"></div><button type="button" class="act sv" style="flex:none;width:100%" onclick="addDetail()">+ Add detail (size, length…)</button><label style="display:flex;gap:8px;align-items:center"><input id="pe" type="checkbox" style="width:auto" ${p.promo_enabled ? "checked" : ""}> Let promoters sell this item for a commission</label><input id="cm" type="number" min="2" max="30" step="0.5" placeholder="Commission % for promoters (2 to 30)" value="${p.commission_pct || ""}"><button class="act g" onclick="saveProduct()">${p.id ? "Save changes" : "Add product"}</button>${p.id ? '<button class="act sv" style="flex:none;width:100%" onclick="sell()">Cancel</button>' : ""}<div id="m" class="msg"></div></div>`;
+   <input id="f" type="file" accept="image/*" multiple><datalist id="dkeys"><option>Size</option><option>Length</option><option>Colour</option><option>Material</option><option>Weight</option></datalist><div id="dl" style="display:grid;gap:6px"></div><button type="button" class="act sv" style="flex:none;width:100%" onclick="addDetail()">+ Add detail (size, length…)</button><label style="display:flex;gap:8px;align-items:center"><input id="pe" type="checkbox" style="width:auto" ${p.promo_enabled ? "checked" : ""}> Let promoters sell this item for a commission</label><input id="cm" type="number" min="2" max="30" step="0.5" placeholder="Commission % for promoters (2 to 30)" value="${p.commission_pct || ""}"><label style="font-size:13px;color:var(--mut)">How do you sell this item?</label><select id="stp" onchange="$('bk').hidden=this.value==='retail'"><option value="retail" ${p.sale_type === "retail" || !p.sale_type ? "selected" : ""}>Normal, one at a time</option><option value="wholesale" ${p.sale_type === "wholesale" ? "selected" : ""}>Wholesale, bulk</option><option value="preorder" ${p.sale_type === "preorder" ? "selected" : ""}>Pre-order</option></select><div id="bk" style="display:grid;gap:6px" ${p.sale_type && p.sale_type !== "retail" ? "" : "hidden"}><input id="mq" type="number" min="1" placeholder="Minimum order quantity" value="${p.min_qty > 1 ? p.min_qty : ""}"><textarea id="tr" rows="3" placeholder="Bulk prices, one per line: quantity=price (example 10=45)">${esc((p.price_tiers || []).map((t) => t.min + "=" + t.price).join("\n"))}</textarea><input id="og" placeholder="Shipping from which country? (optional)" value="${esc(p.origin_country || "")}"><label style="font-size:13px;color:var(--mut)">Pre-order closes on</label><input id="pc" type="date" value="${p.preorder_closes || ""}"><label style="font-size:13px;color:var(--mut)">Expected arrival</label><input id="ea" type="date" value="${p.expected_arrival || ""}"></div><button class="act g" onclick="saveProduct()">${p.id ? "Save changes" : "Add product"}</button>${p.id ? '<button class="act sv" style="flex:none;width:100%" onclick="sell()">Cancel</button>' : ""}<div id="m" class="msg"></div></div>`;
       }
       async function sell() {
         EDIT = null;
@@ -1680,29 +1706,23 @@
      ${sub.status === "trial" ? `<button class="act sv" style="flex:none" onclick="startPlan('${other}')">Switch to ${PLANS[other].name} (GH₵ ${PLANS[other].price} a month, ${PLANS[other].limit} a week)</button>` : ""}</div>`;
         } else pl.innerHTML = "";
         CAN_ADD = canAdd;
-        shop.innerHTML = `<div id="earn"></div><div id="rn"></div><div id="fw">${canAdd ? formHTML() : ""}</div><h2>My products</h2><div id="mine"></div>`;
+        shop.innerHTML = `<div id="earn"></div><div id="rn"></div><div id="pkb"></div><div id="fw">${canAdd ? formHTML() : ""}</div><div id="stb"></div><div id="shb"></div><div id="cpb"></div><h2>My products</h2><div id="mine"></div>`;
         sellerEarnings($("earn"));
         shopBox();
+        pickBox();
         loadMine();
+        shipBox();
+        couponBox();
+        statsBox();
       }
       async function shopBox() {
         const el = $("rn");
         if (!el) return;
         const [{ data }, { data: pr }] = await Promise.all([
-          sb
-            .from("seller_verification")
-            .select("shop_name")
-            .eq("user_id", user.id)
-            .maybeSingle(),
-          sb
-            .from("profiles")
-            .select("shop_renamed_at")
-            .eq("id", user.id)
-            .maybeSingle(),
+          sb.from("seller_verification").select("shop_name").eq("user_id", user.id).maybeSingle(),
+          sb.from("profiles").select("shop_renamed_at").eq("id", user.id).maybeSingle(),
         ]);
-        const next = pr?.shop_renamed_at
-            ? new Date(new Date(pr.shop_renamed_at).getTime() + 30 * 864e5)
-            : null,
+        const next = pr?.shop_renamed_at ? new Date(new Date(pr.shop_renamed_at).getTime() + 30 * 864e5) : null,
           locked = next && next > new Date();
         el.innerHTML = `<div class="box" style="max-width:none"><h2>Your shop name</h2><p style="margin:0;color:var(--mut)">Buyers see this on top of every item you post. You can change it once a month.</p><input id="sn" maxlength="40" placeholder="Shop name" value="${esc(data?.shop_name || "")}" ${locked ? "disabled" : ""}><button class="act g" onclick="renameShop()" ${locked ? "disabled" : ""}>Save shop name</button><div id="snm" class="msg">${locked ? "You can rename again on " + dt(next) + "." : ""}</div></div>`;
       }
@@ -1718,9 +1738,7 @@
         m.textContent = "Saving…";
         const { error } = await sb.rpc("rename_shop", { new_name: n });
         m.className = error ? "msg err" : "msg ok";
-        m.textContent = error
-          ? error.message
-          : "✓ Saved. Every item now shows this name.";
+        m.textContent = error ? error.message : "✓ Saved. Every item now shows this name.";
         if (!error) shopBox();
       }
       async function startPlan(p) {
@@ -1765,7 +1783,7 @@
         const { data: p, error } = await sb
           .from("products")
           .select(
-            "id,title,description,price,category,details,stock_level,promo_enabled,commission_pct",
+            "id,title,description,price,category,details,stock_level,promo_enabled,commission_pct,sale_type,min_qty,price_tiers,preorder_closes,expected_arrival,origin_country",
           )
           .eq("id", id)
           .maybeSingle();
@@ -1827,6 +1845,13 @@
             promo_enabled: pe,
             commission_pct: pe ? cm : 0,
           };
+        const stp = $("stp").value;
+        row.sale_type = stp;
+        row.min_qty = stp === "retail" ? 1 : Math.max(1, parseInt($("mq").value) || 1);
+        row.price_tiers = stp === "retail" ? [] : $("tr").value.split("\n").map((l) => l.split("=").map((x) => Number(x.trim()))).filter((a) => a[0] > 0 && a[1] > 0).map(([min, price]) => ({ min, price }));
+        row.origin_country = stp === "retail" ? null : $("og").value.trim() || null;
+        row.preorder_closes = stp === "preorder" ? $("pc").value || null : null;
+        row.expected_arrival = stp === "preorder" ? $("ea").value || null : null;
         let error;
         if (EDIT) {
           if (images.length) row.images = images;
@@ -1880,6 +1905,7 @@
         "feedback",
         "payouts",
         "reports",
+        "disputes",
       ];
       function admin() {
         if (!profile || profile.role !== "admin") {
@@ -1897,6 +1923,7 @@
           feedback: adFeedback,
           payouts: adPayouts,
           reports: adReports,
+          disputes: adDisputes,
         })[adminTab]();
       }
       const adEl = () => $("ad");
@@ -1945,37 +1972,21 @@
         const [y, m, dd] = d.split("-").map(Number),
           iso = (x) => x.toISOString();
         const [day, mon, owed] = await Promise.all([
-          sb
-            .from("payouts")
-            .select("role,amount")
-            .gte("paid_at", iso(new Date(y, m - 1, dd)))
-            .lt("paid_at", iso(new Date(y, m - 1, dd + 1))),
-          sb
-            .from("payouts")
-            .select("role,amount")
-            .gte("paid_at", iso(new Date(y, m - 1, 1)))
-            .lt("paid_at", iso(new Date(y, m, 1))),
-          sb
-            .from("orders")
-            .select(
-              "amount,commission_amount,seller_paid,promoter_paid,payment_method",
-            )
-            .eq("status", "delivered"),
+          sb.from("payouts").select("role,amount").gte("paid_at", iso(new Date(y, m - 1, dd))).lt("paid_at", iso(new Date(y, m - 1, dd + 1))),
+          sb.from("payouts").select("role,amount").gte("paid_at", iso(new Date(y, m - 1, 1))).lt("paid_at", iso(new Date(y, m, 1))),
+          sb.from("orders").select("amount,commission_amount,seller_paid,promoter_paid,payment_method").eq("status", "delivered"),
         ]);
         if (day.error) {
           el.innerHTML = `<p class="msg err">${esc(day.error.message)}</p>`;
           return;
         }
         const sum = (rows, role) =>
-          (rows || [])
-            .filter((r) => r.role === role)
-            .reduce((a, r) => a + Number(r.amount), 0);
+          (rows || []).filter((r) => r.role === role).reduce((a, r) => a + Number(r.amount), 0);
         let os = 0,
           op = 0;
         (owed.data || []).forEach((o) => {
           const c = Number(o.commission_amount || 0);
-          if (o.payment_method === "in_app" && !o.seller_paid)
-            os += Number(o.amount) - c;
+          if (o.payment_method === "in_app" && !o.seller_paid) os += Number(o.amount) - c;
           if (c > 0 && !o.promoter_paid) op += c;
         });
         const st = [
@@ -2145,7 +2156,7 @@
                 (
                   p,
                 ) => `<div class="mine ${p.in_stock ? "" : "sold"}">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="" loading="lazy">` : ""}
-   <span>${esc(p.title)}<small>${money(p.price)} · ${dt(p.created_at)}</small></span><button class="act" onclick="adStock('${p.id}',${!p.in_stock})">${p.in_stock ? "Hide" : "Show"}</button><button class="act r" onclick="adDel('${p.id}')">Delete</button></div>`,
+   <span>${esc(p.title)}<small>${money(p.price)} · ${dt(p.created_at)}</small></span><button class="act" onclick="adStock('${p.id}',${!p.in_stock})">${p.in_stock ? "Hide" : "Show"}</button><button class="act" onclick="adBoost('${p.id}')">Feature</button><button class="act r" onclick="adDel('${p.id}')">Delete</button></div>`,
               )
               .join("") || "<p>No products yet.</p>";
       }
@@ -2167,7 +2178,7 @@
         const { data, error } = await sb
           .from("orders")
           .select(
-            "id,amount,status,fulfilment,payment_method,delivery_address,phone,promo_code,promoter_id,guest_name,note,created_at,commission_amount,products(title)",
+            "id,amount,quantity,shipment_id,received_at,status,fulfilment,payment_method,delivery_address,phone,promo_code,promoter_id,guest_name,note,created_at,commission_amount,products(title)",
           )
           .order("created_at", { ascending: false })
           .limit(50);
@@ -2188,8 +2199,8 @@
               .map(
                 (
                   o,
-                ) => `<div class="mine"><span>${esc(o.products?.title || "Product")} · ${money(o.amount)}<small>${dt(o.created_at)} · ${esc(o.fulfilment)} · ${esc(o.payment_method)}${o.delivery_address ? " · " + esc(o.delivery_address) : ""}${o.phone ? " · " + esc(o.phone) : ""}${o.note ? " · note: " + esc(o.note) : ""}${o.guest_name ? " · guest " + esc(o.guest_name) : ""}${o.promoter_id ? " · promoter " + esc(names[o.promoter_id] || "") + " (" + esc(o.promo_code || "") + ")" : ""}${o.commission_amount > 0 ? " · promoter commission " + money(o.commission_amount) : ""}</small></span>
-   <select aria-label="Order status" onchange="setStatus('orders','${o.id}',this.value)">${opts(["awaiting_payment", "paid", "pending", "confirmed", "delivered", "cancelled"], o.status)}</select></div>`,
+                ) => `<div class="mine"><span>${esc(o.products?.title || "Product")} · ${money(o.amount)}<small>${dt(o.created_at)} · ${esc(o.fulfilment)} · ${esc(o.payment_method)}${o.delivery_address ? " · " + esc(o.delivery_address) : ""}${o.phone ? " · " + esc(o.phone) : ""}${o.note ? " · note: " + esc(o.note) : ""}${o.guest_name ? " · guest " + esc(o.guest_name) : ""}${o.quantity > 1 ? " · qty " + o.quantity : ""}${o.shipment_id ? " · shipment" : ""}${o.received_at ? " · received " + dt(o.received_at) : ""}${o.promoter_id ? " · promoter " + esc(names[o.promoter_id] || "") + " (" + esc(o.promo_code || "") + ")" : ""}${o.commission_amount > 0 ? " · promoter commission " + money(o.commission_amount) : ""}</small></span>
+   <select aria-label="Order status" onchange="setStatus('orders','${o.id}',this.value)">${Object.entries(ST).map(([k, v]) => `<option value="${k}" ${k === o.status ? "selected" : ""}>${v}</option>`).join("")}</select></div>`,
               )
               .join("") || "<p>No orders yet.</p>";
       }
@@ -2250,10 +2261,7 @@
         const sec = (title, role) => {
           const rows = list.filter(([, x]) => x.role === role),
             tot = rows.reduce((a, [, x]) => a + x.amt, 0);
-          return (
-            `<h2>${title} · ${money(tot)}</h2>` +
-            (rows.map(row).join("") || "<p>Nothing to pay right now.</p>")
-          );
+          return `<h2>${title} · ${money(tot)}</h2>` + (rows.map(row).join("") || "<p>Nothing to pay right now.</p>");
         };
         adEl().innerHTML = `<div class="box" style="max-width:none"><h2>Your WhatsApp number</h2><p style="margin:0;color:var(--mut)">Approved sellers and promoters see a chat button with this number.</p><input id="aw" type="tel" placeholder="e.g. 0241234567" value="${esc(w.data?.value || "")}"><button class="act g" onclick="saveWa()">Save number</button><div id="aws" class="msg"></div></div>
    <h2>Money to pay out</h2><p style="margin:0 0 8px;color:var(--mut)">Delivered orders only. Sellers are listed for in-app payments. Cash-on-delivery sales are already with the seller.</p>
@@ -2261,19 +2269,10 @@
    ${sec("Promoters to pay", "promoter")}`;
       }
       async function adReports() {
-        const { data, error } = await sb
-          .from("reports")
-          .select("id,product_id,reason,status,created_at")
-          .order("created_at", { ascending: false })
-          .limit(50);
+        const { data, error } = await sb.from("reports").select("id,product_id,reason,status,created_at").order("created_at", { ascending: false }).limit(50);
         adEl().innerHTML = error
           ? `<p class="msg err">${esc(error.message)}</p>`
-          : (data || [])
-              .map(
-                (r) =>
-                  `<div class="mine"><span>${esc(r.reason)}<small>${dt(r.created_at)} · ${esc(r.status)}</small></span><button class="act" onclick="item('${r.product_id}')">View item</button>${r.status === "open" ? `<button class="act g" onclick="setStatus('reports','${r.id}','resolved');adReports()">Resolve</button>` : ""}</div>`,
-              )
-              .join("") || "<p>No reports.</p>";
+          : (data || []).map((r) => `<div class="mine"><span>${esc(r.reason)}<small>${dt(r.created_at)} · ${esc(r.status)}</small></span><button class="act" onclick="item('${r.product_id}')">View item</button>${r.status === "open" ? `<button class="act g" onclick="setStatus('reports','${r.id}','resolved');adReports()">Resolve</button>` : ""}</div>`).join("") || "<p>No reports.</p>";
       }
       async function saveWa() {
         const { error } = await sb
@@ -2303,10 +2302,7 @@
           order_ids: x.ids,
         });
         if (log.error)
-          alert(
-            "Marked as paid, but it could not be saved to the daily totals: " +
-              log.error.message,
-          );
+          alert("Marked as paid, but it could not be saved to the daily totals: " + log.error.message);
         adPayouts();
       }
       async function adRefunds() {
@@ -2432,9 +2428,7 @@
             .limit(100),
           sb
             .from("orders")
-            .select(
-              "commission_amount,status,promoter_paid,created_at,products(title)",
-            )
+            .select("commission_amount,status,promoter_paid,created_at,products(title)")
             .eq("promoter_id", user.id)
             .order("created_at", { ascending: false })
             .limit(1000),
@@ -2444,15 +2438,7 @@
             ords.filter(f).reduce((a, x) => a + Number(x.commission_amount), 0);
         hub.innerHTML = `<div class="stats"><div class="stat"><b>${money(sum((x) => x.status === "delivered"))}</b>Total earned</div><div class="stat"><b>${money(sum((x) => x.status === "delivered" && x.promoter_paid))}</b>Paid to you</div><div class="stat"><b>${money(sum((x) => x.status === "delivered" && !x.promoter_paid))}</b>Waiting for payout</div><div class="stat"><b>${money(sum((x) => !["delivered", "cancelled"].includes(x.status)))}</b>Not delivered yet</div></div>
    <h2>Products you can promote</h2>${(p.data || []).map((x) => `<div class="mine">${x.images && x.images[0] ? `<img src="${esc(x.images[0])}" alt="" loading="lazy">` : ""}<span>${esc(x.title)}<small>${money(x.price)} · you earn ${money((x.price * x.commission_pct) / 100)} (${x.commission_pct}%)</small></span><button class="act" onclick="copyLink('${x.id}')">Copy my link</button></div>`).join("") || "<p>No products are open to promoters yet.</p>"}
-   <h2>Your sales</h2>${
-     ords
-       .slice(0, 30)
-       .map(
-         (x) =>
-           `<div class="mine"><span>${esc(x.products?.title || "Product")}<small>${dt(x.created_at)} · ${esc(x.status)}${x.promoter_paid ? " · paid to you" : ""}</small></span><b>${money(x.commission_amount)}</b></div>`,
-       )
-       .join("") || "<p>No sales through your code yet.</p>"
-   }`;
+   <h2>Your sales</h2>${ords.slice(0, 30).map((x) => `<div class="mine"><span>${esc(x.products?.title || "Product")}<small>${dt(x.created_at)} · ${esc(x.status)}${x.promoter_paid ? " · paid to you" : ""}</small></span><b>${money(x.commission_amount)}</b></div>`).join("") || "<p>No sales through your code yet.</p>"}`;
       }
 
       /* Shared promoter links: ?code=PRO-XXXXX&p=<product id> (older ?ref= links still work) */
@@ -2476,7 +2462,9 @@
           setTimeout(() => setUser(s?.user), 0),
         );
         const sp = new URLSearchParams(location.search).get("p");
-        if (sp && UUID.test(sp)) item(sp);
+        const sh = new URLSearchParams(location.search).get("shop");
+        if (sh && UUID.test(sh)) shopPage(sh);
+        else if (sp && UUID.test(sp)) item(sp);
         else go("home");
       })();
     </script>
