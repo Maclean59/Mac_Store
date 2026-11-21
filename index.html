@@ -457,60 +457,451 @@
       }
 
       /* Stop the page being wider than the phone screen */
-      html, body { max-width: 100%; overflow-x: clip; }
-      main, .sec, .banner, .box, .card { min-width: 0; max-width: 100%; }
-      img { max-width: 100%; }
-      header .logo { flex: none; }
-      #q { min-width: 0; width: 100%; }
-      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      @media (min-width: 600px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: clip;
+      }
+      main,
+      .sec,
+      .banner,
+      .box,
+      .card {
+        min-width: 0;
+        max-width: 100%;
+      }
+      img {
+        max-width: 100%;
+      }
+      header .logo {
+        flex: none;
+      }
+      #q {
+        min-width: 0;
+        width: 100%;
+      }
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      @media (min-width: 600px) {
+        .grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
       /* Clean mobile look */
-      body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px) * 0.4); }
-      input, select, textarea { font-size: 16px; }
-      #q { border-radius: 22px; padding: 10px 14px; }
-      .card { border-radius: 14px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-      .row .act, .box .act { min-height: 44px; }
-      nav { border-top: 0; box-shadow: 0 -2px 14px rgba(0,0,0,.08); padding: 4px 6px calc(4px + env(safe-area-inset-bottom, 0px) * 0.4); }
-      nav button { position: relative; min-height: 52px; align-content: center; padding: 2px 0; }
-      nav button b { font-size: 22px; line-height: 1; padding: 4px 16px; border-radius: 14px; }
-      nav button.on b { background: #fff3e6; }
-      .bdg { position: absolute; top: 0; left: calc(50% + 6px); background: var(--red); color: #fff; font-style: normal; font-size: 10px; font-weight: 700; border-radius: 9px; min-width: 18px; padding: 1px 5px; text-align: center; }
-      .ov { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 20; display: flex; align-items: flex-end; }
-      .pn { background: #fff; width: 100%; max-width: 520px; margin: 0 auto; border-radius: 20px 20px 0 0; padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 8px; }
-      .pn button { display: flex; gap: 12px; align-items: center; min-height: 52px; border: 0; background: #f6f6f7; border-radius: 14px; font: inherit; font-size: 16px; font-weight: 600; padding: 0 14px; color: var(--ink); }
-      .pn button.on { color: var(--or); background: #fff3e6; }
-      @media (min-width: 700px) { nav { max-width: 520px; left: 50%; right: auto; transform: translateX(-50%); border-radius: 18px 18px 0 0; } }
+      body {
+        padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px) * 0.4);
+      }
+      input,
+      select,
+      textarea {
+        font-size: 16px;
+      }
+      #q {
+        border-radius: 22px;
+        padding: 10px 14px;
+      }
+      .card {
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      }
+      .row .act,
+      .box .act {
+        min-height: 44px;
+      }
+      nav {
+        border-top: 0;
+        box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.08);
+        padding: 4px 6px calc(4px + env(safe-area-inset-bottom, 0px) * 0.4);
+      }
+      nav button {
+        position: relative;
+        min-height: 52px;
+        align-content: center;
+        padding: 2px 0;
+      }
+      nav button b {
+        font-size: 22px;
+        line-height: 1;
+        padding: 4px 16px;
+        border-radius: 14px;
+      }
+      nav button.on b {
+        background: #fff3e6;
+      }
+      .bdg {
+        position: absolute;
+        top: 0;
+        left: calc(50% + 6px);
+        background: var(--red);
+        color: #fff;
+        font-style: normal;
+        font-size: 10px;
+        font-weight: 700;
+        border-radius: 9px;
+        min-width: 18px;
+        padding: 1px 5px;
+        text-align: center;
+      }
+      .ov {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 20;
+        display: flex;
+        align-items: flex-end;
+      }
+      .pn {
+        background: #fff;
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+        border-radius: 20px 20px 0 0;
+        padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+        display: grid;
+        gap: 8px;
+      }
+      .pn button {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        min-height: 52px;
+        border: 0;
+        background: #f6f6f7;
+        border-radius: 14px;
+        font: inherit;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 0 14px;
+        color: var(--ink);
+      }
+      .pn button.on {
+        color: var(--or);
+        background: #fff3e6;
+      }
+      @media (min-width: 700px) {
+        nav {
+          max-width: 520px;
+          left: 50%;
+          right: auto;
+          transform: translateX(-50%);
+          border-radius: 18px 18px 0 0;
+        }
+      }
 
       /* Food, rides, top this month, bulk */
-      .fhero{background:#4a1b0c;color:#fff;border-radius:16px;padding:16px;margin-bottom:10px}
-      .fhero h1{margin:10px 0 2px;font-size:24px}.fhero p{margin:0;color:#f5c4b3;font-size:13px}
-      .fp{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 10px;font-size:12px}
-      .fsw{display:flex;gap:8px;margin-top:14px}
-      .fsw button{flex:1;border:0;border-radius:24px;padding:9px;font:inherit;font-size:13px;background:rgba(255,255,255,.15);color:#fff;cursor:pointer}
-      .fsw button.on{background:#ffd43b;color:#4a1b0c;font-weight:700}
-      .fv{display:flex;gap:12px;align-items:center;background:#fff;border-radius:16px;padding:12px;margin-bottom:10px}
-      .fv>div:nth-child(2){flex:1;min-width:0}.fv small{display:block;color:var(--mut)}
-      .fi{width:64px;height:64px;border-radius:12px;background:#faece7;display:grid;place-items:center;font-size:30px}
-      .hero{background:var(--or);color:#fff;border-radius:16px;padding:16px;margin-bottom:10px}
-      .hero h1{margin:6px 0 4px;font-size:22px}.hero p{margin:0;color:#ffe7cc;font-size:14px}
-      .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
-      .tiles div{background:rgba(255,255,255,.2);border-radius:12px;padding:10px 4px;text-align:center;font-size:12px}
-      .route{background:#fff1e0;border-radius:14px;padding:14px;color:#7a3e00}
-      .lead{display:flex;gap:12px;align-items:center;background:var(--or);color:#fff;border-radius:16px;padding:14px;margin-bottom:8px}
-      .lead .av{position:relative;width:60px;height:60px;border-radius:50%;background:#fff;color:#b85c00;display:grid;place-items:center;font-weight:700;font-size:20px;flex:none}
-      .lead .av i{position:absolute;right:-6px;bottom:-6px;font-style:normal;font-size:16px}
-      .lead small,.lead span{display:block;color:#ffe7cc}
-      .open{border:1px dashed #ccc;border-radius:12px;padding:12px;color:var(--mut);font-size:13px;margin-bottom:8px}
-      .inv{background:#fff1e0;border-radius:16px;padding:14px;display:flex;gap:12px;align-items:center;color:#7a3e00}
-      .inv button{margin-left:auto;flex:none;width:auto}
-      .pillb{font-style:normal;font-size:11px;border-radius:20px;padding:2px 8px;background:#fff1e0;color:#7a3e00}
-      nav button.fd.on{color:#4a1b0c}nav button.fd.on b{background:#4a1b0c}
-      .banner{background:var(--or);padding:20px 16px}.banner h1{font-size:24px}
-      .qk{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:10px}
-      .qk button{border:0;background:#fff;border-radius:14px;padding:12px 4px;font:inherit;font-size:12px;font-weight:600;color:var(--ink);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-      .cat.on i{background:var(--or)}.cat.on{font-weight:700;color:#b85c00}
-      .price{color:#b85c00}.card .b h3{font-weight:600}
-      .shd{background:#a32d2d;color:#fff;border-radius:16px;padding:16px;margin-bottom:10px}.shd h1{margin:0 0 2px;font-size:22px}.shd p{margin:0;color:#f7c1c1;font-size:13px}
+      .fhero {
+        background: #4a1b0c;
+        color: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 10px;
+      }
+      .fhero h1 {
+        margin: 10px 0 2px;
+        font-size: 24px;
+      }
+      .fhero p {
+        margin: 0;
+        color: #f5c4b3;
+        font-size: 13px;
+      }
+      .fp {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 4px 10px;
+        font-size: 12px;
+      }
+      .fsw {
+        display: flex;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .fsw button {
+        flex: 1;
+        border: 0;
+        border-radius: 24px;
+        padding: 9px;
+        font: inherit;
+        font-size: 13px;
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        cursor: pointer;
+      }
+      .fsw button.on {
+        background: #ffd43b;
+        color: #4a1b0c;
+        font-weight: 700;
+      }
+      .fv {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        background: #fff;
+        border-radius: 16px;
+        padding: 12px;
+        margin-bottom: 10px;
+      }
+      .fv > div:nth-child(2) {
+        flex: 1;
+        min-width: 0;
+      }
+      .fv small {
+        display: block;
+        color: var(--mut);
+      }
+      .fi {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+        background: #faece7;
+        display: grid;
+        place-items: center;
+        font-size: 30px;
+      }
+      .hero {
+        background: var(--or);
+        color: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 10px;
+      }
+      .hero h1 {
+        margin: 6px 0 4px;
+        font-size: 22px;
+      }
+      .hero p {
+        margin: 0;
+        color: #ffe7cc;
+        font-size: 14px;
+      }
+      .tiles {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .tiles div {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 10px 4px;
+        text-align: center;
+        font-size: 12px;
+      }
+      .route {
+        background: #fff1e0;
+        border-radius: 14px;
+        padding: 14px;
+        color: #7a3e00;
+      }
+      .lead {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        background: var(--or);
+        color: #fff;
+        border-radius: 16px;
+        padding: 14px;
+        margin-bottom: 8px;
+      }
+      .lead .av {
+        position: relative;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #fff;
+        color: #b85c00;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 20px;
+        flex: none;
+      }
+      .lead .av i {
+        position: absolute;
+        right: -6px;
+        bottom: -6px;
+        font-style: normal;
+        font-size: 16px;
+      }
+      .lead small,
+      .lead span {
+        display: block;
+        color: #ffe7cc;
+      }
+      .open {
+        border: 1px dashed #ccc;
+        border-radius: 12px;
+        padding: 12px;
+        color: var(--mut);
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+      .inv {
+        background: #fff1e0;
+        border-radius: 16px;
+        padding: 14px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        color: #7a3e00;
+      }
+      .inv button {
+        margin-left: auto;
+        flex: none;
+        width: auto;
+      }
+      .pillb {
+        font-style: normal;
+        font-size: 11px;
+        border-radius: 20px;
+        padding: 2px 8px;
+        background: #fff1e0;
+        color: #7a3e00;
+      }
+      nav button.fd.on {
+        color: #4a1b0c;
+      }
+      nav button.fd.on b {
+        background: #4a1b0c;
+      }
+      .banner {
+        background: var(--or);
+        padding: 20px 16px;
+      }
+      .banner h1 {
+        font-size: 24px;
+      }
+      .qk {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      .qk button {
+        border: 0;
+        background: #fff;
+        border-radius: 14px;
+        padding: 12px 4px;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ink);
+        cursor: pointer;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      }
+      .cat.on i {
+        background: var(--or);
+      }
+      .cat.on {
+        font-weight: 700;
+        color: #b85c00;
+      }
+      .price {
+        color: #b85c00;
+      }
+      .card .b h3 {
+        font-weight: 600;
+      }
+      .shd {
+        background: #a32d2d;
+        color: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 10px;
+      }
+      .shd h1 {
+        margin: 0 0 2px;
+        font-size: 22px;
+      }
+      .shd p {
+        margin: 0;
+        color: #f7c1c1;
+        font-size: 13px;
+      }
+
+      /* MOTION: light and quick; nothing loops, and it is off for people who ask for less movement */
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes fadein {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes sheet {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: none;
+        }
+      }
+      @keyframes pop {
+        0% {
+          transform: scale(1);
+        }
+        40% {
+          transform: scale(1.3);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      #app > * {
+        animation: rise 0.25s ease-out backwards;
+      }
+      .card {
+        animation: fadein 0.3s ease-out backwards;
+      }
+      .act,
+      .qk button,
+      .cat,
+      .lnk {
+        transition: transform 0.12s ease;
+      }
+      .act:active,
+      .qk button:active,
+      .cat:active,
+      .lnk:active {
+        transform: scale(0.97);
+      }
+      .pop {
+        animation: pop 0.35s ease;
+      }
+      .ov {
+        animation: fadein 0.2s ease;
+      }
+      .pn {
+        animation: sheet 0.25s ease-out;
+      }
+      @media (hover: hover) {
+        .card {
+          transition: box-shadow 0.2s ease;
+        }
+        .card:hover {
+          box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -543,7 +934,7 @@
         ["Electronics", "🔌"],
         ["Home", "🛋️"],
         ["Beauty", "💄"],
-        ["Food", "🍲"],
+        ["Groceries", "🛒"],
         ["Other", "🛍️"],
       ];
       const PAGE = 20;
@@ -595,7 +986,8 @@
       ) => `<div class="card"><div onclick="shopPage('${p.seller_id}')" style="cursor:pointer;padding:8px 10px 4px;font-weight:700;font-size:13px;color:#e8890c">🏪 ${esc(p.shop_name || "Macstore")}</div><div onclick="item('${p.id}')" style="cursor:pointer">${p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.title)}" loading="lazy" decoding="async">` : '<div class="ph">🛍️</div>'}</div>
  <div class="b"><h3 onclick="item('${p.id}')" style="cursor:pointer">${esc(p.title)}</h3>${badge(p)}${p.boosted_until && new Date(p.boosted_until) > new Date() ? '<span class="chip" style="background:#7c3aed;color:#fff">Featured</span>' : ""}<div class="chips">${chips(p.details)}</div><div class="price">${money(p.price)}</div>
  <div class="row"><button class="act sv" data-sv="${p.id}" aria-label="Save or unsave" onclick="save('${p.id}')">${heart(p.id)}</button><button class="act" onclick="item('${p.id}')">View</button></div></div></div>`;
-      const PSEL = "id,title,price,images,seller_id,details,stock_level,shop_name,boosted_until";
+      const PSEL =
+        "id,title,price,images,seller_id,details,stock_level,shop_name,boosted_until";
 
       /* LIVE SELLER ALERTS: toast, sound, vibration and phone notification the moment an order is ready */
       let alertCh = null;
@@ -612,16 +1004,22 @@
       }
       function notifySeller(title, body, to = "sorders") {
         beep();
-        try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) {}
+        try {
+          navigator.vibrate && navigator.vibrate([200, 100, 200]);
+        } catch (e) {}
         try {
           if ("Notification" in window && Notification.permission === "granted")
             new Notification(title, { body });
         } catch (e) {}
         const d = document.createElement("div");
         d.setAttribute("role", "alert");
-        d.style.cssText = "position:fixed;top:12px;left:12px;right:12px;z-index:99;background:#00a651;color:#fff;padding:14px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.25)";
+        d.style.cssText =
+          "position:fixed;top:12px;left:12px;right:12px;z-index:99;background:#00a651;color:#fff;padding:14px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.25)";
         d.innerHTML = `${esc(title)}<br><span style="font-weight:400">${esc(body)} · Tap to open</span>`;
-        d.onclick = () => { d.remove(); go(to); };
+        d.onclick = () => {
+          d.remove();
+          go(to);
+        };
         document.body.appendChild(d);
         setTimeout(() => d.remove(), 9000);
       }
@@ -629,21 +1027,48 @@
         const o = p.new;
         if (!o || ALERTED.has(o.id)) return;
         const cod = o.payment_method !== "in_app",
-          ready = cod ? p.eventType === "INSERT" : PAIDSTATES.includes(o.status);
+          ready = cod
+            ? p.eventType === "INSERT"
+            : PAIDSTATES.includes(o.status);
         if (!ready) return;
         ALERTED.add(o.id);
-        notifySeller(cod ? "New order (cash on delivery)" : "New paid order. Deliver now", money(o.amount));
+        notifySeller(
+          cod ? "New order (cash on delivery)" : "New paid order. Deliver now",
+          money(o.amount),
+        );
         await loadTodo();
         tabs();
         if (view === "sorders") sorders();
       }
-      let buyCh = null, BUYN = 0, SHOWN = false;
+      let buyCh = null,
+        BUYN = 0,
+        SHOWN = false;
       async function onBuyerEvent(p) {
         const o = p.new;
-        if (!o || !["confirmed", "ready", "handed_over"].includes(o.status) || ALERTED.has(o.id + o.status)) return;
+        if (
+          !o ||
+          !["confirmed", "ready", "handed_over"].includes(o.status) ||
+          ALERTED.has(o.id + o.status)
+        )
+          return;
         ALERTED.add(o.id + o.status);
         const pk = o.fulfilment === "pickup",
-          m = { confirmed: ["Order confirmed", "The seller has confirmed your order."], ready: pk ? ["Ready for pick-up", "Your order is ready. Open Orders for the pick-up location."] : ["On its way", "Your order is waiting to be delivered to you."], handed_over: ["Delivered?", "The seller marked your order as delivered. Tap Received once you have it."] }[o.status];
+          m = {
+            confirmed: [
+              "Order confirmed",
+              "The seller has confirmed your order.",
+            ],
+            ready: pk
+              ? [
+                  "Ready for pick-up",
+                  "Your order is ready. Open Orders for the pick-up location.",
+                ]
+              : ["On its way", "Your order is waiting to be delivered to you."],
+            handed_over: [
+              "Delivered?",
+              "The seller marked your order as delivered. Tap Received once you have it.",
+            ],
+          }[o.status];
         notifySeller(m[0], m[1], "orders");
         await loadTodo();
         tabs();
@@ -651,53 +1076,132 @@
       }
       function startAlerts() {
         partnerAlerts();
-        if (alertCh) { sb.removeChannel(alertCh); alertCh = null; }
-        if (buyCh) { sb.removeChannel(buyCh); buyCh = null; }
+        if (alertCh) {
+          sb.removeChannel(alertCh);
+          alertCh = null;
+        }
+        if (buyCh) {
+          sb.removeChannel(buyCh);
+          buyCh = null;
+        }
         if (user)
           buyCh = sb
             .channel("buy-" + user.id)
-            .on("postgres_changes", { event: "UPDATE", schema: "public", table: "orders", filter: "buyer_id=eq." + user.id }, onBuyerEvent)
+            .on(
+              "postgres_changes",
+              {
+                event: "UPDATE",
+                schema: "public",
+                table: "orders",
+                filter: "buyer_id=eq." + user.id,
+              },
+              onBuyerEvent,
+            )
             .subscribe();
-        if (!user || !profile || !["seller", "admin"].includes(profile.role)) return;
+        if (!user || !profile || !["seller", "admin"].includes(profile.role))
+          return;
         alertCh = sb
           .channel("orders-" + user.id)
-          .on("postgres_changes", { event: "*", schema: "public", table: "orders", filter: "seller_id=eq." + user.id }, onOrderEvent)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "orders",
+              filter: "seller_id=eq." + user.id,
+            },
+            onOrderEvent,
+          )
           .subscribe();
       }
       function enableAlerts() {
-        if (!("Notification" in window)) return alert("This phone or browser does not support notifications.");
+        if (!("Notification" in window))
+          return alert("This phone or browser does not support notifications.");
         Notification.requestPermission().then(() => go(view));
       }
       let TODO = 0;
+      let PART = { food: false, rider: false, any: false };
       async function loadTodo() {
         TODO = 0;
         BUYN = 0;
+        PART = { food: false, rider: false, any: false };
         if (user) {
-          const r = await sb.from("orders").select("*", { count: "exact", head: true }).eq("buyer_id", user.id).in("status", ["ready", "handed_over"]);
+          const pr = await sb
+            .from("partners")
+            .select("kind")
+            .eq("user_id", user.id);
+          (pr.data || []).forEach((x) => {
+            PART.any = true;
+            if (x.kind === "food") PART.food = true;
+            else PART.rider = true;
+          });
+        }
+        if (user) {
+          const r = await sb
+            .from("orders")
+            .select("*", { count: "exact", head: true })
+            .eq("buyer_id", user.id)
+            .in("status", ["ready", "handed_over"]);
           BUYN = r.count || 0;
         }
-        if (!user || !profile || !["seller", "admin"].includes(profile.role)) return;
-        const { count } = await sb.from("orders").select("*", { count: "exact", head: true }).eq("seller_id", user.id).in("status", ["paid", "confirmed", "ready"]);
+        if (!user || !profile || !["seller", "admin"].includes(profile.role))
+          return;
+        const { count } = await sb
+          .from("orders")
+          .select("*", { count: "exact", head: true })
+          .eq("seller_id", user.id)
+          .in("status", ["paid", "confirmed", "ready"]);
         TODO = count || 0;
       }
       let MORE = [];
       function tabs() {
-        const t = [["home", "🏠", "Home"], ["food", "🍜", "Food"], ["bulk", "🚚", "Bulk"]];
-        if (user) t.push(["orders", "📦", "Orders" + (BUYN ? " (" + BUYN + ")" : "")]);
+        const t = [
+          ["home", "🏠", "Home"],
+          ["saved", "♥️", "Saved"],
+        ];
+        if (user)
+          t.push(["orders", "📦", "Orders" + (BUYN ? " (" + BUYN + ")" : "")]);
         const more = [];
-        if (user) more.push(["saved", "♥️", "Saved"]);
-        if (profile && ["seller", "admin"].includes(profile.role))
-          more.push(["sell", "🏪", "My shop"], ["sorders", "🧾", "Shop orders" + (TODO ? " (" + TODO + ")" : "")]);
-        if (profile && profile.role === "promoter") more.push(["promote", "📣", "Promote"]);
-        more.push(["deliver", "🏍️", "Delivery riders"], ["ride", "🚕", "Book a ride"]);
-        if (user) more.push(["vendor", "🍲", "Vendor orders"], ["rider", "🛵", "Rider home"], ["partner", "🤝", "Join as vendor or rider"]);
-        if (profile && profile.role === "admin") more.push(["admin", "🛡️", "Admin"]);
+        const role = profile && profile.role;
+        const isSeller = role === "seller" || role === "admin";
+        if (isSeller)
+          more.push([
+            "sell",
+            "🏪",
+            "My shop" + (TODO ? " (" + TODO + ")" : ""),
+          ]);
+        if (role === "promoter") more.push(["promote", "📣", "Promote"]);
+        more.push(
+          isSeller
+            ? ["rides", "🚕", "Rides & delivery"]
+            : ["ride", "🚕", "Book a ride"],
+        );
+        if (user && PART.food) more.push(["vendor", "🍲", "Vendor orders"]);
+        if (user && PART.rider) more.push(["rider", "🛵", "Rider home"]);
+        if (!PART.any && (!role || role === "buyer"))
+          more.push(["work", "🤝", "Work with Macstore"]);
+        if (role === "admin") more.push(["admin", "🛡️", "Admin"]);
         MORE = more;
         t.push(["more", "⋯", "More"]);
         t.push(["account", "👤", user ? "Account" : "Log in"]);
         $("tabs").innerHTML = t
           .map(([k, i, l]) => {
-            const on = view === k || (k === "more" && more.some((x) => x[0] === view));
+            const on =
+              view === k ||
+              (k === "more" &&
+                [
+                  "sell",
+                  "sorders",
+                  "promote",
+                  "rides",
+                  "ride",
+                  "deliver",
+                  "vendor",
+                  "rider",
+                  "work",
+                  "partner",
+                  "admin",
+                ].includes(view));
             return `<button class="${on ? "on" : ""}${k === "food" ? " fd" : ""}" onclick="${k === "more" ? "openMore()" : `go('${k}')`}"><b>${i}</b>${l}${k === "more" && TODO ? `<i class="bdg">${TODO}</i>` : ""}</button>`;
           })
           .join("");
@@ -743,10 +1247,20 @@
         if (user) {
           if (TODO && !SHOWN) {
             SHOWN = true;
-            notifySeller("Orders waiting to be delivered", TODO + (TODO === 1 ? " order needs" : " orders need") + " your attention");
+            notifySeller(
+              "Orders waiting to be delivered",
+              TODO +
+                (TODO === 1 ? " order needs" : " orders need") +
+                " your attention",
+            );
           }
           const { data: ra } = await sb.rpc("claim_restock_alerts");
-          if (ra && ra.length) setTimeout(() => alert("Back in stock: " + ra.map((x) => x.title).join(", ")), 500);
+          if (ra && ra.length)
+            setTimeout(
+              () =>
+                alert("Back in stock: " + ra.map((x) => x.title).join(", ")),
+              500,
+            );
         }
         startAlerts();
         document
@@ -761,7 +1275,26 @@
         window.scrollTo(0, 0);
         tabs();
         JOIN = null;
-        ({ home, saved, orders, sell, sorders, account, admin, promote, bulk, food, rider, vendor, partner, deliver: () => tripForm("delivery"), ride: () => tripForm("ride"), shop: () => shopPage(SHOPID) })[v]();
+        ({
+          home,
+          saved,
+          orders,
+          sell,
+          sorders,
+          account,
+          admin,
+          promote,
+          bulk,
+          food,
+          rider,
+          vendor,
+          partner,
+          rides,
+          work,
+          deliver: () => tripForm("delivery"),
+          ride: () => tripForm("ride"),
+          shop: () => shopPage(SHOPID),
+        })[v]();
       }
       const back = () => go(prev || "home");
 
@@ -852,7 +1385,10 @@
           .select(PSEL)
           .eq("in_stock", true)
           .order("boosted_until", { ascending: false, nullsFirst: false })
-          .order(st.sort === "low" || st.sort === "high" ? "price" : "created_at", { ascending: st.sort === "low" })
+          .order(
+            st.sort === "low" || st.sort === "high" ? "price" : "created_at",
+            { ascending: st.sort === "low" },
+          )
           .range(st.from, st.from + PAGE - 1);
         if (st.min) r = r.gte("price", st.min);
         if (st.max) r = r.lte("price", st.max);
@@ -928,13 +1464,18 @@
           det = Object.entries(p.details || {});
         const bulkItem = p.sale_type !== "retail",
           q0 = bulkItem ? p.min_qty || 1 : 1,
-          closed = p.sale_type === "preorder" && p.preorder_closes && new Date(p.preorder_closes + "T23:59:59") < new Date();
-        const bulkInfo = !bulkItem ? "" : `<div class="chips"><span class="chip">${p.sale_type === "preorder" ? "Pre-order" : "Wholesale"}</span>${p.min_qty > 1 ? `<span class="chip">Minimum ${p.min_qty}</span>` : ""}${p.origin_country ? `<span class="chip">From ${esc(p.origin_country)}</span>` : ""}${p.expected_arrival ? `<span class="chip">Arrives about ${dt(p.expected_arrival)}</span>` : ""}${p.preorder_closes ? `<span class="chip">Pre-order closes ${dt(p.preorder_closes)}</span>` : ""}</div>${(p.price_tiers || []).length ? `<table class="dt">${p.price_tiers.map((t) => `<tr><td>${esc(t.min)}+ items</td><td>${money(t.price)} each</td></tr>`).join("")}</table>` : ""}`;
+          closed =
+            p.sale_type === "preorder" &&
+            p.preorder_closes &&
+            new Date(p.preorder_closes + "T23:59:59") < new Date();
+        const bulkInfo = !bulkItem
+          ? ""
+          : `<div class="chips"><span class="chip">${p.sale_type === "preorder" ? "Pre-order" : "Wholesale"}</span>${p.min_qty > 1 ? `<span class="chip">Minimum ${p.min_qty}</span>` : ""}${p.origin_country ? `<span class="chip">From ${esc(p.origin_country)}</span>` : ""}${p.expected_arrival ? `<span class="chip">Arrives about ${dt(p.expected_arrival)}</span>` : ""}${p.preorder_closes ? `<span class="chip">Pre-order closes ${dt(p.preorder_closes)}</span>` : ""}</div>${(p.price_tiers || []).length ? `<table class="dt">${p.price_tiers.map((t) => `<tr><td>${esc(t.min)}+ items</td><td>${money(t.price)} each</td></tr>`).join("")}</table>` : ""}`;
         const form = closed
           ? '<p class="msg err">Pre-orders for this item have closed.</p>'
           : out
-          ? `<p class="msg err">This item is out of stock.</p><button class="act g" style="flex:none;width:100%" onclick="notifyMe('${p.id}')">🔔 Tell me when it is back</button>`
-          : `<h3 style="margin:6px 0 0">Order this item</h3>${user ? "" : '<input id="gn" placeholder="Your full name" autocomplete="name"><input id="ge" type="email" placeholder="Email (for your payment receipt)" autocomplete="email">'}
+            ? `<p class="msg err">This item is out of stock.</p><button class="act g" style="flex:none;width:100%" onclick="notifyMe('${p.id}')">🔔 Tell me when it is back</button>`
+            : `<h3 style="margin:6px 0 0">Order this item</h3>${user ? "" : '<input id="gn" placeholder="Your full name" autocomplete="name"><input id="ge" type="email" placeholder="Email (for your payment receipt)" autocomplete="email">'}
    <input id="oph" type="tel" placeholder="Phone number" value="${esc(last?.phone || "")}" autocomplete="tel">
    ${bulkItem ? `<label style="font-size:13px;color:var(--mut)">Quantity${p.min_qty > 1 ? " (minimum " + p.min_qty + ")" : ""}</label><input id="oq" type="number" min="${q0}" value="${q0}" oninput="qtyChange()">` : ""}${JOIN ? '<p class="msg ok">You are joining a shipment from abroad. You pay the same way as any other order.</p>' : ""}
    <select id="of" onchange="$('oa').hidden=this.value==='pickup';$('pki').hidden=this.value!=='pickup'"><option value="delivery">Deliver to me</option><option value="pickup">I will pick it up</option></select>
@@ -962,10 +1503,23 @@
         }
       }
       async function loadItemRatings(pid) {
-        const { data } = await sb.from("ratings").select("stars,comment").eq("product_id", pid).order("created_at", { ascending: false }).limit(20);
+        const { data } = await sb
+          .from("ratings")
+          .select("stars,comment")
+          .eq("product_id", pid)
+          .order("created_at", { ascending: false })
+          .limit(20);
         if (!$("irt") || !data || !data.length) return;
         const avg = data.reduce((a, r) => a + r.stars, 0) / data.length;
-        $("irt").innerHTML = `<h3 style="margin:0">★ ${avg.toFixed(1)} · ${data.length} rating${data.length === 1 ? "" : "s"} from verified buyers</h3>${data.filter((r) => r.comment).slice(0, 5).map((r) => `<p style="margin:4px 0">${"★".repeat(r.stars)} ${esc(r.comment)}</p>`).join("")}`;
+        $("irt").innerHTML =
+          `<h3 style="margin:0">★ ${avg.toFixed(1)} · ${data.length} rating${data.length === 1 ? "" : "s"} from verified buyers</h3>${data
+            .filter((r) => r.comment)
+            .slice(0, 5)
+            .map(
+              (r) =>
+                `<p style="margin:4px 0">${"★".repeat(r.stars)} ${esc(r.comment)}</p>`,
+            )
+            .join("")}`;
       }
       async function reportItem(pid, sid) {
         if (!user) {
@@ -974,8 +1528,19 @@
         }
         const reason = prompt("What is wrong with this item or seller?");
         if (!reason || !reason.trim()) return;
-        const { error } = await sb.from("reports").insert({ reporter_id: user.id, product_id: pid, seller_id: sid, reason: reason.trim() });
-        alert(error ? error.message : "Thank you. The Macstore admin will look into it.");
+        const { error } = await sb
+          .from("reports")
+          .insert({
+            reporter_id: user.id,
+            product_id: pid,
+            seller_id: sid,
+            reason: reason.trim(),
+          });
+        alert(
+          error
+            ? error.message
+            : "Thank you. The Macstore admin will look into it.",
+        );
       }
       let GUEST_EMAIL = "";
       const PAYSTACK_KEY = "pk_live_1778086fdaa797dc6aaf8e99d6beee56a2d045cb";
@@ -1121,11 +1686,19 @@
         setTimeout(() => go("orders"), 1500);
       }
 
-
       /* DELIVERY STEPS, PICK-UP LOCATION, BULK AND PRE-ORDER */
       let ITEM = null,
         JOIN = null;
-      const ST = { awaiting_payment: "Awaiting payment", paid: "Paid", pending: "Pending", confirmed: "Confirmed", ready: "Waiting to be delivered", handed_over: "Delivered by seller", delivered: "Delivered (received by buyer)", cancelled: "Cancelled" };
+      const ST = {
+        awaiting_payment: "Awaiting payment",
+        paid: "Paid",
+        pending: "Pending",
+        confirmed: "Confirmed",
+        ready: "Waiting to be delivered",
+        handed_over: "Delivered by seller",
+        delivered: "Delivered (received by buyer)",
+        cancelled: "Cancelled",
+      };
       const unitPrice = (p, q) => {
         let u = Number(p.price);
         (p.price_tiers || []).forEach((t) => {
@@ -1134,18 +1707,25 @@
         return u;
       };
       function qtyOf() {
-        return $("oq") ? Math.max(parseInt($("oq").value) || 1, ITEM.min_qty || 1) : 1;
+        return $("oq")
+          ? Math.max(parseInt($("oq").value) || 1, ITEM.min_qty || 1)
+          : 1;
       }
       function qtyChange() {
-        const q = qtyOf(), u = unitPrice(ITEM, q);
-        $("ob").textContent = "Place order · " + money(u * q) + (q > 1 ? " (" + q + " × " + money(u) + ")" : "");
+        const q = qtyOf(),
+          u = unitPrice(ITEM, q);
+        $("ob").textContent =
+          "Place order · " +
+          money(u * q) +
+          (q > 1 ? " (" + q + " × " + money(u) + ")" : "");
       }
       async function showPickup(sid, el) {
         const { data } = await sb.rpc("seller_pickup", { sid }),
           r = data && data[0];
-        el.innerHTML = r && r.address
-          ? `<b>Pick-up location</b><br>${esc(r.address)}${r.hours ? "<br>Open: " + esc(r.hours) : ""}${r.map_link && /^https?:\/\//.test(r.map_link) ? `<br><a href="${esc(r.map_link)}" target="_blank" rel="noopener">Open in Maps</a>` : ""}`
-          : "The seller has not added a pick-up location yet. They will call you after you order.";
+        el.innerHTML =
+          r && r.address
+            ? `<b>Pick-up location</b><br>${esc(r.address)}${r.hours ? "<br>Open: " + esc(r.hours) : ""}${r.map_link && /^https?:\/\//.test(r.map_link) ? `<br><a href="${esc(r.map_link)}" target="_blank" rel="noopener">Open in Maps</a>` : ""}`
+            : "The seller has not added a pick-up location yet. They will call you after you order.";
       }
       async function orderStep(id, step) {
         const { error } = await sb.rpc("seller_order_step", { o: id, s: step });
@@ -1162,48 +1742,101 @@
       async function pickBox() {
         const el = $("pkb");
         if (!el) return;
-        const { data } = await sb.from("profiles").select("pickup_address,pickup_hours,pickup_map_link").eq("id", user.id).maybeSingle();
+        const { data } = await sb
+          .from("profiles")
+          .select("pickup_address,pickup_hours,pickup_map_link")
+          .eq("id", user.id)
+          .maybeSingle();
         el.innerHTML = `<div class="box" style="max-width:none"><h2>Pick-up location</h2><p style="margin:0;color:var(--mut)">Buyers who choose pick-up see this after they order.</p><input id="pua" placeholder="Address or landmark" value="${esc(data?.pickup_address || "")}"><input id="puh" placeholder="Opening hours, like Mon to Sat 9am to 6pm" value="${esc(data?.pickup_hours || "")}"><input id="pul" placeholder="Map link (optional)" value="${esc(data?.pickup_map_link || "")}"><button class="act sv" style="flex:none;width:100%" onclick="useGps()">📍 Use my current location</button><button class="act g" onclick="savePickup()">Save pick-up location</button><button class="act sv" style="flex:none;width:100%" onclick="copyShop('${user.id}')">🔗 Copy my shop link</button><div id="pum" class="msg"></div></div>`;
       }
       function useGps() {
-        if (!navigator.geolocation) return alert("Location is not available on this phone.");
-        navigator.geolocation.getCurrentPosition((g) => ($("pul").value = `https://www.google.com/maps?q=${g.coords.latitude},${g.coords.longitude}`), () => alert("Allow location access, or paste a map link."));
+        if (!navigator.geolocation)
+          return alert("Location is not available on this phone.");
+        navigator.geolocation.getCurrentPosition(
+          (g) =>
+            ($("pul").value =
+              `https://www.google.com/maps?q=${g.coords.latitude},${g.coords.longitude}`),
+          () => alert("Allow location access, or paste a map link."),
+        );
       }
       async function savePickup() {
-        const m = $("pum"), a = $("pua").value.trim(), l = $("pul").value.trim();
+        const m = $("pum"),
+          a = $("pua").value.trim(),
+          l = $("pul").value.trim();
         m.className = "msg err";
         if (!a) return (m.textContent = "Enter the pick-up address.");
-        if (l && !/^https?:\/\//.test(l)) return (m.textContent = "The map link must start with https://");
-        const { error } = await sb.rpc("save_pickup", { a, h: $("puh").value.trim(), l });
+        if (l && !/^https?:\/\//.test(l))
+          return (m.textContent = "The map link must start with https://");
+        const { error } = await sb.rpc("save_pickup", {
+          a,
+          h: $("puh").value.trim(),
+          l,
+        });
         m.className = error ? "msg err" : "msg ok";
-        m.textContent = error ? error.message : "✓ Saved. Buyers see it when they pick up.";
+        m.textContent = error
+          ? error.message
+          : "✓ Saved. Buyers see it when they pick up.";
       }
       async function shipBox() {
         const el = $("shb");
         if (!el) return;
-        const { data } = await sb.from("products").select("id,title").eq("seller_id", user.id).eq("sale_type", "preorder");
-        el.innerHTML = data && data.length
-          ? `<div class="box" style="max-width:none"><h2>Start a shipment from abroad</h2><p style="margin:0;color:var(--mut)">Buyers join together until you reach your target quantity.</p><select id="sp">${data.map((x) => `<option value="${x.id}">${esc(x.title)}</option>`).join("")}</select><input id="sq" type="number" min="1" placeholder="Target quantity"><label style="font-size:13px;color:var(--mut)">Joining closes on</label><input id="sc" type="date"><button class="act g" onclick="addShipment()">Open shipment</button><div id="sm" class="msg"></div></div>`
-          : "";
+        const { data } = await sb
+          .from("products")
+          .select("id,title")
+          .eq("seller_id", user.id)
+          .eq("sale_type", "preorder");
+        el.innerHTML =
+          data && data.length
+            ? `<div class="box" style="max-width:none"><h2>Start a shipment from abroad</h2><p style="margin:0;color:var(--mut)">Buyers join together until you reach your target quantity.</p><select id="sp">${data.map((x) => `<option value="${x.id}">${esc(x.title)}</option>`).join("")}</select><input id="sq" type="number" min="1" placeholder="Target quantity"><label style="font-size:13px;color:var(--mut)">Joining closes on</label><input id="sc" type="date"><button class="act g" onclick="addShipment()">Open shipment</button><div id="sm" class="msg"></div></div>`
+            : "";
       }
       async function addShipment() {
-        const m = $("sm"), q = parseInt($("sq").value);
+        const m = $("sm"),
+          q = parseInt($("sq").value);
         m.className = "msg err";
-        if (!(q > 0) || !$("sc").value) return (m.textContent = "Enter a target quantity and a closing date.");
-        const { error } = await sb.from("shipments").insert({ seller_id: user.id, product_id: $("sp").value, target_qty: q, closes_at: $("sc").value });
+        if (!(q > 0) || !$("sc").value)
+          return (m.textContent =
+            "Enter a target quantity and a closing date.");
+        const { error } = await sb
+          .from("shipments")
+          .insert({
+            seller_id: user.id,
+            product_id: $("sp").value,
+            target_qty: q,
+            closes_at: $("sc").value,
+          });
         m.className = error ? "msg err" : "msg ok";
-        m.textContent = error ? error.message : "✓ Shipment opened. Buyers can join it from the Bulk tab.";
+        m.textContent = error
+          ? error.message
+          : "✓ Shipment opened. Buyers can join it from the Bulk tab.";
       }
       async function bulk() {
-        app.innerHTML = '<div class="hero"><h1>Buy more, pay less</h1><p>Wholesale prices, pre-orders, and shipments from abroad. You pay the same way as any order.</p><div class="tiles"><div>🏷️<br>Lower prices</div><div>🗓️<br>Pre-order</div><div>✈️<br>From abroad</div></div></div><div class="sec" style="margin-bottom:10px"><h2>Shipments from abroad</h2><div id="shp"><div class="sk"></div></div></div><div class="sec"><h2>Wholesale and pre-order items</h2><div id="bl"><div class="sk"></div></div></div>';
+        app.innerHTML =
+          '<div class="hero"><h1>Buy more, pay less</h1><p>Wholesale prices, pre-orders, and shipments from abroad. You pay the same way as any order.</p><div class="tiles"><div>🏷️<br>Lower prices</div><div>🗓️<br>Pre-order</div><div>✈️<br>From abroad</div></div></div><div class="sec" style="margin-bottom:10px"><h2>Shipments from abroad</h2><div id="shp"><div class="sk"></div></div></div><div class="sec"><h2>Wholesale and pre-order items</h2><div id="bl"><div class="sk"></div></div></div>';
         const [s, b] = await Promise.all([
           sb.rpc("open_shipments"),
-          sb.from("products").select(PSEL).in("sale_type", ["wholesale", "preorder"]).neq("stock_level", "out").order("created_at", { ascending: false }).limit(40),
+          sb
+            .from("products")
+            .select(PSEL)
+            .in("sale_type", ["wholesale", "preorder"])
+            .neq("stock_level", "out")
+            .order("created_at", { ascending: false })
+            .limit(40),
         ]);
-        $("shp").innerHTML = (s.data || []).map((x) => `<div class="mine"><span>${esc(x.title)} · ${esc(x.shop_name || "Macstore")}<small>From ${esc(x.origin_country || "abroad")}${x.expected_arrival ? " · arrives about " + dt(x.expected_arrival) : ""}<br>${x.joined} of ${x.target_qty} joined · closes ${dt(x.closes_at)}<span style="display:block;height:6px;background:#e5e5ea;border-radius:3px;margin-top:4px"><span style="display:block;height:6px;width:${Math.min(100, Math.round((x.joined / x.target_qty) * 100))}%;background:#00a651;border-radius:3px"></span></span></small></span><button class="act g" onclick="JOIN='${x.id}';item('${x.product_id}')">Join</button></div>`).join("") || '<div class="route"><b>🌍 ✈️ 📍 Next shipment is on the way</b><br>No open shipments right now. Check back soon.</div>';
-        $("bl").innerHTML = b.error ? `<p class="msg err">${esc(b.error.message)}</p>` : (b.data || []).length ? `<div class="grid">${b.data.map(card).join("")}</div>` : '<div class="open" style="text-align:center">📦 Wholesale and pre-order items are coming soon. Sellers are adding them.</div>';
+        $("shp").innerHTML =
+          (s.data || [])
+            .map(
+              (x) =>
+                `<div class="mine"><span>${esc(x.title)} · ${esc(x.shop_name || "Macstore")}<small>From ${esc(x.origin_country || "abroad")}${x.expected_arrival ? " · arrives about " + dt(x.expected_arrival) : ""}<br>${x.joined} of ${x.target_qty} joined · closes ${dt(x.closes_at)}<span style="display:block;height:6px;background:#e5e5ea;border-radius:3px;margin-top:4px"><span style="display:block;height:6px;width:${Math.min(100, Math.round((x.joined / x.target_qty) * 100))}%;background:#00a651;border-radius:3px"></span></span></small></span><button class="act g" onclick="JOIN='${x.id}';item('${x.product_id}')">Join</button></div>`,
+            )
+            .join("") ||
+          '<div class="route"><b>🌍 ✈️ 📍 Next shipment is on the way</b><br>No open shipments right now. Check back soon.</div>';
+        $("bl").innerHTML = b.error
+          ? `<p class="msg err">${esc(b.error.message)}</p>`
+          : (b.data || []).length
+            ? `<div class="grid">${b.data.map(card).join("")}</div>`
+            : '<div class="open" style="text-align:center">📦 Wholesale and pre-order items are coming soon. Sellers are adding them.</div>';
       }
-
 
       /* SHOP PAGES, LEADERBOARD, STATS, COUPONS, PROBLEM REPORTS, RESTOCK ALERTS */
       let SHOPID = null;
@@ -1220,43 +1853,95 @@
         window.scrollTo(0, 0);
         app.innerHTML = '<div class="sk"></div>';
         const [p, r] = await Promise.all([
-          sb.from("products").select(PSEL).eq("seller_id", sid).eq("in_stock", true).order("created_at", { ascending: false }).limit(60),
+          sb
+            .from("products")
+            .select(PSEL)
+            .eq("seller_id", sid)
+            .eq("in_stock", true)
+            .order("created_at", { ascending: false })
+            .limit(60),
           sb.rpc("seller_stats", { sid }),
         ]);
-        const x = (r.data && r.data[0]) || {}, name = (p.data && p.data[0]?.shop_name) || "Macstore shop";
+        const x = (r.data && r.data[0]) || {},
+          name = (p.data && p.data[0]?.shop_name) || "Macstore shop";
         app.innerHTML = `<div class="box" style="max-width:none"><button class="act sv" style="flex:none;width:auto;justify-self:start" onclick="back()">← Back</button><h2>🏪 ${esc(name)} ${x.verified ? '<span class="chip" style="background:#00a651;color:#fff">✓ Verified seller</span>' : ""}</h2><p style="margin:0;color:var(--mut)">${x.rating_count ? stars(Math.round(x.avg_stars)) + " " + Number(x.avg_stars).toFixed(1) + " (" + x.rating_count + " ratings)" : "No ratings yet"} · ${x.total ? Math.round((x.delivered / x.total) * 100) + "% of orders delivered" : "New seller"}</p><button class="act sv" style="flex:none;width:100%" onclick="copyShop('${sid}')">🔗 Copy shop link</button></div><div class="sec"><div class="grid">${(p.data || []).map(card).join("") || '<div class="empty">No items yet.</div>'}</div></div>`;
       }
       function copyShop(sid) {
         const u = location.origin + location.pathname + "?shop=" + sid;
-        navigator.clipboard ? navigator.clipboard.writeText(u).then(() => alert("Shop link copied. Share it anywhere."), () => prompt("Copy this link", u)) : prompt("Copy this link", u);
+        navigator.clipboard
+          ? navigator.clipboard.writeText(u).then(
+              () => alert("Shop link copied. Share it anywhere."),
+              () => prompt("Copy this link", u),
+            )
+          : prompt("Copy this link", u);
       }
       async function loadLeaders() {
         const { data } = await sb.rpc("leaderboard");
         if (!data || !data.length || !$("rev")) return;
         const f = (k) => {
-          const a = data.filter((x) => x.kind === k), sc = (x) => (k === "seller" ? x.score + " orders delivered" : money(x.score) + " commission earned");
-          return a.map((x, i) => i === 0 ? `<div class="lead"><div class="av">${esc((x.name || "?").slice(0, 2).toUpperCase())}<i>👑</i></div><div><small>No. 1 ${k}</small><b>${esc(x.name)}</b><span>${sc(x)}</span></div></div>` : `<div class="mine"><span>${["", "🥈", "🥉", "4.", "5."][i]} ${esc(x.name)}<small>${sc(x)}</small></span></div>`).join("") + (k === "seller" && a.length < 3 ? '<div class="open">Open spot. Deliver orders to climb.</div>' : "");
+          const a = data.filter((x) => x.kind === k),
+            sc = (x) =>
+              k === "seller"
+                ? x.score + " orders delivered"
+                : money(x.score) + " commission earned";
+          return (
+            a
+              .map((x, i) =>
+                i === 0
+                  ? `<div class="lead"><div class="av">${esc((x.name || "?").slice(0, 2).toUpperCase())}<i>👑</i></div><div><small>No. 1 ${k}</small><b>${esc(x.name)}</b><span>${sc(x)}</span></div></div>`
+                  : `<div class="mine"><span>${["", "🥈", "🥉", "4.", "5."][i]} ${esc(x.name)}<small>${sc(x)}</small></span></div>`,
+              )
+              .join("") +
+            (k === "seller" && a.length < 3
+              ? '<div class="open">Open spot. Deliver orders to climb.</div>'
+              : "")
+          );
         };
-        $("rev").insertAdjacentHTML("beforebegin", `<div class="sec" style="margin-bottom:10px"><h2>🏆 Top this month <small style="color:var(--mut);font-weight:400;font-size:12px">Resets on the 1st</small></h2><h3>Top sellers</h3>${f("seller") || '<div class="open">Open spot. Deliver orders to climb.</div>'}<h3>Top promoters</h3>${f("promoter") || '<div class="inv"><div>📣</div><div><b>Be the first promoter</b><br><small>Share products and earn rewards.</small></div><button class="act" onclick="becomePromoter()">Join</button></div>'}</div>`);
+        $("rev").insertAdjacentHTML(
+          "beforebegin",
+          `<div class="sec" style="margin-bottom:10px"><h2>🏆 Top this month <small style="color:var(--mut);font-weight:400;font-size:12px">Resets on the 1st</small></h2><h3>Top sellers</h3>${f("seller") || '<div class="open">Open spot. Deliver orders to climb.</div>'}<h3>Top promoters</h3>${f("promoter") || '<div class="inv"><div>📣</div><div><b>Be the first promoter</b><br><small>Share products and earn rewards.</small></div><button class="act" onclick="becomePromoter()">Join</button></div>'}</div>`,
+        );
       }
       async function statsBox() {
         const el = $("stb");
         if (!el) return;
         const { data } = await sb.rpc("my_product_stats");
-        el.innerHTML = data && data.length ? `<div class="box" style="max-width:none"><h2>How your items are doing</h2>${data.map((x) => `<div class="mine"><span>${esc(x.title)}<small>${x.views} views · ${x.saves} saves · ${x.orders} orders · ${money(x.revenue)} earned</small></span></div>`).join("")}</div>` : "";
+        el.innerHTML =
+          data && data.length
+            ? `<div class="box" style="max-width:none"><h2>How your items are doing</h2>${data.map((x) => `<div class="mine"><span>${esc(x.title)}<small>${x.views} views · ${x.saves} saves · ${x.orders} orders · ${money(x.revenue)} earned</small></span></div>`).join("")}</div>`
+            : "";
       }
       async function couponBox() {
         const el = $("cpb");
         if (!el) return;
-        const { data } = await sb.from("coupons").select("id,code,pct,expires_at").eq("seller_id", user.id).order("created_at", { ascending: false });
+        const { data } = await sb
+          .from("coupons")
+          .select("id,code,pct,expires_at")
+          .eq("seller_id", user.id)
+          .order("created_at", { ascending: false });
         el.innerHTML = `<div class="box" style="max-width:none"><h2>Discount codes</h2><p style="margin:0;color:var(--mut)">Give buyers a percentage off your items.</p>${(data || []).map((c) => `<div class="mine"><span>${esc(c.code)} · ${c.pct}% off<small>${c.expires_at ? "Until " + dt(c.expires_at) : "No end date"}</small></span><button class="act r" onclick="delCoupon('${c.id}')">Delete</button></div>`).join("")}<input id="cpc" placeholder="Code, like EASTER10" maxlength="20" autocapitalize="characters"><input id="cpp" type="number" min="1" max="90" placeholder="Percent off (1 to 90)"><label style="font-size:13px;color:var(--mut)">Ends on (optional)</label><input id="cpe" type="date"><button class="act g" onclick="addCoupon()">Create code</button><div id="cpm" class="msg"></div></div>`;
       }
       async function addCoupon() {
-        const m = $("cpm"), c = $("cpc").value.trim().toUpperCase(), p = Number($("cpp").value);
+        const m = $("cpm"),
+          c = $("cpc").value.trim().toUpperCase(),
+          p = Number($("cpp").value);
         m.className = "msg err";
-        if (!/^[A-Z0-9-]{3,20}$/.test(c) || !(p >= 1 && p <= 90)) return (m.textContent = "Enter a code (letters and numbers) and a percent from 1 to 90.");
-        const { error } = await sb.from("coupons").insert({ code: c, pct: p, seller_id: user.id, expires_at: $("cpe").value || null });
-        if (error) return (m.textContent = error.code === "23505" ? "That code is already taken. Try another." : error.message);
+        if (!/^[A-Z0-9-]{3,20}$/.test(c) || !(p >= 1 && p <= 90))
+          return (m.textContent =
+            "Enter a code (letters and numbers) and a percent from 1 to 90.");
+        const { error } = await sb
+          .from("coupons")
+          .insert({
+            code: c,
+            pct: p,
+            seller_id: user.id,
+            expires_at: $("cpe").value || null,
+          });
+        if (error)
+          return (m.textContent =
+            error.code === "23505"
+              ? "That code is already taken. Try another."
+              : error.message);
         couponBox();
       }
       async function delCoupon(id) {
@@ -1266,7 +1951,9 @@
       async function dispute(oid) {
         const r = prompt("What went wrong with this order?");
         if (!r || r.trim().length < 5) return;
-        const { error } = await sb.from("disputes").insert({ order_id: oid, buyer_id: user.id, reason: r.trim() });
+        const { error } = await sb
+          .from("disputes")
+          .insert({ order_id: oid, buyer_id: user.id, reason: r.trim() });
         if (error) return alert(error.message);
         orders();
       }
@@ -1275,8 +1962,14 @@
           mode = "login";
           return go("account");
         }
-        const { error } = await sb.from("stock_alerts").upsert({ user_id: user.id, product_id: pid });
-        alert(error ? error.message : "Done. We will tell you here when it is back in stock.");
+        const { error } = await sb
+          .from("stock_alerts")
+          .upsert({ user_id: user.id, product_id: pid });
+        alert(
+          error
+            ? error.message
+            : "Done. We will tell you here when it is back in stock.",
+        );
       }
       async function adBoost(id) {
         const d = parseInt(prompt("Feature this item for how many days?", "7"));
@@ -1285,8 +1978,19 @@
         alert(error ? error.message : "Featured for " + d + " days.");
       }
       async function adDisputes() {
-        const { data, error } = await sb.from("disputes").select("id,order_id,reason,status,created_at").order("created_at", { ascending: false }).limit(50);
-        adEl().innerHTML = error ? `<p class="err msg">${esc(error.message)}</p>` : (data || []).map((d) => `<div class="mine"><span>${esc(d.reason)}<small>${dt(d.created_at)} · order ${esc(String(d.order_id).slice(0, 8).toUpperCase())}</small></span><select aria-label="Problem status" onchange="setStatus('disputes','${d.id}',this.value)">${opts(["open", "investigating", "resolved"], d.status)}</select></div>`).join("") || "<p>No problem reports.</p>";
+        const { data, error } = await sb
+          .from("disputes")
+          .select("id,order_id,reason,status,created_at")
+          .order("created_at", { ascending: false })
+          .limit(50);
+        adEl().innerHTML = error
+          ? `<p class="err msg">${esc(error.message)}</p>`
+          : (data || [])
+              .map(
+                (d) =>
+                  `<div class="mine"><span>${esc(d.reason)}<small>${dt(d.created_at)} · order ${esc(String(d.order_id).slice(0, 8).toUpperCase())}</small></span><select aria-label="Problem status" onchange="setStatus('disputes','${d.id}',this.value)">${opts(["open", "investigating", "resolved"], d.status)}</select></div>`,
+              )
+              .join("") || "<p>No problem reports.</p>";
       }
 
       /* BUYER ORDER HISTORY (orders and delivery details stay here) */
@@ -1302,24 +2006,46 @@
       };
       function timeline(status) {
         if (status === "cancelled") return "<b>Cancelled</b>";
-        const i = { awaiting_payment: 0, pending: 0, paid: 1, confirmed: 2, ready: 3, handed_over: 4, delivered: 5 }[status] ?? 0;
-        return ["Placed", "Paid", "Confirmed", "Waiting to be delivered", "Delivered", "Received"]
-          .map((l, k) => `<span style="color:${k <= i ? "#00a651" : "#a0a0a6"}">${k <= i ? "●" : "○"} ${l}</span>`)
+        const i =
+          {
+            awaiting_payment: 0,
+            pending: 0,
+            paid: 1,
+            confirmed: 2,
+            ready: 3,
+            handed_over: 4,
+            delivered: 5,
+          }[status] ?? 0;
+        return [
+          "Placed",
+          "Paid",
+          "Confirmed",
+          "Waiting to be delivered",
+          "Delivered",
+          "Received",
+        ]
+          .map(
+            (l, k) =>
+              `<span style="color:${k <= i ? "#00a651" : "#a0a0a6"}">${k <= i ? "●" : "○"} ${l}</span>`,
+          )
           .join(" › ");
       }
       async function rate(oid, pid, sid) {
         const n = Number($("rs" + oid).value),
           { error } = await sb.from("ratings").insert({
-            order_id: oid, product_id: pid, seller_id: sid, buyer_id: user.id,
-            stars: n, comment: $("rc" + oid).value.trim() || null,
+            order_id: oid,
+            product_id: pid,
+            seller_id: sid,
+            buyer_id: user.id,
+            stars: n,
+            comment: $("rc" + oid).value.trim() || null,
           });
         if (error) return alert(error.message);
         orders();
       }
       async function orders() {
         if (!user) return go("account");
-        app.innerHTML =
-          `<div class="sec"><h2>My orders</h2>${"Notification" in window && Notification.permission === "default" ? '<button class="act g" style="flex:none;width:100%;margin-bottom:8px" onclick="enableAlerts()">🔔 Get alerts when your order is ready</button>' : ""}<div id="ol"><div class="sk"></div></div></div>`;
+        app.innerHTML = `<div class="sec"><h2>My orders</h2>${"Notification" in window && Notification.permission === "default" ? '<button class="act g" style="flex:none;width:100%;margin-bottom:8px" onclick="enableAlerts()">🔔 Get alerts when your order is ready</button>' : ""}<div id="ol"><div class="sk"></div></div></div>`;
         const { data, error } = await sb
           .from("orders")
           .select(
@@ -1327,9 +2053,25 @@
           )
           .eq("buyer_id", user.id)
           .order("created_at", { ascending: false });
-        const rated = new Set(((await sb.from("ratings").select("order_id").eq("buyer_id", user.id)).data || []).map((r) => r.order_id));
+        const rated = new Set(
+          (
+            (
+              await sb
+                .from("ratings")
+                .select("order_id")
+                .eq("buyer_id", user.id)
+            ).data || []
+          ).map((r) => r.order_id),
+        );
         const dsp = {};
-        ((await sb.from("disputes").select("order_id,status").eq("buyer_id", user.id)).data || []).forEach((d) => (dsp[d.order_id] = d.status));
+        (
+          (
+            await sb
+              .from("disputes")
+              .select("order_id,status")
+              .eq("buyer_id", user.id)
+          ).data || []
+        ).forEach((d) => (dsp[d.order_id] = d.status));
         $("ol").innerHTML = error
           ? `<p class="msg err">${esc(error.message)}</p>`
           : (data || [])
@@ -1343,7 +2085,9 @@
               )
               .join("") ||
             '<p class="empty" style="padding:20px 0">No orders yet. Your orders and delivery details will stay here.</p>';
-        document.querySelectorAll("[id^=pu][data-s]").forEach((e) => showPickup(e.dataset.s, e));
+        document
+          .querySelectorAll("[id^=pu][data-s]")
+          .forEach((e) => showPickup(e.dataset.s, e));
       }
 
       /* ACCOUNT */
@@ -1546,7 +2290,9 @@
       function paintHearts(id) {
         document.querySelectorAll(`[data-sv="${id}"]`).forEach((b) => {
           b.textContent = b.dataset.full
-            ? heart(id) + " " + (SAVED.has(id) ? "Saved. Tap to remove" : "Save this item")
+            ? heart(id) +
+              " " +
+              (SAVED.has(id) ? "Saved. Tap to remove" : "Save this item")
             : heart(id);
         });
       }
@@ -1580,6 +2326,11 @@
           SAVED.add(id);
         }
         paintHearts(id);
+        document.querySelectorAll(`[data-sv="${id}"]`).forEach((b) => {
+          b.classList.remove("pop");
+          void b.offsetWidth;
+          b.classList.add("pop");
+        });
         if (view === "saved") saved();
       }
       async function saved() {
@@ -1597,11 +2348,21 @@
           : items.length
             ? items.map(card).join("")
             : '<div class="open" style="grid-column:1/-1;text-align:center">Nothing saved yet. Tap the heart on any product to keep it here.<br><button class="act" style="margin-top:8px;width:auto" onclick="go(\'home\')">Browse products</button></div>';
-        if (items.length && $("sn")) $("sn").textContent = items.length + (items.length === 1 ? " item" : " items") + " saved. Tap a heart again to remove.";
+        if (items.length && $("sn"))
+          $("sn").textContent =
+            items.length +
+            (items.length === 1 ? " item" : " items") +
+            " saved. Tap a heart again to remove.";
       }
 
       /* SELLER: ORDERS TO DELIVER + EARNINGS */
-      const PAIDSTATES = ["paid", "confirmed", "ready", "handed_over", "delivered"];
+      const PAIDSTATES = [
+        "paid",
+        "confirmed",
+        "ready",
+        "handed_over",
+        "delivered",
+      ];
       async function sellerEarnings(el) {
         const { data, error } = await sb
           .from("orders")
@@ -1623,7 +2384,9 @@
             if (cod || o.seller_paid) received += net;
             else waiting += net;
           } else if (
-            !["cancelled", "awaiting_payment", "handed_over"].includes(o.status) &&
+            !["cancelled", "awaiting_payment", "handed_over"].includes(
+              o.status,
+            ) &&
             (cod || PAIDSTATES.includes(o.status))
           )
             toDeliver++;
@@ -1634,6 +2397,7 @@
         if (!profile || !["seller", "admin"].includes(profile.role))
           return go("home");
         app.innerHTML =
+          shopTabs("sorders") +
           `<div class="sec"><h2>Shop orders</h2>${"Notification" in window && Notification.permission === "default" ? '<button class="act g" style="flex:none;width:100%;margin-bottom:8px" onclick="enableAlerts()">🔔 Turn on order alerts</button>' : ""}<div id="earn"></div><div id="sol"><div class="sk"></div></div></div>`;
         sellerEarnings($("earn"));
         const { data, error } = await sb
@@ -1651,15 +2415,52 @@
                 const cod = o.payment_method !== "in_app",
                   paid = PAIDSTATES.includes(o.status);
                 let tag, col, show;
-                if (o.status === "cancelled") [tag, col, show] = ["Cancelled", "#75757a", false];
-                else if (cod) [tag, col, show] = ["Cash on delivery. Collect " + money(o.amount), "#b45309", true];
-                else if (paid) [tag, col, show] = ["Paid. Ready to deliver", "#00a651", true];
-                else [tag, col, show] = ["Awaiting payment. Do not deliver yet", "#e5252a", false];
-                const done = { delivered: " · Received by buyer", handed_over: " · Waiting for the buyer to tap Received", ready: " · Ready", confirmed: " · Confirmed" }[o.status] || "",
+                if (o.status === "cancelled")
+                  [tag, col, show] = ["Cancelled", "#75757a", false];
+                else if (cod)
+                  [tag, col, show] = [
+                    "Cash on delivery. Collect " + money(o.amount),
+                    "#b45309",
+                    true,
+                  ];
+                else if (paid)
+                  [tag, col, show] = [
+                    "Paid. Ready to deliver",
+                    "#00a651",
+                    true,
+                  ];
+                else
+                  [tag, col, show] = [
+                    "Awaiting payment. Do not deliver yet",
+                    "#e5252a",
+                    false,
+                  ];
+                const done =
+                    {
+                      delivered: " · Received by buyer",
+                      handed_over: " · Waiting for the buyer to tap Received",
+                      ready: " · Ready",
+                      confirmed: " · Confirmed",
+                    }[o.status] || "",
                   youGet = Number(o.amount) - Number(o.commission_amount || 0);
                 const pk = o.fulfilment === "pickup",
-                  nxt = show && ({ paid: ["confirmed", "Confirm order"], pending: ["confirmed", "Confirm order"], confirmed: ["ready", pk ? "Ready for pick-up" : "Ready to deliver"], ready: ["handed_over", pk ? "Mark as handed over" : "Mark as delivered"] })[o.status],
-                  stepBtn = (nxt ? `<br><button class="act g" style="flex:none;width:100%;margin-top:6px" onclick="orderStep('${o.id}','${nxt[0]}')">${nxt[1]}</button>` : "");
+                  nxt =
+                    show &&
+                    {
+                      paid: ["confirmed", "Confirm order"],
+                      pending: ["confirmed", "Confirm order"],
+                      confirmed: [
+                        "ready",
+                        pk ? "Ready for pick-up" : "Ready to deliver",
+                      ],
+                      ready: [
+                        "handed_over",
+                        pk ? "Mark as handed over" : "Mark as delivered",
+                      ],
+                    }[o.status],
+                  stepBtn = nxt
+                    ? `<br><button class="act g" style="flex:none;width:100%;margin-top:6px" onclick="orderStep('${o.id}','${nxt[0]}')">${nxt[1]}</button>`
+                    : "";
                 return `<div class="mine">${o.products?.images && o.products.images[0] ? `<img src="${esc(o.products.images[0])}" alt="" loading="lazy">` : ""}
    <span>${esc(o.products?.title || "Item no longer listed")} · ${money(o.amount)}
    <small>${dt(o.created_at)}${o.quantity > 1 ? " · Qty " + o.quantity : ""}${done}<br><b style="color:${col}">${esc(tag)}</b>${Number(o.commission_amount) > 0 ? `<br>You get ${money(youGet)} after the promoter’s commission` : ""}${
@@ -1702,6 +2503,7 @@
       async function sell() {
         EDIT = null;
         app.innerHTML =
+          shopTabs("sell") +
           '<div id="plan"><div class="sk"></div></div><div id="shop"></div>';
         const isAdmin = profile && profile.role === "admin",
           pl = $("plan"),
@@ -1757,10 +2559,20 @@
         const el = $("rn");
         if (!el) return;
         const [{ data }, { data: pr }] = await Promise.all([
-          sb.from("seller_verification").select("shop_name").eq("user_id", user.id).maybeSingle(),
-          sb.from("profiles").select("shop_renamed_at").eq("id", user.id).maybeSingle(),
+          sb
+            .from("seller_verification")
+            .select("shop_name")
+            .eq("user_id", user.id)
+            .maybeSingle(),
+          sb
+            .from("profiles")
+            .select("shop_renamed_at")
+            .eq("id", user.id)
+            .maybeSingle(),
         ]);
-        const next = pr?.shop_renamed_at ? new Date(new Date(pr.shop_renamed_at).getTime() + 30 * 864e5) : null,
+        const next = pr?.shop_renamed_at
+            ? new Date(new Date(pr.shop_renamed_at).getTime() + 30 * 864e5)
+            : null,
           locked = next && next > new Date();
         el.innerHTML = `<div class="box" style="max-width:none"><h2>Your shop name</h2><p style="margin:0;color:var(--mut)">Buyers see this on top of every item you post. You can change it once a month.</p><input id="sn" maxlength="40" placeholder="Shop name" value="${esc(data?.shop_name || "")}" ${locked ? "disabled" : ""}><button class="act g" onclick="renameShop()" ${locked ? "disabled" : ""}>Save shop name</button><div id="snm" class="msg">${locked ? "You can rename again on " + dt(next) + "." : ""}</div></div>`;
       }
@@ -1776,7 +2588,9 @@
         m.textContent = "Saving…";
         const { error } = await sb.rpc("rename_shop", { new_name: n });
         m.className = error ? "msg err" : "msg ok";
-        m.textContent = error ? error.message : "✓ Saved. Every item now shows this name.";
+        m.textContent = error
+          ? error.message
+          : "✓ Saved. Every item now shows this name.";
         if (!error) shopBox();
       }
       async function startPlan(p) {
@@ -1885,11 +2699,21 @@
           };
         const stp = $("stp").value;
         row.sale_type = stp;
-        row.min_qty = stp === "retail" ? 1 : Math.max(1, parseInt($("mq").value) || 1);
-        row.price_tiers = stp === "retail" ? [] : $("tr").value.split("\n").map((l) => l.split("=").map((x) => Number(x.trim()))).filter((a) => a[0] > 0 && a[1] > 0).map(([min, price]) => ({ min, price }));
-        row.origin_country = stp === "retail" ? null : $("og").value.trim() || null;
+        row.min_qty =
+          stp === "retail" ? 1 : Math.max(1, parseInt($("mq").value) || 1);
+        row.price_tiers =
+          stp === "retail"
+            ? []
+            : $("tr")
+                .value.split("\n")
+                .map((l) => l.split("=").map((x) => Number(x.trim())))
+                .filter((a) => a[0] > 0 && a[1] > 0)
+                .map(([min, price]) => ({ min, price }));
+        row.origin_country =
+          stp === "retail" ? null : $("og").value.trim() || null;
         row.preorder_closes = stp === "preorder" ? $("pc").value || null : null;
-        row.expected_arrival = stp === "preorder" ? $("ea").value || null : null;
+        row.expected_arrival =
+          stp === "preorder" ? $("ea").value || null : null;
         let error;
         if (EDIT) {
           if (images.length) row.images = images;
@@ -2014,21 +2838,37 @@
         const [y, m, dd] = d.split("-").map(Number),
           iso = (x) => x.toISOString();
         const [day, mon, owed] = await Promise.all([
-          sb.from("payouts").select("role,amount").gte("paid_at", iso(new Date(y, m - 1, dd))).lt("paid_at", iso(new Date(y, m - 1, dd + 1))),
-          sb.from("payouts").select("role,amount").gte("paid_at", iso(new Date(y, m - 1, 1))).lt("paid_at", iso(new Date(y, m, 1))),
-          sb.from("orders").select("amount,commission_amount,seller_paid,promoter_paid,payment_method").eq("status", "delivered"),
+          sb
+            .from("payouts")
+            .select("role,amount")
+            .gte("paid_at", iso(new Date(y, m - 1, dd)))
+            .lt("paid_at", iso(new Date(y, m - 1, dd + 1))),
+          sb
+            .from("payouts")
+            .select("role,amount")
+            .gte("paid_at", iso(new Date(y, m - 1, 1)))
+            .lt("paid_at", iso(new Date(y, m, 1))),
+          sb
+            .from("orders")
+            .select(
+              "amount,commission_amount,seller_paid,promoter_paid,payment_method",
+            )
+            .eq("status", "delivered"),
         ]);
         if (day.error) {
           el.innerHTML = `<p class="msg err">${esc(day.error.message)}</p>`;
           return;
         }
         const sum = (rows, role) =>
-          (rows || []).filter((r) => r.role === role).reduce((a, r) => a + Number(r.amount), 0);
+          (rows || [])
+            .filter((r) => r.role === role)
+            .reduce((a, r) => a + Number(r.amount), 0);
         let os = 0,
           op = 0;
         (owed.data || []).forEach((o) => {
           const c = Number(o.commission_amount || 0);
-          if (o.payment_method === "in_app" && !o.seller_paid) os += Number(o.amount) - c;
+          if (o.payment_method === "in_app" && !o.seller_paid)
+            os += Number(o.amount) - c;
           if (c > 0 && !o.promoter_paid) op += c;
         });
         const st = [
@@ -2242,7 +3082,14 @@
                 (
                   o,
                 ) => `<div class="mine"><span>${esc(o.products?.title || "Product")} · ${money(o.amount)}<small>${dt(o.created_at)} · ${esc(o.fulfilment)} · ${esc(o.payment_method)}${o.delivery_address ? " · " + esc(o.delivery_address) : ""}${o.phone ? " · " + esc(o.phone) : ""}${o.note ? " · note: " + esc(o.note) : ""}${o.guest_name ? " · guest " + esc(o.guest_name) : ""}${o.quantity > 1 ? " · qty " + o.quantity : ""}${o.shipment_id ? " · shipment" : ""}${o.received_at ? " · received " + dt(o.received_at) : ""}${o.promoter_id ? " · promoter " + esc(names[o.promoter_id] || "") + " (" + esc(o.promo_code || "") + ")" : ""}${o.commission_amount > 0 ? " · promoter commission " + money(o.commission_amount) : ""}</small></span>
-   <select aria-label="Order status" onchange="setStatus('orders','${o.id}',this.value)">${Object.entries(ST).map(([k, v]) => `<option value="${k}" ${k === o.status ? "selected" : ""}>${v}</option>`).join("")}</select></div>`,
+   <select aria-label="Order status" onchange="setStatus('orders','${o.id}',this.value)">${Object.entries(
+     ST,
+   )
+     .map(
+       ([k, v]) =>
+         `<option value="${k}" ${k === o.status ? "selected" : ""}>${v}</option>`,
+     )
+     .join("")}</select></div>`,
               )
               .join("") || "<p>No orders yet.</p>";
       }
@@ -2303,7 +3150,10 @@
         const sec = (title, role) => {
           const rows = list.filter(([, x]) => x.role === role),
             tot = rows.reduce((a, [, x]) => a + x.amt, 0);
-          return `<h2>${title} · ${money(tot)}</h2>` + (rows.map(row).join("") || "<p>Nothing to pay right now.</p>");
+          return (
+            `<h2>${title} · ${money(tot)}</h2>` +
+            (rows.map(row).join("") || "<p>Nothing to pay right now.</p>")
+          );
         };
         adEl().innerHTML = `<div class="box" style="max-width:none"><h2>Your WhatsApp number</h2><p style="margin:0;color:var(--mut)">Approved sellers and promoters see a chat button with this number.</p><input id="aw" type="tel" placeholder="e.g. 0241234567" value="${esc(w.data?.value || "")}"><button class="act g" onclick="saveWa()">Save number</button><div id="aws" class="msg"></div></div>
    <h2>Money to pay out</h2><p style="margin:0 0 8px;color:var(--mut)">Delivered orders only. Sellers are listed for in-app payments. Cash-on-delivery sales are already with the seller.</p>
@@ -2311,10 +3161,19 @@
    ${sec("Promoters to pay", "promoter")}`;
       }
       async function adReports() {
-        const { data, error } = await sb.from("reports").select("id,product_id,reason,status,created_at").order("created_at", { ascending: false }).limit(50);
+        const { data, error } = await sb
+          .from("reports")
+          .select("id,product_id,reason,status,created_at")
+          .order("created_at", { ascending: false })
+          .limit(50);
         adEl().innerHTML = error
           ? `<p class="msg err">${esc(error.message)}</p>`
-          : (data || []).map((r) => `<div class="mine"><span>${esc(r.reason)}<small>${dt(r.created_at)} · ${esc(r.status)}</small></span><button class="act" onclick="item('${r.product_id}')">View item</button>${r.status === "open" ? `<button class="act g" onclick="setStatus('reports','${r.id}','resolved');adReports()">Resolve</button>` : ""}</div>`).join("") || "<p>No reports.</p>";
+          : (data || [])
+              .map(
+                (r) =>
+                  `<div class="mine"><span>${esc(r.reason)}<small>${dt(r.created_at)} · ${esc(r.status)}</small></span><button class="act" onclick="item('${r.product_id}')">View item</button>${r.status === "open" ? `<button class="act g" onclick="setStatus('reports','${r.id}','resolved');adReports()">Resolve</button>` : ""}</div>`,
+              )
+              .join("") || "<p>No reports.</p>";
       }
       async function saveWa() {
         const { error } = await sb
@@ -2344,7 +3203,10 @@
           order_ids: x.ids,
         });
         if (log.error)
-          alert("Marked as paid, but it could not be saved to the daily totals: " + log.error.message);
+          alert(
+            "Marked as paid, but it could not be saved to the daily totals: " +
+              log.error.message,
+          );
         adPayouts();
       }
       async function adRefunds() {
@@ -2470,7 +3332,9 @@
             .limit(100),
           sb
             .from("orders")
-            .select("commission_amount,status,promoter_paid,created_at,products(title)")
+            .select(
+              "commission_amount,status,promoter_paid,created_at,products(title)",
+            )
             .eq("promoter_id", user.id)
             .order("created_at", { ascending: false })
             .limit(1000),
@@ -2480,33 +3344,70 @@
             ords.filter(f).reduce((a, x) => a + Number(x.commission_amount), 0);
         hub.innerHTML = `<div class="stats"><div class="stat"><b>${money(sum((x) => x.status === "delivered"))}</b>Total earned</div><div class="stat"><b>${money(sum((x) => x.status === "delivered" && x.promoter_paid))}</b>Paid to you</div><div class="stat"><b>${money(sum((x) => x.status === "delivered" && !x.promoter_paid))}</b>Waiting for payout</div><div class="stat"><b>${money(sum((x) => !["delivered", "cancelled"].includes(x.status)))}</b>Not delivered yet</div></div>
    <h2>Products you can promote</h2>${(p.data || []).map((x) => `<div class="mine">${x.images && x.images[0] ? `<img src="${esc(x.images[0])}" alt="" loading="lazy">` : ""}<span>${esc(x.title)}<small>${money(x.price)} · you earn ${money((x.price * x.commission_pct) / 100)} (${x.commission_pct}%)</small></span><button class="act" onclick="copyLink('${x.id}')">Copy my link</button></div>`).join("") || "<p>No products are open to promoters yet.</p>"}
-   <h2>Your sales</h2>${ords.slice(0, 30).map((x) => `<div class="mine"><span>${esc(x.products?.title || "Product")}<small>${dt(x.created_at)} · ${esc(x.status)}${x.promoter_paid ? " · paid to you" : ""}</small></span><b>${money(x.commission_amount)}</b></div>`).join("") || "<p>No sales through your code yet.</p>"}`;
+   <h2>Your sales</h2>${
+     ords
+       .slice(0, 30)
+       .map(
+         (x) =>
+           `<div class="mine"><span>${esc(x.products?.title || "Product")}<small>${dt(x.created_at)} · ${esc(x.status)}${x.promoter_paid ? " · paid to you" : ""}</small></span><b>${money(x.commission_amount)}</b></div>`,
+       )
+       .join("") || "<p>No sales through your code yet.</p>"
+   }`;
       }
 
       /* FOOD, RIDES, DELIVERY RIDERS, PARTNERS (Koforidua only for now) */
       const FARE = { motorbike: 10, taxi: 25 }; // change fares here (GH₵)
-      const TRST = { requested: "Looking for a rider", accepted: "Rider on the way", picked_up: "Picked up", delivered: "Delivered", cancelled: "Cancelled" };
-      const PKIND = { food: "Food vendor", rider: "Motorbike rider", driver: "Taxi driver" };
-      let FOODAREA = "campus", FV = {}, PC = {};
+      const TRST = {
+        requested: "Looking for a rider",
+        accepted: "Rider on the way",
+        picked_up: "Picked up",
+        delivered: "Delivered",
+        cancelled: "Cancelled",
+      };
+      const PKIND = {
+        food: "Food vendor",
+        rider: "Motorbike rider",
+        driver: "Taxi driver",
+      };
+      let FOODAREA = "campus",
+        FV = {},
+        PC = {};
       const need = () => {
         if (user) return true;
-        app.innerHTML = '<div class="box"><h2>Log in first</h2><p style="margin:0;color:var(--mut)">You need an account for this.</p><button class="act" onclick="go(\'account\')">Log in</button></div>';
+        app.innerHTML =
+          '<div class="box"><h2>Log in first</h2><p style="margin:0;color:var(--mut)">You need an account for this.</p><button class="act" onclick="go(\'account\')">Log in</button></div>';
         return false;
       };
       async function food() {
         app.innerHTML = `<div class="fhero"><span class="fp">📍 Koforidua only</span><h1>Hungry? Eat local.</h1><p>Hot food from Koforidua kitchens, delivered to your hostel or door.</p><div class="fsw"><button class="${FOODAREA === "campus" ? "on" : ""}" onclick="FOODAREA='campus';food()">Around campus</button><button class="${FOODAREA === "town" ? "on" : ""}" onclick="FOODAREA='town';food()">Koforidua town</button></div></div><div id="fv"><div class="sk"></div></div>`;
-        const { data, error } = await sb.from("partners").select("id,shop_name,sells,area,hours").eq("kind", "food").eq("status", "approved").eq("town", "Koforidua").eq("area_type", FOODAREA);
+        const { data, error } = await sb
+          .from("partners")
+          .select("id,shop_name,sells,area,hours")
+          .eq("kind", "food")
+          .eq("status", "approved")
+          .eq("town", "Koforidua")
+          .eq("area_type", FOODAREA);
         (data || []).forEach((v) => (FV[v.id] = v));
-        $("fv").innerHTML = error ? `<p class="msg err">${esc(error.message)}</p>` : (data || []).map((v) => `<div class="fv"><div class="fi">🍲</div><div><b>${esc(v.shop_name)}</b><small>${esc(v.sells || "")}<br>${esc(v.area || "")}${v.hours ? " · " + esc(v.hours) : ""}</small></div><button class="act" style="flex:none;width:auto" onclick="foodMenu('${v.id}')">Order</button></div>`).join("") || '<div class="empty"><b>No vendors here yet</b><br>Kitchens in Koforidua are joining soon.</div>';
+        $("fv").innerHTML = error
+          ? `<p class="msg err">${esc(error.message)}</p>`
+          : (data || [])
+              .map(
+                (v) =>
+                  `<div class="fv"><div class="fi">🍲</div><div><b>${esc(v.shop_name)}</b><small>${esc(v.sells || "")}<br>${esc(v.area || "")}${v.hours ? " · " + esc(v.hours) : ""}</small></div><button class="act" style="flex:none;width:auto" onclick="foodMenu('${v.id}')">Order</button></div>`,
+              )
+              .join("") ||
+            '<div class="empty"><b>No vendors here yet</b><br>Kitchens in Koforidua are joining soon.</div>';
       }
       function luggChg() {
-        const big = $("tl").selectedIndex >= 2, v = $("tv");
+        const big = $("tl").selectedIndex >= 2,
+          v = $("tv");
         v.querySelector("option[value=motorbike]").disabled = big;
         if (big) v.value = "taxi";
       }
       function tripForm(kind, vid) {
         if (!need()) return;
-        const r = kind === "ride", f = kind === "food";
+        const r = kind === "ride",
+          f = kind === "food";
         app.innerHTML = `<div class="box"><button class="act sv" style="flex:none;width:auto;justify-self:start" onclick="go('home')">← Home</button><h2>${r ? "🚕 Book a ride" : f ? "🍲 Order from " + esc(FV[vid].shop_name) : "🏍️ Request a rider"}</h2><p style="margin:0;color:var(--mut)">${r ? "Heavy bags? A driver picks you up at your door." : f ? "Pay for the food and the rider when it arrives." : "A motorbike picks up from your shop and delivers to your buyer."}</p>
         ${f ? "" : `<input id="tp" placeholder="Pickup spot, like Hostel block B">`}<input id="td" placeholder="${f ? "Where should we bring it?" : "Drop-off spot"}">
         ${r ? '<select id="tl" onchange="luggChg()"><option>Just me</option><option>1 or 2 bags</option><option>Suitcase or trunk</option><option>Many boxes</option></select><select id="tv"><option value="taxi">Taxi · GH₵ ' + FARE.taxi + '</option><option value="motorbike">Motorbike (small bags only) · GH₵ ' + FARE.motorbike + "</option></select>" : `<textarea id="tn" rows="2" placeholder="${f ? "What would you like to order?" : "What is being delivered?"}"></textarea><div class="route">Delivery fee: <b>${money(FARE.motorbike)}</b></div>`}
@@ -2514,17 +3415,76 @@
         myTrips();
       }
       async function sendTrip(kind, vid) {
-        const g = (i) => ($(i) ? $(i).value.trim() : ""), m = $("tm"), v = kind === "ride" ? g("tv") : "motorbike";
-        const pick = kind === "food" ? (FV[vid].area || "") + " · " + FV[vid].shop_name : g("tp"), drop = g("td");
-        if (!pick || !drop || (kind !== "ride" && !g("tn"))) { m.className = "msg err"; m.textContent = "Fill in every box."; return; }
-        const { error } = await sb.from("trips").insert({ kind, requester_id: user.id, partner_id: vid || null, pickup: pick, dropoff: drop, note: g("tn") || null, luggage: g("tl") || null, vehicle: v, fee: FARE[v] });
+        const g = (i) => ($(i) ? $(i).value.trim() : ""),
+          m = $("tm"),
+          v = kind === "ride" ? g("tv") : "motorbike";
+        const pick =
+            kind === "food"
+              ? (FV[vid].area || "") + " · " + FV[vid].shop_name
+              : g("tp"),
+          drop = g("td");
+        if (!pick || !drop || (kind !== "ride" && !g("tn"))) {
+          m.className = "msg err";
+          m.textContent = "Fill in every box.";
+          return;
+        }
+        const { error } = await sb
+          .from("trips")
+          .insert({
+            kind,
+            requester_id: user.id,
+            partner_id: vid || null,
+            pickup: pick,
+            dropoff: drop,
+            note: g("tn") || null,
+            luggage: g("tl") || null,
+            vehicle: v,
+            fee: FARE[v],
+          });
         m.className = error ? "msg err" : "msg ok";
-        m.textContent = error ? error.message : "✓ Sent. A rider will accept soon.";
+        m.textContent = error
+          ? error.message
+          : "✓ Sent. A rider will accept soon.";
         if (!error) myTrips();
       }
       async function myTrips() {
-        const { data } = await sb.from("trips").select("kind,pickup,dropoff,status,fee,created_at").eq("requester_id", user.id).order("created_at", { ascending: false }).limit(8);
-        if ($("mt")) $("mt").innerHTML = (data || []).length ? `<div class="sec"><h2>Your requests</h2>${data.map((t) => `<div class="mine"><span>${esc(t.pickup)} → ${esc(t.dropoff)}<small>${dt(t.created_at)} · ${money(t.fee)}</small></span><b>${TRST[t.status] || t.status}</b></div>`).join("")}</div>` : "";
+        const { data } = await sb
+          .from("trips")
+          .select("kind,pickup,dropoff,status,fee,created_at")
+          .eq("requester_id", user.id)
+          .order("created_at", { ascending: false })
+          .limit(8);
+        if ($("mt"))
+          $("mt").innerHTML = (data || []).length
+            ? `<div class="sec"><h2>Your requests</h2>${data.map((t) => `<div class="mine"><span>${esc(t.pickup)} → ${esc(t.dropoff)}<small>${dt(t.created_at)} · ${money(t.fee)}</small></span><b>${TRST[t.status] || t.status}</b></div>`).join("")}</div>`
+            : "";
+      }
+      function shopTabs(a) {
+        return (
+          '<div class="cats" style="gap:8px;padding:0 0 10px"><button class="act ' +
+          (a === "sell" ? "" : "sv") +
+          '" style="flex:1" onclick="go(\'sell\')">My shop</button><button class="act ' +
+          (a === "sorders" ? "" : "sv") +
+          '" style="flex:1" onclick="go(\'sorders\')">Shop orders' +
+          (TODO ? " (" + TODO + ")" : "") +
+          "</button></div>"
+        );
+      }
+      function rides() {
+        const s = profile && ["seller", "admin"].includes(profile.role);
+        app.innerHTML =
+          '<div class="shd"><h1>🚕 Rides &amp; delivery</h1><p>Move yourself or your items around Koforidua.</p></div><div class="sec"><div class="mine"><span>Book a ride<small>Get a lift, even with luggage</small></span><button class="act g" style="flex:none;width:auto" onclick="go(\'ride\')">Open</button></div>' +
+          (s
+            ? '<div class="mine"><span>Delivery riders<small>Send your items to a buyer by motorbike</small></span><button class="act g" style="flex:none;width:auto" onclick="go(\'deliver\')">Open</button></div>'
+            : "") +
+          "</div>";
+      }
+      function work() {
+        app.innerHTML =
+          '<div class="shd"><h1>🤝 Work with Macstore</h1><p>Pick how you want to earn.</p></div><div class="sec">' +
+          '<div class="mine"><span>Become a seller<small>List your products. First month free.</small></span><button class="act g" style="flex:none;width:auto" onclick="location.href=\'seller-signup.html\'">Start</button></div>' +
+          '<div class="mine"><span>Become a promoter<small>Share products and earn commission.</small></span><button class="act g" style="flex:none;width:auto" onclick="becomePromoter()">Join</button></div>' +
+          '<div class="mine"><span>Food vendor, rider or driver<small>Koforidua only for now.</small></span><button class="act g" style="flex:none;width:auto" onclick="go(\'partner\')">Apply</button></div></div>';
       }
       function partner() {
         if (!need()) return;
@@ -2538,140 +3498,390 @@
         <button class="act" onclick="savePartner()">Send for approval</button><div id="pmsg" class="msg"></div></div>`;
       }
       async function savePartner() {
-        const g = (i) => $(i).value.trim(), m = $("pmsg"), kind = g("pk"), a = $("pi").files[0], b = $("pf").files[0];
-        const bad = (t) => { m.className = "msg err"; m.textContent = t; };
-        if (!g("pn") || !g("pp") || !g("pr") || !g("pm")) return bad("Fill in name, phone, area, and mobile money number.");
+        const g = (i) => $(i).value.trim(),
+          m = $("pmsg"),
+          kind = g("pk"),
+          a = $("pi").files[0],
+          b = $("pf").files[0];
+        const bad = (t) => {
+          m.className = "msg err";
+          m.textContent = t;
+        };
+        if (!g("pn") || !g("pp") || !g("pr") || !g("pm"))
+          return bad("Fill in name, phone, area, and mobile money number.");
         if (!a || !b) return bad("Upload both photos.");
         if (kind !== "food" && !g("pl")) return bad("Enter your plate number.");
-        m.className = "msg"; m.textContent = "Uploading…";
-        const up = async (f, n) => { const p = user.id + "/partner-" + Date.now() + "-" + n; const r = await sb.storage.from("seller-docs").upload(p, f, { upsert: true }); return r.error ? null : p; };
+        m.className = "msg";
+        m.textContent = "Uploading…";
+        const up = async (f, n) => {
+          const p = user.id + "/partner-" + Date.now() + "-" + n;
+          const r = await sb.storage
+            .from("seller-docs")
+            .upload(p, f, { upsert: true });
+          return r.error ? null : p;
+        };
         const [p1, p2] = [await up(a, "id"), await up(b, "photo")];
         if (!p1 || !p2) return bad("A photo did not upload. Try again.");
-        const { error } = await sb.from("partners").insert({ user_id: user.id, kind, shop_name: g("pn"), phone: g("pp"), town: "Koforidua", area_type: g("pa"), area: g("pr"), sells: kind === "food" ? g("ps") : null, hours: kind === "food" ? g("ph") : null, plate: g("pl") || null, momo: g("pm"), id_photo_path: p1, photo_path: p2 });
+        const { error } = await sb
+          .from("partners")
+          .insert({
+            user_id: user.id,
+            kind,
+            shop_name: g("pn"),
+            phone: g("pp"),
+            town: "Koforidua",
+            area_type: g("pa"),
+            area: g("pr"),
+            sells: kind === "food" ? g("ps") : null,
+            hours: kind === "food" ? g("ph") : null,
+            plate: g("pl") || null,
+            momo: g("pm"),
+            id_photo_path: p1,
+            photo_path: p2,
+          });
         m.className = error ? "msg err" : "msg ok";
-        m.textContent = error ? error.message : "✓ Sent. An admin will review your application.";
+        m.textContent = error
+          ? error.message
+          : "✓ Sent. An admin will review your application.";
       }
       async function rider() {
         if (!need()) return;
-        const { data: me } = await sb.from("partners").select("id,kind,status,online,shop_name").eq("user_id", user.id).in("kind", ["rider", "driver"]).maybeSingle();
-        if (!me || me.status !== "approved") { app.innerHTML = `<div class="box"><h2>🛵 Rider home</h2><p style="margin:0;color:var(--mut)">${me ? "Your application is " + esc(me.status) + "." : "You are not a rider or driver yet."}</p><button class="act" onclick="go('partner')">Join as vendor or rider</button></div>`; return; }
+        const { data: me } = await sb
+          .from("partners")
+          .select("id,kind,status,online,shop_name")
+          .eq("user_id", user.id)
+          .in("kind", ["rider", "driver"])
+          .maybeSingle();
+        if (!me || me.status !== "approved") {
+          app.innerHTML = `<div class="box"><h2>🛵 Rider home</h2><p style="margin:0;color:var(--mut)">${me ? "Your application is " + esc(me.status) + "." : "You are not a rider or driver yet."}</p><button class="act" onclick="go('partner')">Join as vendor or rider</button></div>`;
+          return;
+        }
         const veh = me.kind === "driver" ? "taxi" : "motorbike";
-        const [o, mine] = await Promise.all([sb.from("trips").select("*").eq("status", "requested").eq("vehicle", veh).or("kind.neq.food,vendor_status.eq.ready").order("created_at").limit(20), sb.from("trips").select("*").eq("rider_id", user.id).order("created_at", { ascending: false }).limit(30)]);
-        const day = new Date().toDateString(), done = (mine.data || []).filter((t) => t.status === "delivered"), today = done.filter((t) => new Date(t.created_at).toDateString() === day);
+        const [o, mine] = await Promise.all([
+          sb
+            .from("trips")
+            .select("*")
+            .eq("status", "requested")
+            .eq("vehicle", veh)
+            .or("kind.neq.food,vendor_status.eq.ready")
+            .order("created_at")
+            .limit(20),
+          sb
+            .from("trips")
+            .select("*")
+            .eq("rider_id", user.id)
+            .order("created_at", { ascending: false })
+            .limit(30),
+        ]);
+        const day = new Date().toDateString(),
+          done = (mine.data || []).filter((t) => t.status === "delivered"),
+          today = done.filter(
+            (t) => new Date(t.created_at).toDateString() === day,
+          );
         const sum = (a) => a.reduce((n, t) => n + Number(t.fee || 0), 0);
-        const nxt = { accepted: ["picked_up", "Picked up"], picked_up: ["delivered", "Delivered"] };
+        const nxt = {
+          accepted: ["picked_up", "Picked up"],
+          picked_up: ["delivered", "Delivered"],
+        };
         app.innerHTML = `<div class="box" style="max-width:none"><div class="mine" style="margin:0"><span>${esc(me.shop_name)}<small>${PKIND[me.kind]}</small></span><button class="act ${me.online ? "g" : "sv"}" onclick="setOnline(${!me.online})">${me.online ? "Online" : "Offline"}</button></div></div>
         ${nb()}<div class="hero"><p>Today's earnings</p><h1>${money(sum(today))}</h1><div class="tiles" style="grid-template-columns:repeat(2,1fr)"><div><b>${today.length}</b><br>Trips today</div><div><b>${money(sum(done))}</b><br>All time</div></div></div>
         ${me.online ? "" : '<div class="open">You are offline. Go online to see new requests.</div>'}
-        ${(mine.data || []).filter((t) => nxt[t.status]).map((t) => `<div class="mine"><span>${esc(t.pickup)} → ${esc(t.dropoff)}<small>${esc(t.note || t.luggage || "")} · ${money(t.fee)}</small></span><button class="act g" onclick="tripStep('${t.id}','${nxt[t.status][0]}')">${nxt[t.status][1]}</button></div>`).join("")}
+        ${(mine.data || [])
+          .filter((t) => nxt[t.status])
+          .map(
+            (t) =>
+              `<div class="mine"><span>${esc(t.pickup)} → ${esc(t.dropoff)}<small>${esc(t.note || t.luggage || "")} · ${money(t.fee)}</small></span><button class="act g" onclick="tripStep('${t.id}','${nxt[t.status][0]}')">${nxt[t.status][1]}</button></div>`,
+          )
+          .join("")}
         <div class="sec"><h2>New requests</h2>${me.online ? (o.data || []).map((t) => `<div class="mine"><span>${esc(t.pickup)} → ${esc(t.dropoff)}<small>${t.kind === "food" ? "Food order" : t.kind === "ride" ? "Ride · " + esc(t.luggage || "") : "Seller delivery"} · you earn ${money(t.fee)}</small></span><button class="act" onclick="tripAccept('${t.id}')">Accept</button></div>`).join("") || '<p class="empty" style="padding:12px 0">No requests right now.</p>' : ""}</div>`;
       }
-      async function setOnline(b) { const r = await sb.rpc("set_online", { b }); if (r.error) alert(r.error.message); else RON = b; rider(); }
-      async function tripAccept(id) { const r = await sb.rpc("accept_trip", { tid: id }); if (r.error) alert(r.error.message); rider(); }
-      async function tripStep(id, s2) { const r = await sb.rpc("trip_step", { tid: id, s: s2 }); if (r.error) alert(r.error.message); rider(); }
+      async function setOnline(b) {
+        const r = await sb.rpc("set_online", { b });
+        if (r.error) alert(r.error.message);
+        else RON = b;
+        rider();
+      }
+      async function tripAccept(id) {
+        const r = await sb.rpc("accept_trip", { tid: id });
+        if (r.error) alert(r.error.message);
+        rider();
+      }
+      async function tripStep(id, s2) {
+        const r = await sb.rpc("trip_step", { tid: id, s: s2 });
+        if (r.error) alert(r.error.message);
+        rider();
+      }
       async function adPartners() {
-        const { data, error } = await sb.from("partners").select("id,kind,shop_name,phone,area,area_type,plate,status,id_photo_path,photo_path").order("created_at", { ascending: false }).limit(100);
-        if (error) return (adEl().innerHTML = `<p class="msg err">${esc(error.message)}</p>`);
-        const rk = { pending: 0, approved: 1, suspended: 2, rejected: 3 }, a = data.slice().sort((x, y) => (rk[x.status] ?? 9) - (rk[y.status] ?? 9));
+        const { data, error } = await sb
+          .from("partners")
+          .select(
+            "id,kind,shop_name,phone,area,area_type,plate,status,id_photo_path,photo_path",
+          )
+          .order("created_at", { ascending: false })
+          .limit(100);
+        if (error)
+          return (adEl().innerHTML = `<p class="msg err">${esc(error.message)}</p>`);
+        const rk = { pending: 0, approved: 1, suspended: 2, rejected: 3 },
+          a = data
+            .slice()
+            .sort((x, y) => (rk[x.status] ?? 9) - (rk[y.status] ?? 9));
         a.forEach((p) => (PC[p.id] = p));
         adEl().innerHTML = `<div class="stats"><div class="stat"><b>${a.filter((p) => p.status === "pending").length}</b>Waiting for approval</div><div class="stat"><b>${a.filter((p) => p.status === "approved" && p.kind === "food").length}</b>Food vendors</div><div class="stat"><b>${a.filter((p) => p.status === "approved" && p.kind !== "food").length}</b>Riders and drivers</div></div><h2>Vendors, riders and drivers</h2>${a.map((p) => `<div class="mine" style="align-items:flex-start"><span>${esc(p.shop_name)} <i class="pillb">${PKIND[p.kind]}</i><small>${esc(p.phone || "")} · ${esc(p.area || "")}${p.plate ? " · " + esc(p.plate) : ""}<br>Status: <b>${p.status}</b></small><div id="pp-${p.id}" style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap"></div></span><button class="act" onclick="pdocs('${p.id}')">View photos</button><button class="act g" onclick="pset('${p.id}','approved')">Approve</button><button class="act r" onclick="pset('${p.id}','${p.status === "approved" ? "suspended" : "rejected"}')">${p.status === "approved" ? "Suspend" : "Reject"}</button></div>`).join("") || "<p>No applications yet.</p>"}`;
       }
       async function pdocs(id) {
-        const box = $("pp-" + id), p = PC[id], paths = [p.id_photo_path, p.photo_path].filter(Boolean);
-        const { data, error } = await sb.storage.from("seller-docs").createSignedUrls(paths, 300);
-        box.innerHTML = error || !data ? '<span class="err msg">Could not load photos</span>' : data.map((d) => `<a href="${esc(d.signedUrl)}" target="_blank" rel="noopener"><img src="${esc(d.signedUrl)}" alt="Photo" style="width:130px;height:130px;border-radius:8px;object-fit:cover"></a>`).join("");
+        const box = $("pp-" + id),
+          p = PC[id],
+          paths = [p.id_photo_path, p.photo_path].filter(Boolean);
+        const { data, error } = await sb.storage
+          .from("seller-docs")
+          .createSignedUrls(paths, 300);
+        box.innerHTML =
+          error || !data
+            ? '<span class="err msg">Could not load photos</span>'
+            : data
+                .map(
+                  (d) =>
+                    `<a href="${esc(d.signedUrl)}" target="_blank" rel="noopener"><img src="${esc(d.signedUrl)}" alt="Photo" style="width:130px;height:130px;border-radius:8px;object-fit:cover"></a>`,
+                )
+                .join("");
       }
       async function pset(id, status) {
-        if (!confirm(status[0].toUpperCase() + status.slice(1) + " this application?")) return;
-        const { error } = await sb.from("partners").update({ status }).eq("id", id);
+        if (
+          !confirm(
+            status[0].toUpperCase() + status.slice(1) + " this application?",
+          )
+        )
+          return;
+        const { error } = await sb
+          .from("partners")
+          .update({ status })
+          .eq("id", id);
         if (error) return alert(error.message);
         adPartners();
       }
       async function adTrips() {
-        const { data, error } = await sb.from("trips").select("kind,pickup,dropoff,status,fee,vehicle,created_at").order("created_at", { ascending: false }).limit(60);
-        if (error) return (adEl().innerHTML = `<p class="msg err">${esc(error.message)}</p>`);
-        const late = (t) => t.status === "requested" && Date.now() - new Date(t.created_at) > 20 * 60000, live = data.filter((t) => ["requested", "accepted", "picked_up"].includes(t.status));
+        const { data, error } = await sb
+          .from("trips")
+          .select("kind,pickup,dropoff,status,fee,vehicle,created_at")
+          .order("created_at", { ascending: false })
+          .limit(60);
+        if (error)
+          return (adEl().innerHTML = `<p class="msg err">${esc(error.message)}</p>`);
+        const late = (t) =>
+            t.status === "requested" &&
+            Date.now() - new Date(t.created_at) > 20 * 60000,
+          live = data.filter((t) =>
+            ["requested", "accepted", "picked_up"].includes(t.status),
+          );
         adEl().innerHTML = `<div class="stats"><div class="stat"><b>${live.length}</b>Trips live now</div><div class="stat"><b>${data.filter(late).length}</b>Delayed</div><div class="stat"><b>${data.filter((t) => t.kind === "food").length}</b>Food orders</div></div><h2>Deliveries, rides and food orders</h2>${data.map((t) => `<div class="mine"><span>${{ food: "🍲", ride: "🚕", delivery: "🏍️" }[t.kind]} ${esc(t.pickup)} → ${esc(t.dropoff)}<small>${dt(t.created_at)} · ${t.vehicle} · ${money(t.fee)}</small></span><b style="color:${late(t) ? "#e5252a" : "inherit"}">${late(t) ? "Delayed" : TRST[t.status] || t.status}</b></div>`).join("") || "<p>No trips yet.</p>"}`;
       }
 
       /* ORDER ALERTS FOR VENDORS AND RIDERS (sound, vibration, banner while the app is open) */
-      let pCh = null, RON = false;
-      const nb = () => ("Notification" in window && Notification.permission !== "granted" ? '<button class="lnk" style="width:100%;margin:0 0 10px" onclick="enableAlerts()">🔔 Turn on order alerts</button>' : "");
+      let pCh = null,
+        RON = false;
+      const nb = () =>
+        "Notification" in window && Notification.permission !== "granted"
+          ? '<button class="lnk" style="width:100%;margin:0 0 10px" onclick="enableAlerts()">🔔 Turn on order alerts</button>'
+          : "";
       async function partnerAlerts() {
-        if (pCh) { sb.removeChannel(pCh); pCh = null; }
+        if (pCh) {
+          sb.removeChannel(pCh);
+          pCh = null;
+        }
         if (!user) return;
-        const { data } = await sb.from("partners").select("id,kind,online").eq("user_id", user.id).eq("status", "approved");
-        const v = (data || []).find((x) => x.kind === "food"), r = (data || []).find((x) => x.kind !== "food");
+        const { data } = await sb
+          .from("partners")
+          .select("id,kind,online")
+          .eq("user_id", user.id)
+          .eq("status", "approved");
+        const v = (data || []).find((x) => x.kind === "food"),
+          r = (data || []).find((x) => x.kind !== "food");
         if (!v && !r) return;
         RON = !!(r && r.online);
-        pCh = sb.channel("partner-" + user.id).on("postgres_changes", { event: "*", schema: "public", table: "trips" }, (p) => {
-          const t = p.new, key = t && "t" + t.id + t.vendor_status + t.status;
-          if (!t || ALERTED.has(key)) return;
-          if (v && p.eventType === "INSERT" && t.partner_id === v.id) {
-            ALERTED.add(key);
-            notifySeller("New food order", t.note + " · " + money(t.food_total), "vendor");
-            if (view === "vendor") vendor();
-          } else if (r && RON && t.status === "requested" && t.vehicle === (r.kind === "driver" ? "taxi" : "motorbike") && (t.kind !== "food" || t.vendor_status === "ready")) {
-            ALERTED.add(key);
-            notifySeller(t.kind === "ride" ? "New ride request" : "New delivery request", t.pickup + " → " + t.dropoff + " · " + money(t.fee), "rider");
-            if (view === "rider") rider();
-          }
-        }).subscribe();
+        pCh = sb
+          .channel("partner-" + user.id)
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "trips" },
+            (p) => {
+              const t = p.new,
+                key = t && "t" + t.id + t.vendor_status + t.status;
+              if (!t || ALERTED.has(key)) return;
+              if (v && p.eventType === "INSERT" && t.partner_id === v.id) {
+                ALERTED.add(key);
+                notifySeller(
+                  "New food order",
+                  t.note + " · " + money(t.food_total),
+                  "vendor",
+                );
+                if (view === "vendor") vendor();
+              } else if (
+                r &&
+                RON &&
+                t.status === "requested" &&
+                t.vehicle === (r.kind === "driver" ? "taxi" : "motorbike") &&
+                (t.kind !== "food" || t.vendor_status === "ready")
+              ) {
+                ALERTED.add(key);
+                notifySeller(
+                  t.kind === "ride"
+                    ? "New ride request"
+                    : "New delivery request",
+                  t.pickup + " → " + t.dropoff + " · " + money(t.fee),
+                  "rider",
+                );
+                if (view === "rider") rider();
+              }
+            },
+          )
+          .subscribe();
       }
 
       /* FOOD MENU, CART AND VENDOR ORDERS */
-      let CART = {}, CV = null, VI = {}, VID = null;
+      let CART = {},
+        CV = null,
+        VI = {},
+        VID = null;
       async function foodMenu(vid) {
-        CV = vid; CART = {};
-        const { data } = await sb.from("food_items").select("id,name,price,photo_url").eq("partner_id", vid).eq("available", true).order("created_at");
+        CV = vid;
+        CART = {};
+        const { data } = await sb
+          .from("food_items")
+          .select("id,name,price,photo_url")
+          .eq("partner_id", vid)
+          .eq("available", true)
+          .order("created_at");
         if (!(data || []).length) return tripForm("food", vid);
-        VI = {}; data.forEach((i) => (VI[i.id] = i));
+        VI = {};
+        data.forEach((i) => (VI[i.id] = i));
         const v = FV[vid];
         app.innerHTML = `<div class="fhero"><button class="fsw" style="all:unset;cursor:pointer;font-size:13px" onclick="food()">← Back</button><h1>${esc(v.shop_name)}</h1><p>${esc(v.sells || "")} · ${esc(v.area || "")}</p></div><div class="sec" style="margin-bottom:10px">${data.map((i) => `<div class="mine">${i.photo_url ? `<img src="${esc(i.photo_url)}" alt="" loading="lazy">` : ""}<span>${esc(i.name)}<small>${money(i.price)}</small></span><button class="act sv" style="flex:none;width:40px" aria-label="Less" onclick="cartQ('${i.id}',-1)">−</button><b id="q-${i.id}">0</b><button class="act" style="flex:none;width:40px" aria-label="More" onclick="cartQ('${i.id}',1)">+</button></div>`).join("")}</div><div class="box" style="max-width:none"><input id="td" placeholder="Where should we bring it?"><div id="ct" class="route">Pick something from the menu.</div><button class="act" style="background:#4a1b0c" onclick="sendFood()">Place order</button><div id="tm" class="msg"></div></div>`;
       }
       function cartQ(id, d) {
         CART[id] = Math.max(0, (CART[id] || 0) + d);
         $("q-" + id).textContent = CART[id];
-        const n = Object.entries(CART).filter(([, q]) => q), sub = n.reduce((a, [k, q]) => a + VI[k].price * q, 0);
-        $("ct").innerHTML = n.length ? `Food ${money(sub)} + delivery ${money(FARE.motorbike)}<br><b>Total ${money(sub + FARE.motorbike)}</b>` : "Pick something from the menu.";
+        const n = Object.entries(CART).filter(([, q]) => q),
+          sub = n.reduce((a, [k, q]) => a + VI[k].price * q, 0);
+        $("ct").innerHTML = n.length
+          ? `Food ${money(sub)} + delivery ${money(FARE.motorbike)}<br><b>Total ${money(sub + FARE.motorbike)}</b>`
+          : "Pick something from the menu.";
       }
       async function sendFood() {
-        const m = $("tm"), n = Object.entries(CART).filter(([, q]) => q), drop = $("td").value.trim();
-        if (!n.length || !drop) { m.className = "msg err"; m.textContent = "Pick items and enter where to bring it."; return; }
-        const items = n.map(([k, q]) => ({ name: VI[k].name, price: VI[k].price, qty: q })), sub = items.reduce((a, i) => a + i.price * i.qty, 0);
-        const { error } = await sb.from("trips").insert({ kind: "food", requester_id: user.id, partner_id: CV, pickup: (FV[CV].area || "") + " · " + FV[CV].shop_name, dropoff: drop, note: items.map((i) => i.qty + " x " + i.name).join(", "), items, food_total: sub, vehicle: "motorbike", fee: FARE.motorbike });
+        const m = $("tm"),
+          n = Object.entries(CART).filter(([, q]) => q),
+          drop = $("td").value.trim();
+        if (!n.length || !drop) {
+          m.className = "msg err";
+          m.textContent = "Pick items and enter where to bring it.";
+          return;
+        }
+        const items = n.map(([k, q]) => ({
+            name: VI[k].name,
+            price: VI[k].price,
+            qty: q,
+          })),
+          sub = items.reduce((a, i) => a + i.price * i.qty, 0);
+        const { error } = await sb
+          .from("trips")
+          .insert({
+            kind: "food",
+            requester_id: user.id,
+            partner_id: CV,
+            pickup: (FV[CV].area || "") + " · " + FV[CV].shop_name,
+            dropoff: drop,
+            note: items.map((i) => i.qty + " x " + i.name).join(", "),
+            items,
+            food_total: sub,
+            vehicle: "motorbike",
+            fee: FARE.motorbike,
+          });
         m.className = error ? "msg err" : "msg ok";
-        m.textContent = error ? error.message : "✓ Order sent. The kitchen will confirm soon.";
+        m.textContent = error
+          ? error.message
+          : "✓ Order sent. The kitchen will confirm soon.";
         if (!error) CART = {};
       }
       async function vendor() {
         if (!need()) return;
-        const { data: me } = await sb.from("partners").select("id,shop_name,status").eq("user_id", user.id).eq("kind", "food").maybeSingle();
-        if (!me || me.status !== "approved") { app.innerHTML = `<div class="box"><h2>🍲 Vendor orders</h2><p style="margin:0;color:var(--mut)">${me ? "Your application is " + esc(me.status) + "." : "You are not a food vendor yet."}</p><button class="act" onclick="go('partner')">Join as vendor or rider</button></div>`; return; }
+        const { data: me } = await sb
+          .from("partners")
+          .select("id,shop_name,status")
+          .eq("user_id", user.id)
+          .eq("kind", "food")
+          .maybeSingle();
+        if (!me || me.status !== "approved") {
+          app.innerHTML = `<div class="box"><h2>🍲 Vendor orders</h2><p style="margin:0;color:var(--mut)">${me ? "Your application is " + esc(me.status) + "." : "You are not a food vendor yet."}</p><button class="act" onclick="go('partner')">Join as vendor or rider</button></div>`;
+          return;
+        }
         VID = me.id;
-        const [o, i] = await Promise.all([sb.from("trips").select("*").eq("partner_id", me.id).in("vendor_status", ["new", "preparing"]).order("created_at"), sb.from("food_items").select("*").eq("partner_id", me.id).order("created_at")]);
-        const nx = { new: ["preparing", "Accept"], preparing: ["ready", "Ready for rider"] };
+        const [o, i] = await Promise.all([
+          sb
+            .from("trips")
+            .select("*")
+            .eq("partner_id", me.id)
+            .in("vendor_status", ["new", "preparing"])
+            .order("created_at"),
+          sb
+            .from("food_items")
+            .select("*")
+            .eq("partner_id", me.id)
+            .order("created_at"),
+        ]);
+        const nx = {
+          new: ["preparing", "Accept"],
+          preparing: ["ready", "Ready for rider"],
+        };
         app.innerHTML = `${nb()}<div class="fhero"><h1>${esc(me.shop_name)}</h1><p>Orders and menu</p></div><div class="sec" style="margin-bottom:10px"><h2>Orders</h2>${(o.data || []).map((t) => `<div class="mine"><span>${esc(t.note)}<small>${money(t.food_total)} food · to ${esc(t.dropoff)} · ${t.vendor_status === "new" ? "New" : "Preparing"}</small></span><button class="act g" onclick="vStep('${t.id}','${nx[t.vendor_status][0]}')">${nx[t.vendor_status][1]}</button>${t.vendor_status === "new" ? `<button class="act r" onclick="vStep('${t.id}','rejected')">Reject</button>` : ""}</div>`).join("") || '<p class="empty" style="padding:12px 0">No orders waiting.</p>'}</div><div class="sec"><h2>Your menu</h2>${(i.data || []).map((x) => `<div class="mine ${x.available ? "" : "sold"}">${x.photo_url ? `<img src="${esc(x.photo_url)}" alt="" loading="lazy">` : ""}<span>${esc(x.name)}<small>${money(x.price)}</small></span><button class="act sv" style="flex:none;width:auto" onclick="itemAvail('${x.id}',${!x.available})">${x.available ? "Hide" : "Show"}</button><button class="act r" onclick="itemDel('${x.id}')">Delete</button></div>`).join("")}<input id="mn" placeholder="Dish, like Jollof with chicken"><input id="mp" type="number" min="1" step="0.5" placeholder="Price GH₵"><label style="font-size:13px;color:var(--mut)">Dish photo (optional)</label><input id="mf" type="file" accept="image/*"><button class="act" onclick="itemAdd()">Add to menu</button><div id="mm" class="msg"></div></div>`;
       }
-      async function vStep(id, s2) { const r = await sb.rpc("vendor_step", { tid: id, s: s2 }); if (r.error) alert(r.error.message); vendor(); }
+      async function vStep(id, s2) {
+        const r = await sb.rpc("vendor_step", { tid: id, s: s2 });
+        if (r.error) alert(r.error.message);
+        vendor();
+      }
       async function itemAdd() {
-        const n = $("mn").value.trim(), pr = Number($("mp").value), m = $("mm"), f = $("mf").files[0];
-        const bad = (t) => { m.className = "msg err"; m.textContent = t; };
+        const n = $("mn").value.trim(),
+          pr = Number($("mp").value),
+          m = $("mm"),
+          f = $("mf").files[0];
+        const bad = (t) => {
+          m.className = "msg err";
+          m.textContent = t;
+        };
         if (!n || !(pr > 0)) return bad("Enter the dish and its price.");
-        if (f && f.size > 5e6) return bad("Photo is too big. Choose one under 5 MB.");
+        if (f && f.size > 5e6)
+          return bad("Photo is too big. Choose one under 5 MB.");
         let url = null;
         if (f) {
-          m.className = "msg"; m.textContent = "Uploading photo…";
-          const path = user.id + "/food-" + Date.now() + "-" + f.name.replace(/[^\w.]/g, "");
-          const u = await sb.storage.from("products").upload(path, f, { upsert: true });
+          m.className = "msg";
+          m.textContent = "Uploading photo…";
+          const path =
+            user.id +
+            "/food-" +
+            Date.now() +
+            "-" +
+            f.name.replace(/[^\w.]/g, "");
+          const u = await sb.storage
+            .from("products")
+            .upload(path, f, { upsert: true });
           if (u.error) return bad("Photo did not upload: " + u.error.message);
           url = sb.storage.from("products").getPublicUrl(path).data.publicUrl;
         }
-        const { error } = await sb.from("food_items").insert({ partner_id: VID, name: n, price: pr, photo_url: url });
-        if (error) bad(error.message); else vendor();
+        const { error } = await sb
+          .from("food_items")
+          .insert({ partner_id: VID, name: n, price: pr, photo_url: url });
+        if (error) bad(error.message);
+        else vendor();
       }
-      async function itemAvail(id, b) { await sb.from("food_items").update({ available: b }).eq("id", id); vendor(); }
-      async function itemDel(id) { if (confirm("Delete this dish?")) { await sb.from("food_items").delete().eq("id", id); vendor(); } }
+      async function itemAvail(id, b) {
+        await sb.from("food_items").update({ available: b }).eq("id", id);
+        vendor();
+      }
+      async function itemDel(id) {
+        if (confirm("Delete this dish?")) {
+          await sb.from("food_items").delete().eq("id", id);
+          vendor();
+        }
+      }
 
       /* Shared promoter links: ?code=PRO-XXXXX&p=<product id> (older ?ref= links still work) */
       const UUID =
