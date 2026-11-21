@@ -9,8 +9,8 @@
     <title>Macstore</title>
     <meta name="theme-color" content="#f68b1e" />
     <link rel="manifest" href="manifest.json" />
-    <link rel="icon" href="icon-192.jpeg" />
-    <link rel="apple-touch-icon" href="icon-192.jpeg" />
+    <link rel="icon" href="icon-192.png" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Macstore" />
@@ -480,6 +480,37 @@
       .pn button { display: flex; gap: 12px; align-items: center; min-height: 52px; border: 0; background: #f6f6f7; border-radius: 14px; font: inherit; font-size: 16px; font-weight: 600; padding: 0 14px; color: var(--ink); }
       .pn button.on { color: var(--or); background: #fff3e6; }
       @media (min-width: 700px) { nav { max-width: 520px; left: 50%; right: auto; transform: translateX(-50%); border-radius: 18px 18px 0 0; } }
+
+      /* Food, rides, top this month, bulk */
+      .fhero{background:#4a1b0c;color:#fff;border-radius:16px;padding:16px;margin-bottom:10px}
+      .fhero h1{margin:10px 0 2px;font-size:24px}.fhero p{margin:0;color:#f5c4b3;font-size:13px}
+      .fp{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 10px;font-size:12px}
+      .fsw{display:flex;gap:8px;margin-top:14px}
+      .fsw button{flex:1;border:0;border-radius:24px;padding:9px;font:inherit;font-size:13px;background:rgba(255,255,255,.15);color:#fff;cursor:pointer}
+      .fsw button.on{background:#ffd43b;color:#4a1b0c;font-weight:700}
+      .fv{display:flex;gap:12px;align-items:center;background:#fff;border-radius:16px;padding:12px;margin-bottom:10px}
+      .fv>div:nth-child(2){flex:1;min-width:0}.fv small{display:block;color:var(--mut)}
+      .fi{width:64px;height:64px;border-radius:12px;background:#faece7;display:grid;place-items:center;font-size:30px}
+      .hero{background:var(--or);color:#fff;border-radius:16px;padding:16px;margin-bottom:10px}
+      .hero h1{margin:6px 0 4px;font-size:22px}.hero p{margin:0;color:#ffe7cc;font-size:14px}
+      .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+      .tiles div{background:rgba(255,255,255,.2);border-radius:12px;padding:10px 4px;text-align:center;font-size:12px}
+      .route{background:#fff1e0;border-radius:14px;padding:14px;color:#7a3e00}
+      .lead{display:flex;gap:12px;align-items:center;background:var(--or);color:#fff;border-radius:16px;padding:14px;margin-bottom:8px}
+      .lead .av{position:relative;width:60px;height:60px;border-radius:50%;background:#fff;color:#b85c00;display:grid;place-items:center;font-weight:700;font-size:20px;flex:none}
+      .lead .av i{position:absolute;right:-6px;bottom:-6px;font-style:normal;font-size:16px}
+      .lead small,.lead span{display:block;color:#ffe7cc}
+      .open{border:1px dashed #ccc;border-radius:12px;padding:12px;color:var(--mut);font-size:13px;margin-bottom:8px}
+      .inv{background:#fff1e0;border-radius:16px;padding:14px;display:flex;gap:12px;align-items:center;color:#7a3e00}
+      .inv button{margin-left:auto;flex:none;width:auto}
+      .pillb{font-style:normal;font-size:11px;border-radius:20px;padding:2px 8px;background:#fff1e0;color:#7a3e00}
+      nav button.fd.on{color:#4a1b0c}nav button.fd.on b{background:#4a1b0c}
+      .banner{background:var(--or);padding:20px 16px}.banner h1{font-size:24px}
+      .qk{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:10px}
+      .qk button{border:0;background:#fff;border-radius:14px;padding:12px 4px;font:inherit;font-size:12px;font-weight:600;color:var(--ink);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+      .cat.on i{background:var(--or)}.cat.on{font-weight:700;color:#b85c00}
+      .price{color:#b85c00}.card .b h3{font-weight:600}
+      .shd{background:#a32d2d;color:#fff;border-radius:16px;padding:16px;margin-bottom:10px}.shd h1{margin:0 0 2px;font-size:22px}.shd p{margin:0;color:#f7c1c1;font-size:13px}
     </style>
   </head>
   <body>
@@ -619,6 +650,7 @@
         if (view === "orders") orders();
       }
       function startAlerts() {
+        partnerAlerts();
         if (alertCh) { sb.removeChannel(alertCh); alertCh = null; }
         if (buyCh) { sb.removeChannel(buyCh); buyCh = null; }
         if (user)
@@ -650,21 +682,23 @@
       }
       let MORE = [];
       function tabs() {
-        const t = [["home", "🏠", "Home"], ["bulk", "🚚", "Bulk"]];
-        if (user) t.push(["saved", "♥️", "Saved"], ["orders", "📦", "Orders" + (BUYN ? " (" + BUYN + ")" : "")]);
+        const t = [["home", "🏠", "Home"], ["food", "🍜", "Food"], ["bulk", "🚚", "Bulk"]];
+        if (user) t.push(["orders", "📦", "Orders" + (BUYN ? " (" + BUYN + ")" : "")]);
         const more = [];
+        if (user) more.push(["saved", "♥️", "Saved"]);
         if (profile && ["seller", "admin"].includes(profile.role))
           more.push(["sell", "🏪", "My shop"], ["sorders", "🧾", "Shop orders" + (TODO ? " (" + TODO + ")" : "")]);
         if (profile && profile.role === "promoter") more.push(["promote", "📣", "Promote"]);
+        more.push(["deliver", "🏍️", "Delivery riders"], ["ride", "🚕", "Book a ride"]);
+        if (user) more.push(["vendor", "🍲", "Vendor orders"], ["rider", "🛵", "Rider home"], ["partner", "🤝", "Join as vendor or rider"]);
         if (profile && profile.role === "admin") more.push(["admin", "🛡️", "Admin"]);
         MORE = more;
-        if (more.length === 1) t.push(more[0]);
-        else if (more.length > 1) t.push(["more", "⋯", "More"]);
+        t.push(["more", "⋯", "More"]);
         t.push(["account", "👤", user ? "Account" : "Log in"]);
         $("tabs").innerHTML = t
           .map(([k, i, l]) => {
             const on = view === k || (k === "more" && more.some((x) => x[0] === view));
-            return `<button class="${on ? "on" : ""}" onclick="${k === "more" ? "openMore()" : `go('${k}')`}"><b>${i}</b>${l}${k === "more" && TODO ? `<i class="bdg">${TODO}</i>` : ""}</button>`;
+            return `<button class="${on ? "on" : ""}${k === "food" ? " fd" : ""}" onclick="${k === "more" ? "openMore()" : `go('${k}')`}"><b>${i}</b>${l}${k === "more" && TODO ? `<i class="bdg">${TODO}</i>` : ""}</button>`;
           })
           .join("");
       }
@@ -727,7 +761,7 @@
         window.scrollTo(0, 0);
         tabs();
         JOIN = null;
-        ({ home, saved, orders, sell, sorders, account, admin, promote, bulk, shop: () => shopPage(SHOPID) })[v]();
+        ({ home, saved, orders, sell, sorders, account, admin, promote, bulk, food, rider, vendor, partner, deliver: () => tripForm("delivery"), ride: () => tripForm("ride"), shop: () => shopPage(SHOPID) })[v]();
       }
       const back = () => go(prev || "home");
 
@@ -762,7 +796,7 @@
       /* HOME: banner, reviews, categories, endless grid loaded 20 at a time */
       function home() {
         if (io) io.disconnect();
-        app.innerHTML = `<div class="banner"><h1>Shop from sellers across Ghana</h1><p>Pay on delivery or pick up near you.</p>${profile && ["seller", "promoter", "admin"].includes(profile.role) ? "" : '<a class="lnk bec" href="seller-signup.html">🏪 Become a seller</a><button class="lnk bec" style="width:100%" onclick="becomePromoter()">📣 Become a promoter</button>'}${standalone() ? "" : '<button class="lnk" style="width:100%" onclick="installApp()">📲 Install the app</button>'}</div>
+        app.innerHTML = `<div class="banner"><h1>Shop from sellers across Ghana</h1><p>Pay on delivery or pick up near you.</p>${profile && ["seller", "promoter", "admin"].includes(profile.role) ? "" : '<a class="lnk bec" href="seller-signup.html">🏪 Become a seller</a><button class="lnk bec" style="width:100%" onclick="becomePromoter()">📣 Become a promoter</button>'}${standalone() ? "" : '<button class="lnk" style="width:100%" onclick="installApp()">📲 Install the app</button>'}</div><div class="qk"><button onclick="go('food')">🍜<br>Food</button><button onclick="go('ride')">🚕<br>Book a ride</button><button onclick="go('bulk')">🚚<br>Bulk</button><button onclick="go('deliver')">🏍️<br>Delivery</button></div>
    <div id="rev"></div>
    <div class="cats">${CATS.map(([c, i]) => `<button class="cat ${st.cat === c ? "on" : ""}" onclick="setCat('${c}')"><i>${i}</i>${c}</button>`).join("")}</div>
    <div class="cats" style="gap:8px;align-items:center;padding:8px 10px 12px"><input id="fmin" type="number" min="0" placeholder="Min GH₵" value="${st.min || ""}" style="flex:1;min-width:0;width:auto" onchange="setFilter()"><input id="fmax" type="number" min="0" placeholder="Max GH₵" value="${st.max || ""}" style="flex:1;min-width:0;width:auto" onchange="setFilter()"><select id="fsort" onchange="setFilter()" style="flex:1.5;min-width:0;width:auto"><option value="new" ${st.sort === "new" || !st.sort ? "selected" : ""}>Newest</option><option value="low" ${st.sort === "low" ? "selected" : ""}>Price: low to high</option><option value="high" ${st.sort === "high" ? "selected" : ""}>Price: high to low</option></select></div>
@@ -1161,13 +1195,13 @@
         m.textContent = error ? error.message : "✓ Shipment opened. Buyers can join it from the Bulk tab.";
       }
       async function bulk() {
-        app.innerHTML = '<div class="sec"><h2>Bulk and pre-order</h2><p style="margin:0 0 8px;color:var(--mut)">Buy in bulk for lower prices, pre-order items, or join a shipment from abroad. You pay the same way as any order.</p><h3>Shipments from abroad</h3><div id="shp"><div class="sk"></div></div><h3>Wholesale and pre-order items</h3><div id="bl"><div class="sk"></div></div></div>';
+        app.innerHTML = '<div class="hero"><h1>Buy more, pay less</h1><p>Wholesale prices, pre-orders, and shipments from abroad. You pay the same way as any order.</p><div class="tiles"><div>🏷️<br>Lower prices</div><div>🗓️<br>Pre-order</div><div>✈️<br>From abroad</div></div></div><div class="sec" style="margin-bottom:10px"><h2>Shipments from abroad</h2><div id="shp"><div class="sk"></div></div></div><div class="sec"><h2>Wholesale and pre-order items</h2><div id="bl"><div class="sk"></div></div></div>';
         const [s, b] = await Promise.all([
           sb.rpc("open_shipments"),
           sb.from("products").select(PSEL).in("sale_type", ["wholesale", "preorder"]).neq("stock_level", "out").order("created_at", { ascending: false }).limit(40),
         ]);
-        $("shp").innerHTML = (s.data || []).map((x) => `<div class="mine"><span>${esc(x.title)} · ${esc(x.shop_name || "Macstore")}<small>From ${esc(x.origin_country || "abroad")}${x.expected_arrival ? " · arrives about " + dt(x.expected_arrival) : ""}<br>${x.joined} of ${x.target_qty} joined · closes ${dt(x.closes_at)}<span style="display:block;height:6px;background:#e5e5ea;border-radius:3px;margin-top:4px"><span style="display:block;height:6px;width:${Math.min(100, Math.round((x.joined / x.target_qty) * 100))}%;background:#00a651;border-radius:3px"></span></span></small></span><button class="act g" onclick="JOIN='${x.id}';item('${x.product_id}')">Join</button></div>`).join("") || '<p class="empty" style="padding:12px 0">No open shipments right now.</p>';
-        $("bl").innerHTML = b.error ? `<p class="msg err">${esc(b.error.message)}</p>` : (b.data || []).length ? `<div class="grid">${b.data.map(card).join("")}</div>` : '<p class="empty" style="padding:12px 0">No wholesale or pre-order items yet.</p>';
+        $("shp").innerHTML = (s.data || []).map((x) => `<div class="mine"><span>${esc(x.title)} · ${esc(x.shop_name || "Macstore")}<small>From ${esc(x.origin_country || "abroad")}${x.expected_arrival ? " · arrives about " + dt(x.expected_arrival) : ""}<br>${x.joined} of ${x.target_qty} joined · closes ${dt(x.closes_at)}<span style="display:block;height:6px;background:#e5e5ea;border-radius:3px;margin-top:4px"><span style="display:block;height:6px;width:${Math.min(100, Math.round((x.joined / x.target_qty) * 100))}%;background:#00a651;border-radius:3px"></span></span></small></span><button class="act g" onclick="JOIN='${x.id}';item('${x.product_id}')">Join</button></div>`).join("") || '<div class="route"><b>🌍 ✈️ 📍 Next shipment is on the way</b><br>No open shipments right now. Check back soon.</div>';
+        $("bl").innerHTML = b.error ? `<p class="msg err">${esc(b.error.message)}</p>` : (b.data || []).length ? `<div class="grid">${b.data.map(card).join("")}</div>` : '<div class="open" style="text-align:center">📦 Wholesale and pre-order items are coming soon. Sellers are adding them.</div>';
       }
 
 
@@ -1199,8 +1233,11 @@
       async function loadLeaders() {
         const { data } = await sb.rpc("leaderboard");
         if (!data || !data.length || !$("rev")) return;
-        const f = (k) => data.filter((x) => x.kind === k).map((x, i) => `<div class="mine"><span>${["🥇", "🥈", "🥉", "4.", "5."][i]} ${esc(x.name)}<small>${k === "seller" ? x.score + " orders delivered" : money(x.score) + " commission earned"}</small></span></div>`).join("");
-        $("rev").insertAdjacentHTML("beforebegin", `<div class="sec"><h2>🏆 Top this month</h2><h3>Sellers</h3>${f("seller") || "<p>No sellers yet.</p>"}<h3>Promoters</h3>${f("promoter") || "<p>No promoters yet.</p>"}</div>`);
+        const f = (k) => {
+          const a = data.filter((x) => x.kind === k), sc = (x) => (k === "seller" ? x.score + " orders delivered" : money(x.score) + " commission earned");
+          return a.map((x, i) => i === 0 ? `<div class="lead"><div class="av">${esc((x.name || "?").slice(0, 2).toUpperCase())}<i>👑</i></div><div><small>No. 1 ${k}</small><b>${esc(x.name)}</b><span>${sc(x)}</span></div></div>` : `<div class="mine"><span>${["", "🥈", "🥉", "4.", "5."][i]} ${esc(x.name)}<small>${sc(x)}</small></span></div>`).join("") + (k === "seller" && a.length < 3 ? '<div class="open">Open spot. Deliver orders to climb.</div>' : "");
+        };
+        $("rev").insertAdjacentHTML("beforebegin", `<div class="sec" style="margin-bottom:10px"><h2>🏆 Top this month <small style="color:var(--mut);font-weight:400;font-size:12px">Resets on the 1st</small></h2><h3>Top sellers</h3>${f("seller") || '<div class="open">Open spot. Deliver orders to climb.</div>'}<h3>Top promoters</h3>${f("promoter") || '<div class="inv"><div>📣</div><div><b>Be the first promoter</b><br><small>Share products and earn rewards.</small></div><button class="act" onclick="becomePromoter()">Join</button></div>'}</div>`);
       }
       async function statsBox() {
         const el = $("stb");
@@ -1548,7 +1585,7 @@
       async function saved() {
         if (!user) return go("account");
         app.innerHTML =
-          '<div class="sec"><h2>Saved items</h2><div id="g" class="grid"></div></div>';
+          '<div class="shd"><h1>♥️ Saved items</h1><p id="sn">Tap a heart again to remove an item.</p></div><div class="sec"><div id="g" class="grid"></div></div>';
         const { data, error } = await sb
           .from("saved_items")
           .select(`products(${PSEL})`)
@@ -1559,7 +1596,8 @@
           ? `<div class="empty err">${esc(error.message)}</div>`
           : items.length
             ? items.map(card).join("")
-            : '<div class="empty">Nothing saved yet. Tap the heart on any product. Tap it again to remove it.</div>';
+            : '<div class="open" style="grid-column:1/-1;text-align:center">Nothing saved yet. Tap the heart on any product to keep it here.<br><button class="act" style="margin-top:8px;width:auto" onclick="go(\'home\')">Browse products</button></div>';
+        if (items.length && $("sn")) $("sn").textContent = items.length + (items.length === 1 ? " item" : " items") + " saved. Tap a heart again to remove.";
       }
 
       /* SELLER: ORDERS TO DELIVER + EARNINGS */
@@ -1906,6 +1944,8 @@
         "payouts",
         "reports",
         "disputes",
+        "partners",
+        "trips",
       ];
       function admin() {
         if (!profile || profile.role !== "admin") {
@@ -1924,6 +1964,8 @@
           payouts: adPayouts,
           reports: adReports,
           disputes: adDisputes,
+          partners: adPartners,
+          trips: adTrips,
         })[adminTab]();
       }
       const adEl = () => $("ad");
@@ -2440,6 +2482,196 @@
    <h2>Products you can promote</h2>${(p.data || []).map((x) => `<div class="mine">${x.images && x.images[0] ? `<img src="${esc(x.images[0])}" alt="" loading="lazy">` : ""}<span>${esc(x.title)}<small>${money(x.price)} · you earn ${money((x.price * x.commission_pct) / 100)} (${x.commission_pct}%)</small></span><button class="act" onclick="copyLink('${x.id}')">Copy my link</button></div>`).join("") || "<p>No products are open to promoters yet.</p>"}
    <h2>Your sales</h2>${ords.slice(0, 30).map((x) => `<div class="mine"><span>${esc(x.products?.title || "Product")}<small>${dt(x.created_at)} · ${esc(x.status)}${x.promoter_paid ? " · paid to you" : ""}</small></span><b>${money(x.commission_amount)}</b></div>`).join("") || "<p>No sales through your code yet.</p>"}`;
       }
+
+      /* FOOD, RIDES, DELIVERY RIDERS, PARTNERS (Koforidua only for now) */
+      const FARE = { motorbike: 10, taxi: 25 }; // change fares here (GH₵)
+      const TRST = { requested: "Looking for a rider", accepted: "Rider on the way", picked_up: "Picked up", delivered: "Delivered", cancelled: "Cancelled" };
+      const PKIND = { food: "Food vendor", rider: "Motorbike rider", driver: "Taxi driver" };
+      let FOODAREA = "campus", FV = {}, PC = {};
+      const need = () => {
+        if (user) return true;
+        app.innerHTML = '<div class="box"><h2>Log in first</h2><p style="margin:0;color:var(--mut)">You need an account for this.</p><button class="act" onclick="go(\'account\')">Log in</button></div>';
+        return false;
+      };
+      async function food() {
+        app.innerHTML = `<div class="fhero"><span class="fp">📍 Koforidua only</span><h1>Hungry? Eat local.</h1><p>Hot food from Koforidua kitchens, delivered to your hostel or door.</p><div class="fsw"><button class="${FOODAREA === "campus" ? "on" : ""}" onclick="FOODAREA='campus';food()">Around campus</button><button class="${FOODAREA === "town" ? "on" : ""}" onclick="FOODAREA='town';food()">Koforidua town</button></div></div><div id="fv"><div class="sk"></div></div>`;
+        const { data, error } = await sb.from("partners").select("id,shop_name,sells,area,hours").eq("kind", "food").eq("status", "approved").eq("town", "Koforidua").eq("area_type", FOODAREA);
+        (data || []).forEach((v) => (FV[v.id] = v));
+        $("fv").innerHTML = error ? `<p class="msg err">${esc(error.message)}</p>` : (data || []).map((v) => `<div class="fv"><div class="fi">🍲</div><div><b>${esc(v.shop_name)}</b><small>${esc(v.sells || "")}<br>${esc(v.area || "")}${v.hours ? " · " + esc(v.hours) : ""}</small></div><button class="act" style="flex:none;width:auto" onclick="foodMenu('${v.id}')">Order</button></div>`).join("") || '<div class="empty"><b>No vendors here yet</b><br>Kitchens in Koforidua are joining soon.</div>';
+      }
+      function luggChg() {
+        const big = $("tl").selectedIndex >= 2, v = $("tv");
+        v.querySelector("option[value=motorbike]").disabled = big;
+        if (big) v.value = "taxi";
+      }
+      function tripForm(kind, vid) {
+        if (!need()) return;
+        const r = kind === "ride", f = kind === "food";
+        app.innerHTML = `<div class="box"><button class="act sv" style="flex:none;width:auto;justify-self:start" onclick="go('home')">← Home</button><h2>${r ? "🚕 Book a ride" : f ? "🍲 Order from " + esc(FV[vid].shop_name) : "🏍️ Request a rider"}</h2><p style="margin:0;color:var(--mut)">${r ? "Heavy bags? A driver picks you up at your door." : f ? "Pay for the food and the rider when it arrives." : "A motorbike picks up from your shop and delivers to your buyer."}</p>
+        ${f ? "" : `<input id="tp" placeholder="Pickup spot, like Hostel block B">`}<input id="td" placeholder="${f ? "Where should we bring it?" : "Drop-off spot"}">
+        ${r ? '<select id="tl" onchange="luggChg()"><option>Just me</option><option>1 or 2 bags</option><option>Suitcase or trunk</option><option>Many boxes</option></select><select id="tv"><option value="taxi">Taxi · GH₵ ' + FARE.taxi + '</option><option value="motorbike">Motorbike (small bags only) · GH₵ ' + FARE.motorbike + "</option></select>" : `<textarea id="tn" rows="2" placeholder="${f ? "What would you like to order?" : "What is being delivered?"}"></textarea><div class="route">Delivery fee: <b>${money(FARE.motorbike)}</b></div>`}
+        <button class="act" onclick="sendTrip('${kind}','${vid || ""}')">${r ? "Request ride" : f ? "Place order" : "Find a rider"}</button><div id="tm" class="msg"></div></div><div id="mt"></div>`;
+        myTrips();
+      }
+      async function sendTrip(kind, vid) {
+        const g = (i) => ($(i) ? $(i).value.trim() : ""), m = $("tm"), v = kind === "ride" ? g("tv") : "motorbike";
+        const pick = kind === "food" ? (FV[vid].area || "") + " · " + FV[vid].shop_name : g("tp"), drop = g("td");
+        if (!pick || !drop || (kind !== "ride" && !g("tn"))) { m.className = "msg err"; m.textContent = "Fill in every box."; return; }
+        const { error } = await sb.from("trips").insert({ kind, requester_id: user.id, partner_id: vid || null, pickup: pick, dropoff: drop, note: g("tn") || null, luggage: g("tl") || null, vehicle: v, fee: FARE[v] });
+        m.className = error ? "msg err" : "msg ok";
+        m.textContent = error ? error.message : "✓ Sent. A rider will accept soon.";
+        if (!error) myTrips();
+      }
+      async function myTrips() {
+        const { data } = await sb.from("trips").select("kind,pickup,dropoff,status,fee,created_at").eq("requester_id", user.id).order("created_at", { ascending: false }).limit(8);
+        if ($("mt")) $("mt").innerHTML = (data || []).length ? `<div class="sec"><h2>Your requests</h2>${data.map((t) => `<div class="mine"><span>${esc(t.pickup)} → ${esc(t.dropoff)}<small>${dt(t.created_at)} · ${money(t.fee)}</small></span><b>${TRST[t.status] || t.status}</b></div>`).join("")}</div>` : "";
+      }
+      function partner() {
+        if (!need()) return;
+        app.innerHTML = `<div class="box"><h2>🤝 Join Macstore</h2><p style="margin:0;color:var(--mut)">For food vendors, motorbike riders, and taxi drivers in Koforidua. We review every application.</p>
+        <select id="pk" onchange="$('pf1').style.display=this.value==='food'?'grid':'none'"><option value="food">Food vendor</option><option value="rider">Motorbike rider</option><option value="driver">Taxi driver</option></select>
+        <input id="pn" placeholder="Shop name or your full name"><input id="pp" type="tel" placeholder="Phone number">
+        <input value="Koforidua" disabled aria-label="Town"><select id="pa"><option value="campus">Around campus</option><option value="town">Koforidua town</option></select><input id="pr" placeholder="Area, like Near main gate">
+        <div id="pf1" style="display:grid;gap:10px"><input id="ps" placeholder="What do you sell? Jollof, waakye, fufu"><input id="ph" placeholder="Opening hours, like 7 am to 10 pm"></div>
+        <input id="pl" placeholder="Plate number (riders and drivers)"><input id="pm" type="tel" placeholder="Mobile money number for payouts">
+        <label style="font-size:13px;color:var(--mut)">Ghana ID photo</label><input id="pi" type="file" accept="image/*"><label style="font-size:13px;color:var(--mut)">Your picture, or a photo of your shop</label><input id="pf" type="file" accept="image/*">
+        <button class="act" onclick="savePartner()">Send for approval</button><div id="pmsg" class="msg"></div></div>`;
+      }
+      async function savePartner() {
+        const g = (i) => $(i).value.trim(), m = $("pmsg"), kind = g("pk"), a = $("pi").files[0], b = $("pf").files[0];
+        const bad = (t) => { m.className = "msg err"; m.textContent = t; };
+        if (!g("pn") || !g("pp") || !g("pr") || !g("pm")) return bad("Fill in name, phone, area, and mobile money number.");
+        if (!a || !b) return bad("Upload both photos.");
+        if (kind !== "food" && !g("pl")) return bad("Enter your plate number.");
+        m.className = "msg"; m.textContent = "Uploading…";
+        const up = async (f, n) => { const p = user.id + "/partner-" + Date.now() + "-" + n; const r = await sb.storage.from("seller-docs").upload(p, f, { upsert: true }); return r.error ? null : p; };
+        const [p1, p2] = [await up(a, "id"), await up(b, "photo")];
+        if (!p1 || !p2) return bad("A photo did not upload. Try again.");
+        const { error } = await sb.from("partners").insert({ user_id: user.id, kind, shop_name: g("pn"), phone: g("pp"), town: "Koforidua", area_type: g("pa"), area: g("pr"), sells: kind === "food" ? g("ps") : null, hours: kind === "food" ? g("ph") : null, plate: g("pl") || null, momo: g("pm"), id_photo_path: p1, photo_path: p2 });
+        m.className = error ? "msg err" : "msg ok";
+        m.textContent = error ? error.message : "✓ Sent. An admin will review your application.";
+      }
+      async function rider() {
+        if (!need()) return;
+        const { data: me } = await sb.from("partners").select("id,kind,status,online,shop_name").eq("user_id", user.id).in("kind", ["rider", "driver"]).maybeSingle();
+        if (!me || me.status !== "approved") { app.innerHTML = `<div class="box"><h2>🛵 Rider home</h2><p style="margin:0;color:var(--mut)">${me ? "Your application is " + esc(me.status) + "." : "You are not a rider or driver yet."}</p><button class="act" onclick="go('partner')">Join as vendor or rider</button></div>`; return; }
+        const veh = me.kind === "driver" ? "taxi" : "motorbike";
+        const [o, mine] = await Promise.all([sb.from("trips").select("*").eq("status", "requested").eq("vehicle", veh).or("kind.neq.food,vendor_status.eq.ready").order("created_at").limit(20), sb.from("trips").select("*").eq("rider_id", user.id).order("created_at", { ascending: false }).limit(30)]);
+        const day = new Date().toDateString(), done = (mine.data || []).filter((t) => t.status === "delivered"), today = done.filter((t) => new Date(t.created_at).toDateString() === day);
+        const sum = (a) => a.reduce((n, t) => n + Number(t.fee || 0), 0);
+        const nxt = { accepted: ["picked_up", "Picked up"], picked_up: ["delivered", "Delivered"] };
+        app.innerHTML = `<div class="box" style="max-width:none"><div class="mine" style="margin:0"><span>${esc(me.shop_name)}<small>${PKIND[me.kind]}</small></span><button class="act ${me.online ? "g" : "sv"}" onclick="setOnline(${!me.online})">${me.online ? "Online" : "Offline"}</button></div></div>
+        ${nb()}<div class="hero"><p>Today's earnings</p><h1>${money(sum(today))}</h1><div class="tiles" style="grid-template-columns:repeat(2,1fr)"><div><b>${today.length}</b><br>Trips today</div><div><b>${money(sum(done))}</b><br>All time</div></div></div>
+        ${me.online ? "" : '<div class="open">You are offline. Go online to see new requests.</div>'}
+        ${(mine.data || []).filter((t) => nxt[t.status]).map((t) => `<div class="mine"><span>${esc(t.pickup)} → ${esc(t.dropoff)}<small>${esc(t.note || t.luggage || "")} · ${money(t.fee)}</small></span><button class="act g" onclick="tripStep('${t.id}','${nxt[t.status][0]}')">${nxt[t.status][1]}</button></div>`).join("")}
+        <div class="sec"><h2>New requests</h2>${me.online ? (o.data || []).map((t) => `<div class="mine"><span>${esc(t.pickup)} → ${esc(t.dropoff)}<small>${t.kind === "food" ? "Food order" : t.kind === "ride" ? "Ride · " + esc(t.luggage || "") : "Seller delivery"} · you earn ${money(t.fee)}</small></span><button class="act" onclick="tripAccept('${t.id}')">Accept</button></div>`).join("") || '<p class="empty" style="padding:12px 0">No requests right now.</p>' : ""}</div>`;
+      }
+      async function setOnline(b) { const r = await sb.rpc("set_online", { b }); if (r.error) alert(r.error.message); else RON = b; rider(); }
+      async function tripAccept(id) { const r = await sb.rpc("accept_trip", { tid: id }); if (r.error) alert(r.error.message); rider(); }
+      async function tripStep(id, s2) { const r = await sb.rpc("trip_step", { tid: id, s: s2 }); if (r.error) alert(r.error.message); rider(); }
+      async function adPartners() {
+        const { data, error } = await sb.from("partners").select("id,kind,shop_name,phone,area,area_type,plate,status,id_photo_path,photo_path").order("created_at", { ascending: false }).limit(100);
+        if (error) return (adEl().innerHTML = `<p class="msg err">${esc(error.message)}</p>`);
+        const rk = { pending: 0, approved: 1, suspended: 2, rejected: 3 }, a = data.slice().sort((x, y) => (rk[x.status] ?? 9) - (rk[y.status] ?? 9));
+        a.forEach((p) => (PC[p.id] = p));
+        adEl().innerHTML = `<div class="stats"><div class="stat"><b>${a.filter((p) => p.status === "pending").length}</b>Waiting for approval</div><div class="stat"><b>${a.filter((p) => p.status === "approved" && p.kind === "food").length}</b>Food vendors</div><div class="stat"><b>${a.filter((p) => p.status === "approved" && p.kind !== "food").length}</b>Riders and drivers</div></div><h2>Vendors, riders and drivers</h2>${a.map((p) => `<div class="mine" style="align-items:flex-start"><span>${esc(p.shop_name)} <i class="pillb">${PKIND[p.kind]}</i><small>${esc(p.phone || "")} · ${esc(p.area || "")}${p.plate ? " · " + esc(p.plate) : ""}<br>Status: <b>${p.status}</b></small><div id="pp-${p.id}" style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap"></div></span><button class="act" onclick="pdocs('${p.id}')">View photos</button><button class="act g" onclick="pset('${p.id}','approved')">Approve</button><button class="act r" onclick="pset('${p.id}','${p.status === "approved" ? "suspended" : "rejected"}')">${p.status === "approved" ? "Suspend" : "Reject"}</button></div>`).join("") || "<p>No applications yet.</p>"}`;
+      }
+      async function pdocs(id) {
+        const box = $("pp-" + id), p = PC[id], paths = [p.id_photo_path, p.photo_path].filter(Boolean);
+        const { data, error } = await sb.storage.from("seller-docs").createSignedUrls(paths, 300);
+        box.innerHTML = error || !data ? '<span class="err msg">Could not load photos</span>' : data.map((d) => `<a href="${esc(d.signedUrl)}" target="_blank" rel="noopener"><img src="${esc(d.signedUrl)}" alt="Photo" style="width:130px;height:130px;border-radius:8px;object-fit:cover"></a>`).join("");
+      }
+      async function pset(id, status) {
+        if (!confirm(status[0].toUpperCase() + status.slice(1) + " this application?")) return;
+        const { error } = await sb.from("partners").update({ status }).eq("id", id);
+        if (error) return alert(error.message);
+        adPartners();
+      }
+      async function adTrips() {
+        const { data, error } = await sb.from("trips").select("kind,pickup,dropoff,status,fee,vehicle,created_at").order("created_at", { ascending: false }).limit(60);
+        if (error) return (adEl().innerHTML = `<p class="msg err">${esc(error.message)}</p>`);
+        const late = (t) => t.status === "requested" && Date.now() - new Date(t.created_at) > 20 * 60000, live = data.filter((t) => ["requested", "accepted", "picked_up"].includes(t.status));
+        adEl().innerHTML = `<div class="stats"><div class="stat"><b>${live.length}</b>Trips live now</div><div class="stat"><b>${data.filter(late).length}</b>Delayed</div><div class="stat"><b>${data.filter((t) => t.kind === "food").length}</b>Food orders</div></div><h2>Deliveries, rides and food orders</h2>${data.map((t) => `<div class="mine"><span>${{ food: "🍲", ride: "🚕", delivery: "🏍️" }[t.kind]} ${esc(t.pickup)} → ${esc(t.dropoff)}<small>${dt(t.created_at)} · ${t.vehicle} · ${money(t.fee)}</small></span><b style="color:${late(t) ? "#e5252a" : "inherit"}">${late(t) ? "Delayed" : TRST[t.status] || t.status}</b></div>`).join("") || "<p>No trips yet.</p>"}`;
+      }
+
+      /* ORDER ALERTS FOR VENDORS AND RIDERS (sound, vibration, banner while the app is open) */
+      let pCh = null, RON = false;
+      const nb = () => ("Notification" in window && Notification.permission !== "granted" ? '<button class="lnk" style="width:100%;margin:0 0 10px" onclick="enableAlerts()">🔔 Turn on order alerts</button>' : "");
+      async function partnerAlerts() {
+        if (pCh) { sb.removeChannel(pCh); pCh = null; }
+        if (!user) return;
+        const { data } = await sb.from("partners").select("id,kind,online").eq("user_id", user.id).eq("status", "approved");
+        const v = (data || []).find((x) => x.kind === "food"), r = (data || []).find((x) => x.kind !== "food");
+        if (!v && !r) return;
+        RON = !!(r && r.online);
+        pCh = sb.channel("partner-" + user.id).on("postgres_changes", { event: "*", schema: "public", table: "trips" }, (p) => {
+          const t = p.new, key = t && "t" + t.id + t.vendor_status + t.status;
+          if (!t || ALERTED.has(key)) return;
+          if (v && p.eventType === "INSERT" && t.partner_id === v.id) {
+            ALERTED.add(key);
+            notifySeller("New food order", t.note + " · " + money(t.food_total), "vendor");
+            if (view === "vendor") vendor();
+          } else if (r && RON && t.status === "requested" && t.vehicle === (r.kind === "driver" ? "taxi" : "motorbike") && (t.kind !== "food" || t.vendor_status === "ready")) {
+            ALERTED.add(key);
+            notifySeller(t.kind === "ride" ? "New ride request" : "New delivery request", t.pickup + " → " + t.dropoff + " · " + money(t.fee), "rider");
+            if (view === "rider") rider();
+          }
+        }).subscribe();
+      }
+
+      /* FOOD MENU, CART AND VENDOR ORDERS */
+      let CART = {}, CV = null, VI = {}, VID = null;
+      async function foodMenu(vid) {
+        CV = vid; CART = {};
+        const { data } = await sb.from("food_items").select("id,name,price,photo_url").eq("partner_id", vid).eq("available", true).order("created_at");
+        if (!(data || []).length) return tripForm("food", vid);
+        VI = {}; data.forEach((i) => (VI[i.id] = i));
+        const v = FV[vid];
+        app.innerHTML = `<div class="fhero"><button class="fsw" style="all:unset;cursor:pointer;font-size:13px" onclick="food()">← Back</button><h1>${esc(v.shop_name)}</h1><p>${esc(v.sells || "")} · ${esc(v.area || "")}</p></div><div class="sec" style="margin-bottom:10px">${data.map((i) => `<div class="mine">${i.photo_url ? `<img src="${esc(i.photo_url)}" alt="" loading="lazy">` : ""}<span>${esc(i.name)}<small>${money(i.price)}</small></span><button class="act sv" style="flex:none;width:40px" aria-label="Less" onclick="cartQ('${i.id}',-1)">−</button><b id="q-${i.id}">0</b><button class="act" style="flex:none;width:40px" aria-label="More" onclick="cartQ('${i.id}',1)">+</button></div>`).join("")}</div><div class="box" style="max-width:none"><input id="td" placeholder="Where should we bring it?"><div id="ct" class="route">Pick something from the menu.</div><button class="act" style="background:#4a1b0c" onclick="sendFood()">Place order</button><div id="tm" class="msg"></div></div>`;
+      }
+      function cartQ(id, d) {
+        CART[id] = Math.max(0, (CART[id] || 0) + d);
+        $("q-" + id).textContent = CART[id];
+        const n = Object.entries(CART).filter(([, q]) => q), sub = n.reduce((a, [k, q]) => a + VI[k].price * q, 0);
+        $("ct").innerHTML = n.length ? `Food ${money(sub)} + delivery ${money(FARE.motorbike)}<br><b>Total ${money(sub + FARE.motorbike)}</b>` : "Pick something from the menu.";
+      }
+      async function sendFood() {
+        const m = $("tm"), n = Object.entries(CART).filter(([, q]) => q), drop = $("td").value.trim();
+        if (!n.length || !drop) { m.className = "msg err"; m.textContent = "Pick items and enter where to bring it."; return; }
+        const items = n.map(([k, q]) => ({ name: VI[k].name, price: VI[k].price, qty: q })), sub = items.reduce((a, i) => a + i.price * i.qty, 0);
+        const { error } = await sb.from("trips").insert({ kind: "food", requester_id: user.id, partner_id: CV, pickup: (FV[CV].area || "") + " · " + FV[CV].shop_name, dropoff: drop, note: items.map((i) => i.qty + " x " + i.name).join(", "), items, food_total: sub, vehicle: "motorbike", fee: FARE.motorbike });
+        m.className = error ? "msg err" : "msg ok";
+        m.textContent = error ? error.message : "✓ Order sent. The kitchen will confirm soon.";
+        if (!error) CART = {};
+      }
+      async function vendor() {
+        if (!need()) return;
+        const { data: me } = await sb.from("partners").select("id,shop_name,status").eq("user_id", user.id).eq("kind", "food").maybeSingle();
+        if (!me || me.status !== "approved") { app.innerHTML = `<div class="box"><h2>🍲 Vendor orders</h2><p style="margin:0;color:var(--mut)">${me ? "Your application is " + esc(me.status) + "." : "You are not a food vendor yet."}</p><button class="act" onclick="go('partner')">Join as vendor or rider</button></div>`; return; }
+        VID = me.id;
+        const [o, i] = await Promise.all([sb.from("trips").select("*").eq("partner_id", me.id).in("vendor_status", ["new", "preparing"]).order("created_at"), sb.from("food_items").select("*").eq("partner_id", me.id).order("created_at")]);
+        const nx = { new: ["preparing", "Accept"], preparing: ["ready", "Ready for rider"] };
+        app.innerHTML = `${nb()}<div class="fhero"><h1>${esc(me.shop_name)}</h1><p>Orders and menu</p></div><div class="sec" style="margin-bottom:10px"><h2>Orders</h2>${(o.data || []).map((t) => `<div class="mine"><span>${esc(t.note)}<small>${money(t.food_total)} food · to ${esc(t.dropoff)} · ${t.vendor_status === "new" ? "New" : "Preparing"}</small></span><button class="act g" onclick="vStep('${t.id}','${nx[t.vendor_status][0]}')">${nx[t.vendor_status][1]}</button>${t.vendor_status === "new" ? `<button class="act r" onclick="vStep('${t.id}','rejected')">Reject</button>` : ""}</div>`).join("") || '<p class="empty" style="padding:12px 0">No orders waiting.</p>'}</div><div class="sec"><h2>Your menu</h2>${(i.data || []).map((x) => `<div class="mine ${x.available ? "" : "sold"}">${x.photo_url ? `<img src="${esc(x.photo_url)}" alt="" loading="lazy">` : ""}<span>${esc(x.name)}<small>${money(x.price)}</small></span><button class="act sv" style="flex:none;width:auto" onclick="itemAvail('${x.id}',${!x.available})">${x.available ? "Hide" : "Show"}</button><button class="act r" onclick="itemDel('${x.id}')">Delete</button></div>`).join("")}<input id="mn" placeholder="Dish, like Jollof with chicken"><input id="mp" type="number" min="1" step="0.5" placeholder="Price GH₵"><label style="font-size:13px;color:var(--mut)">Dish photo (optional)</label><input id="mf" type="file" accept="image/*"><button class="act" onclick="itemAdd()">Add to menu</button><div id="mm" class="msg"></div></div>`;
+      }
+      async function vStep(id, s2) { const r = await sb.rpc("vendor_step", { tid: id, s: s2 }); if (r.error) alert(r.error.message); vendor(); }
+      async function itemAdd() {
+        const n = $("mn").value.trim(), pr = Number($("mp").value), m = $("mm"), f = $("mf").files[0];
+        const bad = (t) => { m.className = "msg err"; m.textContent = t; };
+        if (!n || !(pr > 0)) return bad("Enter the dish and its price.");
+        if (f && f.size > 5e6) return bad("Photo is too big. Choose one under 5 MB.");
+        let url = null;
+        if (f) {
+          m.className = "msg"; m.textContent = "Uploading photo…";
+          const path = user.id + "/food-" + Date.now() + "-" + f.name.replace(/[^\w.]/g, "");
+          const u = await sb.storage.from("products").upload(path, f, { upsert: true });
+          if (u.error) return bad("Photo did not upload: " + u.error.message);
+          url = sb.storage.from("products").getPublicUrl(path).data.publicUrl;
+        }
+        const { error } = await sb.from("food_items").insert({ partner_id: VID, name: n, price: pr, photo_url: url });
+        if (error) bad(error.message); else vendor();
+      }
+      async function itemAvail(id, b) { await sb.from("food_items").update({ available: b }).eq("id", id); vendor(); }
+      async function itemDel(id) { if (confirm("Delete this dish?")) { await sb.from("food_items").delete().eq("id", id); vendor(); } }
 
       /* Shared promoter links: ?code=PRO-XXXXX&p=<product id> (older ?ref= links still work) */
       const UUID =
